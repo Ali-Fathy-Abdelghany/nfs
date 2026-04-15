@@ -15,8 +15,10 @@ namespace NafsApp.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        public Therapist Therapist { get; set; }
+         public SessionRecording? Recording { get; set; }
+        public Therapist? Therapist { get; set; }
         public List<Booking> Bookings { get; set; } = new();
+        public List<Review> Reviews { get; set; } = new();
+        public List<SessionParticipant> Participants { get; set; } = new();
     }
 }

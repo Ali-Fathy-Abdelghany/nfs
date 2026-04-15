@@ -16,6 +16,7 @@ namespace NafsApp.Data
         public DbSet<Availability> Availabilities { get; set; }
         public DbSet<SessionParticipant> SessionParticipants { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<SessionRecording> SessionRecordings { get; set; }
 
 
 
@@ -117,6 +118,69 @@ namespace NafsApp.Data
                 .WithOne(b => b.Payment)
                 .HasForeignKey<Payment>(p => p.BookingId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            modelBuilder.Entity<MedicalRecord>()
+               .HasOne(m => m.Client)
+               .WithMany(c => c.MedicalRecords)
+               .HasForeignKey(m => m.ClientId);
+
+            modelBuilder.Entity<MedicalRecord>()
+               .HasOne(m => m.Therapist)
+               .WithMany()
+               .HasForeignKey(m => m.TherapistId);
+            modelBuilder.Entity<SessionParticipant>()
+            .HasKey(sp => new { sp.SessionId, sp.ClientId });
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.Session)
+                .WithMany(s => s.Participants)
+                .HasForeignKey(sp => sp.SessionId);
+
+            modelBuilder.Entity<SessionParticipant>()
+                .HasOne(sp => sp.Client)
+                .WithMany()
+                .HasForeignKey(sp => sp.ClientId);
+
+
+            modelBuilder.Entity<SessionRecording>()
+                .HasOne(r => r.Session)
+                .WithOne(s => s.Recording)
+                .HasForeignKey<SessionRecording>(r => r.SessionId);
+
+            modelBuilder.Entity<Availability>()
+                .HasKey(a => a.AvailabilityId);
+
+            modelBuilder.Entity<Availability>()
+                .HasOne(a => a.Therapist)
+                .WithMany(t => t.Availabilities)
+                .HasForeignKey(a => a.TherapistId);
+           
+             modelBuilder.Entity<Notification>()
+                 .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId);
+             modelBuilder.Entity<Review>()
+                  .HasOne(r => r.Client)
+                  .WithMany(c => c.Reviews)
+                   .HasForeignKey(r => r.ClientId);
+
+    modelBuilder.Entity<Review>()
+        .HasOne(r => r.Therapist)
+        .WithMany(t => t.Reviews)
+        .HasForeignKey(r => r.TherapistId);
+
+    modelBuilder.Entity<Review>()
+        .HasOne(r => r.Session)
+        .WithMany(s => s.Reviews)
+        .HasForeignKey(r => r.SessionId);
+
+ modelBuilder.Entity<Booking>()
+        .HasIndex(b => new { b.ClientId, b.SessionId })
+        .IsUnique(); // prevent duplicate booking
+
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace NafsApp.Models
         public string? TreatmentPlan { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } 
-        public Client Client { get; set; }
-        public Therapist Therapist { get; set; }
+        public Client? Client { get; set; }
+        public Therapist? Therapist { get; set; }
 
 }}

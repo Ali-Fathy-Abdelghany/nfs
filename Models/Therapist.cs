@@ -12,7 +12,9 @@ namespace NafsApp.Models
         public bool IsVerified { get; set; }
         public string? LicenseFile { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
         public List<Session> Sessions { get; set; } = new();
+        public List<Review> Reviews { get; set; } = new();
+        public List<Availability> Availabilities { get; set; } = new();
     }
 }

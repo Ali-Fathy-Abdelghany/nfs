@@ -10,7 +10,7 @@ namespace NafsApp.Models
         public decimal Amount { get; set; }
         public   Currency Currency { get; set; } 
         public PaymentMethod PaymentMethod { get; set; } 
-        public PaymentStatus paymentStatus { get; set; }
+        public PaymentStatus PaymentStatus{ get; set; }
         public string? TransactionReference { get; set; } 
         public PaymentGateway PaymentGateway { get; set; } 
         public DateTime TransactionDate { get; set; } = DateTime.Now;
