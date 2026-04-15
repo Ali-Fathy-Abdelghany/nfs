@@ -11,10 +11,23 @@ namespace NafsApp.Data
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
-          
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<Availability> Availabilities { get; set; }
+        public DbSet<SessionParticipant> SessionParticipants { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
+
+
+
+
+
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=NafsApp.db");
+            optionsBuilder.UseSqlServer("Server=.;Database=NafsApp;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NfsApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d70deab3de469b32b9624542fa7c98a08681e324")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ce9554d6c37bb5fb9a404d74444bdbacbd0c582")]
 [assembly: System.Reflection.AssemblyProductAttribute("NfsApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NfsApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
