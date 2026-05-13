@@ -1,0 +1,31 @@
+flowchart TD
+    Start((Start Booking)) --> Search[Browse Therapists List]
+    
+    Search --> Filter[Filter by Specialty / Price / Rating]
+    Filter --> ViewProfile[View Therapist Profile & Bio]
+    
+    ViewProfile --> SelectSlot[Select Date and Time Slot]
+    
+    SelectSlot --> CheckSQL{Is Slot Still \n Available?}
+    
+    CheckSQL -- No --> Conflict[Show Error: Slot Just Taken]
+    Conflict --> SelectSlot
+    
+    CheckSQL -- Yes --> SessionType{Choose Session \n Type}
+    
+    SessionType -- Online --> VideoLink[Generate Meeting Link Placeholder]
+    SessionType -- Offline --> ClinicInfo[Show Clinic Address & Location]
+    
+    VideoLink --> Payment[Payment Gateway / Insurance]
+    ClinicInfo --> Payment
+    
+    Payment --> PayStatus{Payment \n Successful?}
+    
+    PayStatus -- No --> Retry[Retry or Change Method]
+    Retry --> Payment
+    
+    PayStatus -- Yes --> DBUpdate[SQL: Update Slot Status to 'Reserved']
+    
+    DBUpdate --> Notify[Send Confirmation SMS / Email]
+    Notify --> Dashboard[Add to User Upcoming Sessions]
+    Dashboard --> End((End))

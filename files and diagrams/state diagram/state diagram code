@@ -1,0 +1,26 @@
+stateDiagram-v2
+    [*] --> Scheduled : Admin/Therapist creates slot (SQL Insert)
+    
+    Scheduled --> Pending : User clicks 'Book' (UC2/UC3)
+    
+    state Pending {
+        [*] --> AwaitingPayment
+        AwaitingPayment --> PaymentFailed : Timeout / Reject (Risk Plan)
+        AwaitingPayment --> PaymentSuccess : Transaction OK
+    }
+    
+    PaymentFailed --> Scheduled : Release SQL Slot
+    
+    PaymentSuccess --> Confirmed : Booking Confirmed (US4)
+    
+    Confirmed --> InProgress : Start Time reached (Join Button Active)
+    Confirmed --> Cancelled : Cancelled (FR-DR-02 / Admin Refund)
+    
+    InProgress --> Completed : Doctor updates status (FR-DR-01)
+    InProgress --> NoShow : Patient doesn't join (FR-DR-01)
+    
+    Cancelled --> Scheduled : Slot freed (Business Logic)
+    Completed --> FeedbackProvided : User submits review (FR-03)
+    
+    FeedbackProvided --> [*]
+    NoShow --> [*]
