@@ -1,0 +1,44 @@
+flowchart LR
+    %%   (Frontend Components)
+    subgraph Frontend_React [React Application]
+        direction TB
+        Auth_Comp[Auth & Identity Component]
+        Booking_Comp[Booking & Schedule UI]
+        Chat_UI[SignalR Chat Interface]
+        Assessment_Comp[Smart Assessment UI]
+    end
+
+    %% (Backend Components)
+    subgraph Backend_NET [ASP.NET Core 9 Web API]
+        direction TB
+        Controllers[API Controllers: Auth, Booking, Users]
+        Services[Business Logic Services: BookingService, RecommendationService]
+        Identity_Srv[Identity & JWT Service]
+        SignalR_Hub[SignalR Real-time Hub]
+        EF_Core[Entity Framework Core - DAL]
+    end
+
+    %% (AI Modules)
+    subgraph AI_Modules [Python AI Engine]
+        direction TB
+        Chatbot_Engine[Chatbot NLP Module]
+        Rec_Engine[Recommendation Engine]
+    end
+
+    %% (Data Stores)
+    subgraph Storage [Data Layers]
+        SQL_DB[(SQL Server: Sessions & Users)]
+        Mongo_DB[(MongoDB: AI Logs)]
+    end
+
+    %% (Dependencies)
+    Frontend_React -- HTTP/JSON --> Controllers
+    Frontend_React <--> SignalR_Hub
+    
+    Controllers --> Services
+    Controllers --> Identity_Srv
+    Services --> EF_Core
+    EF_Core --> SQL_DB
+    
+    Services -- Internal API --> AI_Modules
+    AI_Modules --> Mongo_DB
