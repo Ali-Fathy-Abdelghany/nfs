@@ -1,44 +1,20 @@
-flowchart LR
-    %%   (Frontend Components)
-    subgraph Frontend_React [React Application]
-        direction TB
-        Auth_Comp[Auth & Identity Component]
-        Booking_Comp[Booking & Schedule UI]
-        Chat_UI[SignalR Chat Interface]
-        Assessment_Comp[Smart Assessment UI]
-    end
+عدد التاسكات المطلوبة:
+المفاجأة السعيدة: مش مطلوب منك الـ 33 تاسك كلهم! المطلوب فقط هو إنك تخلصي من 2 إلى 3 تاسكات بس عشان تاخدي الشهادة. (لو عايزة تعملي أكتر ده اختياري ليكي لزيادة التعلم).
 
-    %% (Backend Components)
-    subgraph Backend_NET [ASP.NET Core 9 Web API]
-        direction TB
-        Controllers[API Controllers: Auth, Booking, Users]
-        Services[Business Logic Services: BookingService, RecommendationService]
-        Identity_Srv[Identity & JWT Service]
-        SignalR_Hub[SignalR Real-time Hub]
-        EF_Core[Entity Framework Core - DAL]
-    end
+2️⃣ بوست وفيديو الـ LinkedIn:
+بقى اختياري (Optional): الخطوة دي ما بقتش إجبارية عشان تاخدي الشهادة، تقدري تعمليها وتنزلي فيديو بيشرح التاسكات اللي خلصتيها كنوع من زيادة التفاعل والـ Visibility لبروفايلك، لكن لو ما عملتيهاش مش هتحرمك من الشهادة.
 
-    %% (AI Modules)
-    subgraph AI_Modules [Python AI Engine]
-        direction TB
-        Chatbot_Engine[Chatbot NLP Module]
-        Rec_Engine[Recommendation Engine]
-    end
+3️⃣ مستودع GitHub:
+طالبين تسمية الريبو باسم محدد وهو: codealpha_tasks وترفعي عليها التاسكات اللي خلصتيها، وتشاركي اللينك بتاعها في فورم التسليم. (بما إننا عملناها باسم مختلف شوية، تقدري بكل بساطة تدخلي من الـ Settings على GitHub وتغيري الاسم لـ codealpha_tasks عشان تبقي ماشية مع تعليماتهم بالظبط).
 
-    %% (Data Stores)
-    subgraph Storage [Data Layers]
-        SQL_DB[(SQL Server: Sessions & Users)]
-        Mongo_DB[(MongoDB: AI Logs)]
-    end
+4️⃣ الموعد النهائي (Deadline):
+التسليم آخره يوم 20 يونيو 2026.
 
-    %% (Dependencies)
-    Frontend_React -- HTTP/JSON --> Controllers
-    Frontend_React <--> SignalR_Hub
-    
-    Controllers --> Services
-    Controllers --> Identity_Srv
-    Services --> EF_Core
-    EF_Core --> SQL_DB
-    
-    Services -- Internal API --> AI_Modules
-    AI_Modules --> Mongo_DB
+🎁 المميزات والجوائز اللي هتاخديها لما تسلمي:
+شهادة إتمام التدريب (Internship Certificate).
+
+خطاب توصية (Letter of Recommendation - LOR) وده ممتاز جداً للسي في بتاعك.
+
+هدايا حصرية (Goodies): أفضل 10 طلاب متميزين في التدريب هيبعتوا لهم هدايا خاصة من CodeAlpha.
+
+⚠️ تنبيه هام: ركزي جداً وأنتِ بتملي بياناتك في الفورم (الاسم، الإيميل، واللينكات) لأن الشهادات والجوائز بتتبعت بناءً على البيانات اللي هتكتبيها بإيدك.
