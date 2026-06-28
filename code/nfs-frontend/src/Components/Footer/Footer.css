@@ -48,10 +48,10 @@
 }
 
 .nav-item:hover {
-  color: #0F766E; 
+  color: var(--primary-color); 
 }
 
 .nav-item:hover .icon-circle {
-  background-color: rgba(15, 118, 110, 0.1); 
-  color: #0F766E;
+  background-color: var(--primary-light); 
+  color: var(--primary-color);
 }

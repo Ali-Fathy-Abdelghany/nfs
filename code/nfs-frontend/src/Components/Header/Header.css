@@ -18,8 +18,7 @@
 }
 
 .header-logo {
-  color: #0F766E; 
-font-family: 'Amiri', serif; 
+  color: var(--primary-color); 
  font-weight: 700; 
   font-size: 24px; 
   line-height: 32px;
@@ -41,6 +40,6 @@ font-family: 'Amiri', serif;
 }
 
 .icon-wrapper:hover {
-  color: #0F766E; 
+  color: var(--primary-color); 
   transform: scale(1.05);
 }
