@@ -15,17 +15,19 @@ function Sidebar({ activeTab }) {
                     <i className="fa-solid fa-user-group"></i>
                     <span>المرضى</span>
                 </li>
-                <li className={`menu-item ${activeTab === "schedule" ? "active" : ""}`}>
+                <li className={`menu-item ${activeTab === "timetable" ? "active" : ""}`}>
                     <i className="fa-solid fa-calendar-days"></i>
                     <span>الجدول الزمني</span>
                 </li>
                 <li
-                    className={`menu-item ${activeTab === "analytics" ? "active" : ""}`}
+                    className={`menu-item ${activeTab === "analysis" ? "active" : ""}`}
                 >
                     <i className="fa-solid fa-chart-line"></i>
                     <span>التحليلات</span>
                 </li>
             </ul>
+
+            
         </aside>
     );
 }

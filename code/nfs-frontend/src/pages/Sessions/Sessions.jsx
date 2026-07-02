@@ -35,10 +35,10 @@ function Sessions() {
                                 </div>
                             </div>
 
-                            {/* مساحة العمل المقسمة (الفلتر الجانبي + النتائج) */}
+                            
                             <div className="sessions-workspace-layout">
 
-                                {/* الفلتر الجانبي والبحث المتقدم */}
+                                
                                 <aside className="sessions-sidebar-filter">
                                     <h3 className="filter-main-title">بحث متقدم</h3>
 
@@ -144,7 +144,7 @@ function Sessions() {
                                             {activeDoctorId === 1 && (
                                                 <div className="booking-details-expanded-zone">
 
-                                                    {/* اختيار التاريخ */}
+                                                    
                                                     <div className="booking-section">
                                                         <h5 className="booking-sub-title">
                                                             <i className="fa-regular fa-calendar-days"></i> اختر تاريخ الجلسة (متاح لمدة شهر من اليوم)

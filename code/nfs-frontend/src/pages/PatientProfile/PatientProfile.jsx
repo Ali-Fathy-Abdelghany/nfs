@@ -32,7 +32,7 @@ function PatientProfile() {
             <main className="patient-profile-main">
                 <div className="patient-profile-container">
 
-                    {/* الهيدر الخاص ببيانات المريض الأساسية */}
+                    
                     <div className="patient-info-header">
                         <div className="patient-main-meta">
                             <img
@@ -135,7 +135,7 @@ function PatientProfile() {
 
                     <div className="patient-profile-footer-grid">
 
-                        {/* عمود ملاحظات الجلسة الأخيرة */}
+                        
                         <div className="profile-notes-column">
                             <div className="last-session-notes-box">
                                 <div className="notes-header">
@@ -162,7 +162,7 @@ function PatientProfile() {
                             </div>
                         </div>
 
-                        {/* عمود سجل الجلسات السابقة */}
+                        
                         <div className="profile-last-sidebar-column">
                             <div className="session-history-box">
                                 <h4>سجل الجلسات</h4>
@@ -204,7 +204,7 @@ function PatientProfile() {
                 </div>
             </main>
 
-            <ProfileFooter />
+<ProfileFooter activeTab="profile" />
         </div>
     );
 }

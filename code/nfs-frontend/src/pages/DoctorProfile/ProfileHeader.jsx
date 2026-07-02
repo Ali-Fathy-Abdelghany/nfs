@@ -8,9 +8,9 @@ function ProfileHeader() {
 
   return (
     <header className="profile-header">
-      {}
+      
 
-      {}
+      
       <div className="header-left-side">
         <span className="brand-name">نفس</span>
         <button

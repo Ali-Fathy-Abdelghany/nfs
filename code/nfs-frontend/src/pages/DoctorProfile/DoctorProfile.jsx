@@ -9,12 +9,12 @@ function DoctorProfile() {
     <div className="doctor-profile-page">
       <ProfileHeader />
 
-      {}
+      
       <main className="profile-main-content">
         <div className="profile-container">
-          {}
+          
           <section className="doctor-main-card">
-            {}
+            
             <div className="doctor-image-container-right">
               <img
                 src={doctorImg}
@@ -22,15 +22,15 @@ function DoctorProfile() {
                 className="doctor-rect-avatar"
               />
 
-              {}
+              
               <div className="compatibility-overlay-card">
-                {}
+                
                 <div className="compat-text-side">
                   <span className="compat-label">توافقنا</span>
                   <span className="compat-value">96%</span>
                 </div>
 
-                {}
+                
                 <div className="compat-icon-side">
                   <div className="loading-stars-circle">
                     <span className="inner-star-ai">✨</span>
@@ -39,9 +39,9 @@ function DoctorProfile() {
                 </div>
               </div>
             </div>
-            {}
+            
             <div className="doctor-details-container-left">
-              {}
+              
               <div className="doctor-text-block">
                 <span className="availability-badge">متاح اليوم</span>
                 <h2 className="doctor-name">د. سارة أحمد</h2>
@@ -50,23 +50,23 @@ function DoctorProfile() {
                 </p>
               </div>
 
-              {}
+              
               <div className="doctor-stats-container">
-                {}
+                
                 <div className="stat-box">
                   <i className="fa-solid fa-comment-dots stat-icon"></i>
                   <span className="stat-label">جلسات</span>
                   <span className="stat-value">+1,200</span>
                 </div>
 
-                {}
+                
                 <div className="stat-box">
                   <i className="fa-solid fa-star stat-icon"></i>
                   <span className="stat-label">تقييم</span>
                   <span className="stat-value">4.9</span>
                 </div>
 
-                {}
+                
                 <div className="stat-box">
                   <i className="fa-solid fa-briefcase stat-icon"></i>
                   <span className="stat-label">الخبرة</span>
@@ -76,14 +76,14 @@ function DoctorProfile() {
             </div>
           </section>
 
-          {}
-          {}
+          
+          
 
-          {}
+          
           <section className="doctor-secondary-card">
-            {}
+            
             <div className="secondary-right-side">
-              {}
+              
               <div className="bio-section">
                 <h3 className="section-title">حول د. سارة</h3>
                 <p className="bio-text">
@@ -95,7 +95,7 @@ function DoctorProfile() {
                 </p>
               </div>
 
-              {}
+              
               <div className="specialties-section">
                 <h3 className="section-title">مجالات الاختصاص</h3>
                 <div className="specialties-tags">
@@ -107,29 +107,29 @@ function DoctorProfile() {
                 </div>
               </div>
 
-              {}
-              {}
+              
+              
               <div className="qualifications-section">
                 <h3 className="section-title">المؤهلات والخبرة</h3>
 
-                {}
+                
                 <div className="timeline-item">
                   <div className="timeline-icon-wrapper">
                     <i className="fa-solid fa-graduation-cap timeline-icon-ai"></i>
                   </div>{" "}
-                  {}
+                  
                   <div className="timeline-content">
                     <h4>دكتوراة في علم النفس العيادي</h4>
                     <p>جامعة الملك سعود، الرياض 2012-2016</p>
                   </div>
                 </div>
 
-                {}
+                
                 <div className="timeline-item">
                   <div className="timeline-icon-wrapper">
                     <i className="fa-solid fa-certificate timeline-icon-ai"></i>
                   </div>{" "}
-                  {}
+                  
                   <div className="timeline-content">
                     <h4>شهادة معتمدة في العلاج المعرفي (CBT)</h4>
                     <p>الأكاديمية البريطانية للمعالجين النفسيين</p>
@@ -137,15 +137,15 @@ function DoctorProfile() {
                 </div>
               </div>
             </div>{" "}
-            {}
-            {}
-            {}
+            
+            
+            
             <div className="secondary-left-side">
-              {}
+              
               <div className="reviews-section">
                 <div className="reviews-header">
                   <h3 className="section-title">آراء المراجعين</h3>
-                  {}
+                  
                   <span
                     className="see-all-btn"
                     onClick={() => console.log("فتح كل الآراء")}
@@ -155,7 +155,7 @@ function DoctorProfile() {
                 </div>
 
                 <div className="reviews-list">
-                  {}
+                  
                   <div className="review-card">
                     <div className="stars-row">
                       {Array.from({ length: 5 }).map((_, index) => (
@@ -174,7 +174,7 @@ function DoctorProfile() {
                     </span>
                   </div>
 
-                  {}
+                  
                   <div className="review-card">
                     <div className="stars-row">
                       {Array.from({ length: 5 }).map((_, index) => {
@@ -196,7 +196,7 @@ function DoctorProfile() {
                 </div>
               </div>
 
-              {}
+              
               <div className="inquiry-card">
                 <h4>هل لديك استفسار؟</h4>
                 <p>يمكنك مراسلة د. سارة قبل الحجز للاستفسار عن نوع الجلسات.</p>

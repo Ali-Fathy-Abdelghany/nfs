@@ -14,13 +14,13 @@ function Patients() {
 
                     <Sidebar activeTab="patients" />
 
-                    {/* منطقة المحتوى الأساسية */}
+                    
                     <section className="content-area">
                         <div className="patients-content-wrapper">
 
                             <div className="patients-stats-grid">
 
-                                {/* كارت إجمالي المرضى */}
+                                
                                 <div className="stat-card-box">
                                     <div className="stat-card-info">
                                         <span className="stat-card-title">إجمالي المرضى</span>
@@ -31,7 +31,7 @@ function Patients() {
                                     </div>
                                 </div>
 
-                                {/* كارت جلسات اليوم */}
+                                
                                 <div className="stat-card-box">
                                     <div className="stat-card-info">
                                         <span className="stat-card-title">جلسات اليوم</span>
@@ -42,7 +42,7 @@ function Patients() {
                                     </div>
                                 </div>
 
-                                {/* كارت متوسط التقييم */}
+                                
                                 <div className="stat-card-box">
                                     <div className="stat-card-info">
                                         <span className="stat-card-title">متوسط التقييم</span>

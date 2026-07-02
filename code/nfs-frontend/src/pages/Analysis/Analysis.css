@@ -1,0 +1,635 @@
+
+.analysis-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  direction: rtl;
+  font-family: inherit;
+}
+
+
+.analysis-under-header-flex {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: flex-start; 
+}
+
+/* ==========================================================================
+   تنسيق السايد بار المستقل والثابت (Sticky Sidebar)
+   ========================================================================== */
+.sidebar {
+  position: sticky;
+  top: 0; 
+  height: calc(100vh - 80px); 
+  overflow-y: auto; 
+  z-index: 100;
+}
+
+
+.analysis-content-area {
+  flex: 1;
+  padding: 30px;
+  min-width: 0;
+}
+
+
+.analysis-internal-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px; 
+}
+
+
+.analysis-section-box {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  min-height: 150px; 
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+}
+
+/* ==========================================================================
+   التجاوب مع الشاشات (Responsive)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .analysis-content-area {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .analysis-content-area {
+    padding: 12px;
+  }
+}
+
+/* ==========================================================================
+   تنسيقات الجزء الأول: الـ Hero Section
+   ========================================================================== */
+.analysis-hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  min-height: auto !important; 
+  padding: 24px 30px;
+}
+
+.analysis-main-title {
+  margin: 0 0 6px 0;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--primary-color); 
+}
+
+.analysis-main-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b; 
+  line-height: 1.5;
+}
+
+
+.hero-timeframe-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f1f5f9; 
+  border: 1px solid #e2e8f0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap; 
+}
+
+.hero-timeframe-badge i {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+
+@media (max-width: 576px) {
+  .analysis-hero-section {
+    flex-direction: column;
+    align-items: flex-start; 
+    gap: 14px;
+    padding: 20px;
+  }
+}
+
+/* ==========================================================================
+   تنسيقات الجزء الثاني: كروت المؤشرات الثلاثة الرمادية
+   ========================================================================== */
+.analysis-stats-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px;
+  background: transparent !important; 
+  border: none !important; 
+  box-shadow: none !important;
+  padding: 0 !important;
+  min-height: auto !important;
+}
+
+.analysis-gray-stat-card {
+  background-color: #f1f5f9; 
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.stat-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #64748b; 
+}
+
+.stat-number {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a; 
+}
+
+
+.stat-mini-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 45px;
+}
+
+.mini-bar {
+  width: 6px;
+  background-color: #cbd5e1;
+  border-radius: 10px;
+  transition: height 0.3s ease;
+}
+
+.mini-bar.active {
+  background-color: var(--primary-color); 
+}
+
+
+.stat-card-icon-box {
+  font-size: 24px;
+  color: #94a3b8;
+}
+
+
+.feedback-card {
+  align-items: flex-start; 
+}
+
+.rating-flex-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.out-of-five {
+  font-size: 14px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.stat-subtext {
+  margin: 6px 0 0 0;
+  font-size: 11.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   تجاوب الجزء الثاني مع الشاشات
+   ========================================================================== */
+@media (max-width: 992px) {
+  .analysis-stats-grid-container {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+@media (max-width: 650px) {
+  .analysis-stats-grid-container {
+    grid-template-columns: 1fr; 
+  }
+}
+
+/* ==========================================================================
+   تنسيقات الجزء الثالث: الـ Line Chart بوكس
+   ========================================================================== */
+.analysis-chart-section {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 14px;
+  padding: 24px 30px;
+  min-height: auto !important; 
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.chart-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.chart-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chart-box-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var;
+}
+
+.chart-box-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+
+.chart-mood-legends {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #f8fafc;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid #f1f5f9;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+
+.happy-dot { background-color: #10b981; }   
+.calm-dot { background-color: #3b82f6; }    
+.anxious-dot { background-color: #f59e0b; } 
+
+.legend-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #475569;
+}
+
+
+.main-line-chart-wrapper {
+  width: 100%;
+  direction: ltr; 
+}
+
+/* ==========================================================================
+   تجاوب الجزء الثالث مع الشاشات
+   ========================================================================== */
+@media (max-width: 768px) {
+  .chart-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .chart-mood-legends {
+    align-self: flex-start;
+  }
+}
+/* ==========================================================================
+   تنسيقات الجزء الرابع: تمديد البوكسين بكامل العرض المتبقي في الشاشة
+   ========================================================================== */
+
+
+.analysis-two-columns-grid {
+  display: flex;
+  flex-direction: row; 
+  width: 100%; 
+  gap: 24px; 
+  box-sizing: border-box;
+}
+
+
+.analysis-gray-column-card {
+  flex: 1; 
+  background-color: #f1f5f9; 
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 24px; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box; 
+  min-width: 0; 
+}
+
+
+.column-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.column-card-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   📊 تنسيقات البوكس الأول: الباي شارت (Pie Chart)
+   -------------------------------------------------------------------------- */
+.pie-chart-flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.pie-chart-graphics-side {
+  flex: 1.5; 
+  direction: ltr; 
+}
+
+.pie-chart-legends-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 120px;
+}
+
+.pie-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.pie-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.pie-name {
+  color: #475569;
+  font-weight: 700;
+  flex-grow: 1;
+}
+
+.pie-percentage {
+  color: #1e293b;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   👥 تنسيقات البوكس الثاني: أداء الجلسات وبارات التحميل
+   -------------------------------------------------------------------------- */
+.card-header-with-legends {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.session-type-legends {
+  display: flex;
+  gap: 12px;
+  background: #ffffff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  align-items: center;
+}
+
+.type-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.type-label {
+  color: #475569;
+}
+
+.metrics-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.metric-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.metric-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.metric-name {
+  color: #1e293b;
+}
+
+.metric-ratio {
+  color: #64748b;
+  font-size: 12px;
+}
+
+
+.split-progress-bar {
+  display: flex;
+  height: 8px;
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden; 
+  background-color: #cbd5e1;
+}
+
+.progress-segment {
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+}
+
+
+@media (max-width: 868px) {
+  .analysis-two-columns-grid {
+    flex-direction: column; 
+    gap: 16px;
+  }
+}
+
+/* ==========================================================================
+   تنسيقات الجزء الخامس: الرؤى التحليلية الذكية وزر التصدير
+   ========================================================================== */
+.analysis-insights-box {
+  background-color: rgba(15, 118, 110, 0.06) !important; 
+  border: 1px solid rgba(15, 118, 110, 0.15) !important;
+  border-radius: 14px;
+  padding: 24px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  min-height: auto !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+.insights-content-side {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+
+.insights-icon-wrapper {
+  background-color: var(--primary-color); 
+  color: #ffffff;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+}
+
+.insight-bulb-icon {
+  font-size: 20px;
+}
+
+
+.insights-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.insights-box-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--primary-color); 
+}
+
+.insights-box-description {
+  margin: 0;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+
+.highlight-text {
+  color: var(--primary-color);
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* --------------------------------------------------------------------------
+   🔘 زر تصدير التقرير
+   -------------------------------------------------------------------------- */
+.export-report-btn {
+  background-color: var(--primary-color); 
+  color: #ffffff;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap; 
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15);
+}
+
+.export-report-btn i {
+  font-size: 15px;
+}
+
+
+.export-report-btn:hover {
+  background-color: #0d665f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.25);
+}
+
+.export-report-btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   📱 التجاوب مع شاشات الموبايل
+   ========================================================================== */
+@media (max-width: 768px) {
+  .analysis-insights-box {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .insights-action-side {
+    width: 100%;
+  }
+  
+  .export-report-btn {
+    width: 100%; 
+    justify-content: center;
+  }
+}

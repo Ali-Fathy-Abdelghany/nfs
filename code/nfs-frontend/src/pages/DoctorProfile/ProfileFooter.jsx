@@ -5,7 +5,7 @@ function ProfileFooter() {
   return (
     <footer className="profile-custom-footer">
       <div className="footer-container">
-        {}
+        
         <div className="footer-price-section">
           <span className="price-label">سعر الجلسة</span>
           <div className="price-value-wrapper">
@@ -14,7 +14,7 @@ function ProfileFooter() {
           </div>
         </div>
 
-        {}
+        
         <div className="footer-action-section">
           <button className="book-now-btn">احجز الجلسة الآن</button>
         </div>
