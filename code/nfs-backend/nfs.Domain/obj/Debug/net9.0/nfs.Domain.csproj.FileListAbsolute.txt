@@ -1,0 +1,23 @@
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\bin\Debug\net9.0\nfs.Domain.deps.json
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.AssemblyInfoInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.AssemblyInfo.cs
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\refint\nfs.Domain.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Domain\obj\Debug\net9.0\ref\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\bin\Debug\net9.0\nfs.Domain.deps.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.AssemblyInfoInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.AssemblyInfo.cs
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.sourcelink.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\refint\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Domain\obj\Debug\net9.0\ref\nfs.Domain.dll
