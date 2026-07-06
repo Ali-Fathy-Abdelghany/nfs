@@ -1,0 +1,31 @@
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.deps.json
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\refint\nfs.Application.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\ref\nfs.Application.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.deps.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.sourcelink.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\refint\nfs.Application.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\ref\nfs.Application.dll
