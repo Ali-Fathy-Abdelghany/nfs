@@ -1,0 +1,30 @@
+## Build artifacts
+**/bin/
+**/obj/
+**/out/
+
+## Visual Studio / Rider
+**/.vs/
+*.user
+*.suo
+
+## User-specific app settings
+**/appsettings.Development.json
+**/appsettings.Local.json
+
+## Node (frontend)
+**/node_modules/
+**/dist/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Logs
+*.log
+
+## Archives
+*.zip
+
+## Postman local metadata
+**/.postman/
