@@ -31,5 +31,8 @@ namespace NafsApp.Models
 
         // Navigation properties
         public ICollection<UserRoleMapping> UserRoles { get; set; } = new List<UserRoleMapping>();
+        
+        public Therapist? Therapist { get; set; }
+        public Patient? Patient { get; set; }
     }
 }

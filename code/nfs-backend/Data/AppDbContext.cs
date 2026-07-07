@@ -8,6 +8,9 @@ namespace NafsApp.Data
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Role> Roles { get; set; } = null!;
         public DbSet<UserRoleMapping> UserRoles { get; set; } = null!;
+        public DbSet<Therapist> Therapists { get; set; } = null!;
+        public DbSet<Patient> Patients { get; set; } = null!;
+        public DbSet<Assessment> Assessments { get; set; } = null!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -86,6 +89,70 @@ namespace NafsApp.Data
                     .WithMany()
                     .HasForeignKey(ur => ur.AssignedBy)
                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // THERAPISTS configuration
+            modelBuilder.Entity<Therapist>(entity =>
+            {
+                entity.ToTable("THERAPISTS");
+                entity.HasKey(t => t.TherapistId);
+                entity.Property(t => t.TherapistId).HasColumnName("therapist_id");
+                entity.Property(t => t.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(t => t.Specialization).HasColumnName("specialization").HasMaxLength(200).IsRequired();
+                entity.Property(t => t.Bio).HasColumnName("bio").HasMaxLength(1000);
+                entity.Property(t => t.ExperienceYears).HasColumnName("experience_years");
+                entity.Property(t => t.HourlyRate).HasColumnName("hourly_rate").HasColumnType("decimal(18,2)");
+                entity.Property(t => t.Rating).HasColumnName("rating").HasColumnType("decimal(3,2)");
+                entity.Property(t => t.Qualifications).HasColumnName("qualifications").HasMaxLength(1000);
+                entity.Property(t => t.CreatedAt).HasColumnName("created_at");
+                entity.Property(t => t.UpdatedAt).HasColumnName("updated_at");
+
+                entity.HasIndex(t => t.UserId).IsUnique();
+
+                entity.HasOne(t => t.User)
+                    .WithOne(u => u.Therapist)
+                    .HasForeignKey<Therapist>(t => t.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // PATIENTS configuration
+            modelBuilder.Entity<Patient>(entity =>
+            {
+                entity.ToTable("PATIENTS");
+                entity.HasKey(p => p.PatientId);
+                entity.Property(p => p.PatientId).HasColumnName("patient_id");
+                entity.Property(p => p.UserId).HasColumnName("user_id").IsRequired();
+                entity.Property(p => p.EmergencyContactName).HasColumnName("emergency_contact_name").HasMaxLength(200);
+                entity.Property(p => p.EmergencyContactPhone).HasColumnName("emergency_contact_phone").HasMaxLength(20);
+                entity.Property(p => p.MedicalHistory).HasColumnName("medical_history").HasMaxLength(2000);
+                entity.Property(p => p.Notes).HasColumnName("notes").HasMaxLength(2000);
+                entity.Property(p => p.CreatedAt).HasColumnName("created_at");
+                entity.Property(p => p.UpdatedAt).HasColumnName("updated_at");
+
+                entity.HasIndex(p => p.UserId).IsUnique();
+
+                entity.HasOne(p => p.User)
+                    .WithOne(u => u.Patient)
+                    .HasForeignKey<Patient>(p => p.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ASSESSMENTS configuration
+            modelBuilder.Entity<Assessment>(entity =>
+            {
+                entity.ToTable("ASSESSMENTS");
+                entity.HasKey(a => a.AssessmentId);
+                entity.Property(a => a.AssessmentId).HasColumnName("assessment_id");
+                entity.Property(a => a.PatientId).HasColumnName("patient_id").IsRequired();
+                entity.Property(a => a.Title).HasColumnName("title").HasMaxLength(200).IsRequired();
+                entity.Property(a => a.AnswersJson).HasColumnName("answers_json").IsRequired();
+                entity.Property(a => a.Score).HasColumnName("score");
+                entity.Property(a => a.CompletedAt).HasColumnName("completed_at");
+
+                entity.HasOne(a => a.Patient)
+                    .WithMany(p => p.Assessments)
+                    .HasForeignKey(a => a.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

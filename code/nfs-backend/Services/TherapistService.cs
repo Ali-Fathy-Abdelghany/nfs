@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 using nfs.Application.DTOs;
 using nfs.Domain.Entities;
 using nfs.Infrastructure.Repositories;
+=======
+>>>>>>> 357c55b89764eb08da5a380662001a6eb1d85477
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 
 namespace nfs.Application.Services
 {
@@ -254,5 +258,122 @@ namespace nfs.Application.Services
                 }).ToList()
             };
         }
+=======
+using Microsoft.EntityFrameworkCore;
+using NafsApp.Data;
+using NafsApp.DTOs;
+using NafsApp.Models;
+
+namespace NafsApp.Services
+{
+    public class TherapistService : ITherapistService
+    {
+        private readonly AppDbContext _context;
+
+        public TherapistService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync()
+        {
+            return await _context.Therapists
+                .Include(t => t.User)
+                .Select(t => MapToDto(t))
+                .ToListAsync();
+        }
+
+        public async Task<TherapistDto?> GetTherapistByIdAsync(int id)
+        {
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TherapistId == id);
+            return therapist == null ? null : MapToDto(therapist);
+        }
+
+        public async Task<TherapistDto?> GetTherapistByUserIdAsync(int userId)
+        {
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.UserId == userId);
+            return therapist == null ? null : MapToDto(therapist);
+        }
+
+        public async Task<TherapistDto> CreateTherapistAsync(CreateTherapistDto dto)
+        {
+            var user = await _context.Users.FindAsync(dto.UserId);
+            if (user == null)
+            {
+                throw new ArgumentException($"User with ID {dto.UserId} not found.");
+            }
+
+            var existing = await _context.Therapists.AnyAsync(t => t.UserId == dto.UserId);
+            if (existing)
+            {
+                throw new InvalidOperationException($"Therapist profile already exists for User ID {dto.UserId}.");
+            }
+
+            var therapist = new Therapist
+            {
+                UserId = dto.UserId,
+                Specialization = dto.Specialization,
+                Bio = dto.Bio,
+                ExperienceYears = dto.ExperienceYears,
+                HourlyRate = dto.HourlyRate,
+                Qualifications = dto.Qualifications,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            _context.Therapists.Add(therapist);
+            await _context.SaveChangesAsync();
+
+            therapist.User = user;
+            return MapToDto(therapist);
+        }
+
+        public async Task<bool> UpdateTherapistAsync(int id, UpdateTherapistDto dto)
+        {
+            var therapist = await _context.Therapists.FindAsync(id);
+            if (therapist == null) return false;
+
+            therapist.Specialization = dto.Specialization;
+            therapist.Bio = dto.Bio;
+            therapist.ExperienceYears = dto.ExperienceYears;
+            therapist.HourlyRate = dto.HourlyRate;
+            therapist.Qualifications = dto.Qualifications;
+            therapist.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteTherapistAsync(int id)
+        {
+            var therapist = await _context.Therapists.FindAsync(id);
+            if (therapist == null) return false;
+
+            _context.Therapists.Remove(therapist);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        private static TherapistDto MapToDto(Therapist t) => new TherapistDto
+        {
+            TherapistId = t.TherapistId,
+            UserId = t.UserId,
+            FirstName = t.User?.FirstName ?? "",
+            LastName = t.User?.LastName ?? "",
+            Email = t.User?.Email ?? "",
+            Phone = t.User?.Phone,
+            ProfileImageUrl = t.User?.ProfileImageUrl,
+            Specialization = t.Specialization,
+            Bio = t.Bio,
+            ExperienceYears = t.ExperienceYears,
+            HourlyRate = t.HourlyRate,
+            Rating = t.Rating,
+            Qualifications = t.Qualifications,
+            CreatedAt = t.CreatedAt
+        };
+>>>>>>> 357c55b89764eb08da5a380662001a6eb1d85477
     }
 }
