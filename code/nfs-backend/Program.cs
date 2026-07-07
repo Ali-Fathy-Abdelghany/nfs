@@ -65,6 +65,9 @@ namespace NafsApp
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<ITherapistService, TherapistService>();
+            builder.Services.AddScoped<IPatientService, PatientService>();
+            builder.Services.AddScoped<IAssessmentService, AssessmentService>();
 
             builder.Services.AddControllers();
 
@@ -129,7 +132,7 @@ namespace NafsApp
                         db.Database.EnsureDeleted();
                     }
 
-                    db.Database.EnsureCreated();
+                    db.Database.Migrate();
                     SeedDatabase(db);
                 }
                 catch (Exception ex)
