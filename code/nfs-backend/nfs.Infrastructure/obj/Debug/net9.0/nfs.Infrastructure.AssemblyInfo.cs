@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("nfs.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28ec7b12c3b90e27c6c1b0888e49f2daabea87c0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da966430f011c30df0a08a383e5adab953f953c1")]
 [assembly: System.Reflection.AssemblyProductAttribute("nfs.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("nfs.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
