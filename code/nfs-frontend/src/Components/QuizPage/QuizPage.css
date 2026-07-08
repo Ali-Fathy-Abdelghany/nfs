@@ -1,0 +1,680 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+/* ==========================================================================
+   التنسيق العام وإجبار الخط الأساسي للمشروع
+   ========================================================================== */
+.quiz-container, 
+.quiz-container * {
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.quiz-container {
+  max-width: 850px; 
+  margin: 60px auto;
+  padding: 40px 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  direction: rtl;
+}
+
+/* ==========================================================================
+   شريط التقدم العلوي (Progress Bar)
+   ========================================================================== */
+.quiz-progress-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 35px;
+}
+
+.progress-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.current-step-text {
+  color: var(--primary-color); 
+}
+
+.remaining-text {
+  color: #94a3b8;
+}
+
+.quiz-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background-color: #f1f5f9;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.quiz-progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: 20px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+/* ==========================================================================
+   نصوص رأس السؤال
+   ========================================================================== */
+.quiz-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.quiz-header-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.quiz-question-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.quiz-question-subtitle {
+  margin: 0;
+  font-size: 14.5px;
+  color: #64748b;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   نظام شبكة البوكسات الكبيرة (Grid System)
+   ========================================================================== */
+.session-types-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 20px;
+  width: 100%;
+}
+
+
+.session-type-card {
+  background-color: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 26px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+}
+
+.session-type-card:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-4px); 
+  background-color: #f1f5f9;
+}
+
+
+.session-type-card.active {
+  border-color: var(--primary-color) !important;
+  background-color: rgba(15, 118, 110, 0.04) !important;
+}
+
+
+.session-card-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  background-color: rgba(15, 118, 110, 0.08);
+  color: var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+  transition: all 0.2s ease;
+}
+
+.session-type-card.active .session-card-icon-wrapper {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+
+.session-card-title {
+  margin: 0 0 10px 0;
+  font-size: 16.5px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.session-card-desc {
+  margin: 0 0 24px 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  font-weight: 600;
+  flex-grow: 1; 
+}
+
+
+.select-session-inside-btn {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.session-type-card:hover .select-session-inside-btn {
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.session-type-card.active .select-session-inside-btn {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   جزء "تحدث مع منسق الحالة" أسفل الصفحة
+   ========================================================================== */
+.not-sure-footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+  padding-top: 20px;
+  border-top: 1px dashed #e2e8f0;
+  font-size: 14px;
+}
+
+.not-sure-text {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.coordinator-link {
+  color: var(--primary-color);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.coordinator-link:hover {
+  color: #0d665f;
+  border-bottom-style: solid;
+}
+
+/* ==========================================================================
+   أزرار التنقل السفلى الثابتة (السابق / التالي)
+   ========================================================================== */
+.quiz-navigation-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 25px;
+}
+
+.quiz-nav-btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.prev-btn {
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+.next-btn {
+  background-color: var(--primary-color);
+  border: none;
+  color: #ffffff;
+}
+
+.next-btn:hover:not(:disabled) {
+  background-color: #0d665f;
+}
+
+.quiz-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   📱 التجاوب مع شاشات الموبايل (Responsive)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .quiz-container {
+    margin: 20px 15px;
+    padding: 25px 20px;
+  }
+  
+  .session-types-grid {
+    grid-template-columns: 1fr; 
+    gap: 16px;
+  }
+  
+  .quiz-question-title {
+    font-size: 19px;
+  }
+}
+
+.session-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+
+.quiz-info-gradient-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 15px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.07) 0%, rgba(255, 255, 255, 1) 100%);
+  border: 1px solid rgba(15, 118, 110, 0.15);
+  border-radius: 14px;
+  text-align: right;
+}
+
+.info-box-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.info-box-text {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--primary-color);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+
+@media (max-width: 600px) {
+  .quiz-info-gradient-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+  }
+}
+/* ==========================================================================
+   تنسيق خط الأعداد الممتد (السؤال الثالث)
+   ========================================================================== */
+.quiz-scale-timeline-container {
+  position: relative;
+  width: 100%;
+  padding: 40px 10px;
+  margin: 10px 0;
+}
+
+
+.timeline-connecting-line {
+  position: absolute;
+  top: 52px; 
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: #e2e8f0;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+.timeline-steps-wrapper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+
+.timeline-step-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  width: 22%; 
+  text-align: center;
+}
+
+
+.node-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 0 4px #ffffff; 
+}
+
+.node-inner-dot {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+
+.node-label-text {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 700;
+  line-height: 1.4;
+  transition: all 0.25s ease;
+}
+
+
+.timeline-step-node:hover .node-circle {
+  border-color: #94a3b8;
+  transform: scale(1.1);
+}
+
+
+.timeline-step-node.active .node-circle {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  box-shadow: 0 0 0 6px rgba(15, 118, 110, 0.15), 0 0 0 4px #ffffff;
+}
+
+.timeline-step-node.active .node-inner-dot {
+  background-color: #ffffff;
+}
+
+.timeline-step-node.active .node-label-text {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+
+@media (max-width: 640px) {
+  .quiz-scale-timeline-container {
+    padding: 10px 20px;
+  }
+  
+  .timeline-connecting-line {
+    top: 0;
+    bottom: 0;
+    right: 32px; 
+    left: auto;
+    width: 4px;
+    height: auto;
+  }
+  
+  .timeline-steps-wrapper {
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  
+  .timeline-step-node {
+    flex-direction: row;
+    width: 100%;
+    text-align: right;
+    gap: 20px;
+  }
+  
+  .node-circle {
+    box-shadow: 0 0 0 4px #ffffff;
+  }
+}
+/* ==========================================================================
+   ستايل بوكس المرآة الفاخر (السؤال الرابع)
+   ========================================================================= */
+.quiz-mirror-gradient-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 15px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(15, 118, 110, 0.04) 100%);
+  border: 1px solid rgba(15, 118, 110, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.01);
+}
+
+.mirror-box-text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+}
+
+.mirror-box-tag {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+}
+
+.mirror-box-text {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.mirror-box-image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--primary-color);
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.06);
+}
+
+.mirror-svg-art {
+  animation: mirrorFloat 4s ease-in-out infinite;
+}
+
+
+@keyframes mirrorFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+
+@media (max-width: 600px) {
+  .quiz-mirror-gradient-box {
+    flex-direction: column-reverse; 
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 16px;
+  }
+  
+  .mirror-box-text-content {
+    text-align: center;
+  }
+}
+
+/* ==========================================================================
+   تنسيق تخطيط النوم المنقسم (السؤال الخامس والأخير)
+   ========================================================================== */
+.quiz-sleep-split-layout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+.sleep-quiz-interactive-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.unique-right-align {
+  text-align: right !important;
+}
+
+
+.sleep-rating-row-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 420px;
+}
+
+
+.sleep-rating-node-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+
+.rating-number-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: #f8fafc;
+  border: 2px solid #e2e8f0;
+  color: #475569;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+}
+
+
+.rating-desc-label {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 700;
+  position: absolute;
+  top: 56px;
+  white-space: nowrap;
+}
+
+
+.sleep-rating-node-box:hover .rating-number-bubble {
+  border-color: #cbd5e1;
+  background-color: #f1f5f9;
+  color: #1e293b;
+  transform: translateY(-2px);
+}
+
+
+.sleep-rating-node-box.active .rating-number-bubble {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25);
+}
+
+.sleep-rating-node-box.active .rating-desc-label {
+  color: var(--primary-color);
+  font-weight: 800;
+}
+
+
+.sleep-quiz-art-side {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sleep-illustration-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(15, 118, 110, 0.03) 100%);
+  border: 1px solid #f1f5f9;
+  padding: 35px 50px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01);
+}
+
+.sleeping-avatar-svg {
+  color: var(--primary-color);
+  animation: gentleSleep Float 5s ease-in-out infinite;
+}
+
+.sleeping-art-subtext {
+  font-size: 12.5px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+
+@keyframes gentleSleep {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+
+
+@media (max-width: 768px) {
+  .quiz-sleep-split-layout {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .sleep-quiz-interactive-side {
+    width: 100%;
+    align-items: center;
+  }
+  
+  .unique-right-align {
+    text-align: center !important;
+  }
+  
+  .sleep-rating-row-wrapper {
+    margin-bottom: 20px;
+  }
+}

@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: "Cairo", sans-serif;
+}
+
+:root {
+  --primary-color: #0f766e;
+
+  --primary-light: rgba(15, 118, 110, 0.1);
+}

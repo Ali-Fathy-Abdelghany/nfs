@@ -1,0 +1,79 @@
+.profile-custom-footer {
+  width: 100%;
+  height: 75px;
+  background-color: #ffffff;
+  border-top: 1px solid #eaeaea;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.profile-custom-footer .footer-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+}
+
+.footer-price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.price-label {
+  font-size: 13px;
+  color: #888888;
+  font-weight: 400;
+}
+
+.price-value-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  padding-right: 4px;
+}
+
+.price-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.currency {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.book-now-btn {
+  background: linear-gradient(330deg, var(--primary-color) 0%, #a4e5da 100%);
+
+  color: white;
+
+  outline: none;
+  border: none;
+  padding: 10px 32px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.book-now-btn:hover {
+  transform: translateY(-1px);
+}
+
+.book-now-btn:active {
+  transform: translateY(1px);
+}

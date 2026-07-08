@@ -1,0 +1,39 @@
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.AssemblyInfo.cs
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.deps.json
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.runtimeconfig.json
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infr.B6F4AB21.Up2Date
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\refint\nfs.Infrastructure.dll
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.pdb
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.genruntimeconfig.cache
+C:\Users\Mega Store\source\repos\nfs\nfs.Infrastructure\obj\Debug\net9.0\ref\nfs.Infrastructure.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.deps.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.runtimeconfig.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Infrastructure.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Application.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Domain.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Application.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\bin\Debug\net9.0\nfs.Domain.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.AssemblyInfo.cs
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.sourcelink.json
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infr.B6F4AB21.Up2Date
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\refint\nfs.Infrastructure.dll
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.pdb
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\nfs.Infrastructure.genruntimeconfig.cache
+C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Infrastructure\obj\Debug\net9.0\ref\nfs.Infrastructure.dll
