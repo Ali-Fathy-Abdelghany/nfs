@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using nfs.Application.Interfaces;
-using nfs.Domain.Entities;
-using nfs.Infrastructure.Data;
+using NFS.Application.Interfaces;
+using NFS.Domain.Entities;
+using NFS.Infrastructure.Data;
 
-namespace nfs.Infrastructure.Repositories
+namespace NFS.Infrastructure.Repositories
 {
     public class AppointmentRepository : IAppointmentRepository
     {
@@ -21,7 +21,7 @@ namespace nfs.Infrastructure.Repositories
             var slot = await _context.AvailabilitySlots.FindAsync(appointment.SlotId);
             if (slot != null)
             {
-                slot.IsBooked = true; // خلاص مابقاش متاح!
+                slot.IsBooked = true;
             }
 
             await _context.SaveChangesAsync();
@@ -30,7 +30,7 @@ namespace nfs.Infrastructure.Repositories
         public async Task<Appointment?> GetAppointmentByIdAsync(int id)
         {
             return await _context.Appointments
-                .Include(a => a.Session) // لو عايزة تجيبي بيانات الجلسة المرتبطة بالموعد فوراً
+                .Include(a => a.Session)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -77,7 +77,7 @@ namespace nfs.Infrastructure.Repositories
         public async Task<IEnumerable<AvailabilitySlot>> GetAvailableSlotsByDoctorIdAsync(int doctorId)
         {
             return await _context.AvailabilitySlots
-                .Where(slot => slot.DoctorId == doctorId && slot.IsBooked == false) // الفترات التابعة للدكتور وغير المحجوزة فقط
+                .Where(slot => slot.DoctorId == doctorId && slot.IsBooked == false)
                 .ToListAsync();
         }
     }

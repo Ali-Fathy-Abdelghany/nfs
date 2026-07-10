@@ -1,6 +1,6 @@
-@nfs.API_HostAddress = http://localhost:5148
+@NFS.API_HostAddress = http://localhost:5148
 
-GET {{nfs.API_HostAddress}}/weatherforecast/
+GET {{NFS.API_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

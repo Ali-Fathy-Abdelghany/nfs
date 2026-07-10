@@ -1,34 +1,39 @@
-## Build results
+# Build
 bin/
 obj/
-out/
 
-## Visual Studio / Rider
+# Visual Studio
 .vs/
+.vscode/
+
+# Rider
+.idea/
+
+# User files
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
-*.csproj.user
 
-## User-specific settings
-appsettings.Development.json
-appsettings.Local.json
-*.local.json
+# Logs
+*.log
 
-## OS
+# Temp
+*.tmp
+*.temp
+
+# NuGet
+*.nupkg
+
+# Publish
+publish/
+
+# Test
+TestResults/
+
+# OS
 .DS_Store
 Thumbs.db
 
-## Logs
-*.log
-
-## NuGet
-*.nupkg
-project.lock.json
-
-## Postman local workspace (keep collection, ignore IDE metadata)
-.postman/
-
-## Archives
-*.zip
+# Secrets
+appsettings.Development.json

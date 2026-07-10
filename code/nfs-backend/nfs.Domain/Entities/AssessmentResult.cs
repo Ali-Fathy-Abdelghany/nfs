@@ -1,37 +1,19 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace nfs.Domain.Entities
+namespace NFS.Domain.Entities
 {
     public class AssessmentResult
     {
-        [Key]
-        public int Id { get; set; }
+        public int AssessmentResultId { get; set; }
 
-        [Required]
         public int AssessmentId { get; set; }
+        public Assessment? Assessment { get; set; }
 
-        [Required]
-        [MaxLength(200)]
-        public string QuestionText { get; set; }
+        public int PatientId { get; set; }
+        public Patient? Patient { get; set; }
 
-        [Required]
-        public int QuestionNumber { get; set; }
+        public string AnswersJson { get; set; } = string.Empty;
 
-        [Required]
-        public int AnswerScore { get; set; }
+        public DateTime TakenAt { get; set; } = DateTime.Now;
 
-        [MaxLength(500)]
-        public string? AnswerText { get; set; }
-
-        [MaxLength(100)]
-        public string? Category { get; set; } // For categorizing questions in complex assessments
-
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        // Navigation properties
-        [ForeignKey("AssessmentId")]
-        public Assessment Assessment { get; set; }
+        public string? ResultSummary { get; set; }
     }
 }

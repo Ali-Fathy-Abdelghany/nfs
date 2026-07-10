@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace nfs.Domain.Entities
+namespace NFS.Domain.Entities
 {
     public class SessionNote
     {
@@ -9,16 +9,14 @@ namespace nfs.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int SessionId { get; set; } // الملاحظات دي تابعة لأي جلسة؟
+        public int SessionId { get; set; }
 
-        [ForeignKey("SessionId")]
-        public Session Session { get; set; }
+        [ForeignKey(nameof(SessionId))]
+        public Session? Session { get; set; }
 
-        [Required]
-        public int DoctorId { get; set; } // الطبيب اللي كتب الملاحظة للأمان
+        public int DoctorId { get; set; }
 
-        [Required]
-        public string? NoteText { get; set; } // نص التقرير والملاحظات النفسية (بدون تحديد طول لأنه قد يكون طويل جداً)
+        public string NoteText { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

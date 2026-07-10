@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace nfs.Domain.Entities
+namespace NFS.Domain.Entities
 {
     public class AvailabilitySlot
     {

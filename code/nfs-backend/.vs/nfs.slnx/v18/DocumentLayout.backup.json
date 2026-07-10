@@ -3,8 +3,100 @@
   "WorkspaceRootPath": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4E271C84-AD6E-38CC-1DE9-6C860B450A4B}|nfs.API\\nfs.API.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E271C84-AD6E-38CC-1DE9-6C860B450A4B}|nfs.API\\nfs.API.csproj|solutionrelative:nfs.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\nfs.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\nfs.domain.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.infrastructure\\nfs.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|solutionrelative:nfs.infrastructure\\nfs.infrastructure.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\nfs.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\nfs.application.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E271C84-AD6E-38CC-1DE9-6C860B450A4B}|nfs.API\\nfs.API.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.api\\nfs.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4E271C84-AD6E-38CC-1DE9-6C860B450A4B}|nfs.API\\nfs.API.csproj|solutionrelative:nfs.api\\nfs.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.infrastructure\\migrations\\20260705170514_initialcreate.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|solutionrelative:nfs.infrastructure\\migrations\\20260705170514_initialcreate.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{13D7BD28-77A2-6168-900C-CC0355736828}|nfs.Infrastructure\\nfs.Infrastructure.csproj|solutionrelative:nfs.infrastructure\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\services\\assessmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\services\\assessmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\interfaces\\data\\iapplicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\interfaces\\data\\iapplicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\interfaces\\services\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\interfaces\\services\\itokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\dtos\\auth\\updateprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\dtos\\auth\\updateprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\dtos\\auth\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\dtos\\auth\\registerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\services\\therapistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\services\\therapistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.application\\interfaces\\services\\itherapistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A7CEBE57-3ED9-F229-7ACD-2106DE89ACDD}|nfs.Application\\nfs.Application.csproj|solutionrelative:nfs.application\\interfaces\\services\\itherapistservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\therapistspecialization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\therapistspecialization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\specialization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\specialization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\therapist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\therapist.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\role.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\userrolemapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\userrolemapping.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\enums\\gender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\enums\\gender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\patient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\assessmentresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\assessmentresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\assessment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\assessment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|c:\\users\\mega store\\desktop\\depi\\final project\\nfs\\code\\nfs-backend\\nfs.domain\\entities\\patientmedicalhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2162295-6DAE-BF22-90B9-CC7FE633FE06}|nfs.Domain\\nfs.Domain.csproj|solutionrelative:nfs.domain\\entities\\patientmedicalhistory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,19 +106,318 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "nfs.Infrastructure.csproj",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Infrastructure\\nfs.Infrastructure.csproj",
+              "RelativeDocumentMoniker": "nfs.Infrastructure\\nfs.Infrastructure.csproj",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Infrastructure\\nfs.Infrastructure.csproj",
+              "RelativeToolTip": "nfs.Infrastructure\\nfs.Infrastructure.csproj",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-08T14:46:37.462Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.API\\Program.cs",
-              "RelativeDocumentMoniker": "nfs.API\\Program.cs",
-              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.API\\Program.cs",
-              "RelativeToolTip": "nfs.API\\Program.cs",
+              "Title": "nfs.Domain.csproj",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Domain\\nfs.Domain.csproj",
+              "RelativeDocumentMoniker": "nfs.Domain\\nfs.Domain.csproj",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Domain\\nfs.Domain.csproj",
+              "RelativeToolTip": "nfs.Domain\\nfs.Domain.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-08T14:57:05.685Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "nfs.Application.csproj",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Application\\nfs.Application.csproj",
+              "RelativeDocumentMoniker": "nfs.Application\\nfs.Application.csproj",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Application\\nfs.Application.csproj",
+              "RelativeToolTip": "nfs.Application\\nfs.Application.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-08T14:31:14.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "nfs.API.csproj",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.API\\nfs.API.csproj",
+              "RelativeDocumentMoniker": "nfs.API\\nfs.API.csproj",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.API\\nfs.API.csproj",
+              "RelativeToolTip": "nfs.API\\nfs.API.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-08T14:56:25.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "20260705170514_InitialCreate.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Infrastructure\\Migrations\\20260705170514_InitialCreate.Designer.cs",
+              "RelativeDocumentMoniker": "NFS.Infrastructure\\Migrations\\20260705170514_InitialCreate.Designer.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Infrastructure\\Migrations\\20260705170514_InitialCreate.Designer.cs",
+              "RelativeToolTip": "NFS.Infrastructure\\Migrations\\20260705170514_InitialCreate.Designer.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwA8AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-05T23:09:59.764Z",
+              "WhenOpened": "2026-07-08T14:54:41.342Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "NFS.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "NFS.Infrastructure\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:42:58.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AssessmentService.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Services\\AssessmentService.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\Services\\AssessmentService.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Services\\AssessmentService.cs",
+              "RelativeToolTip": "NFS.Application\\Services\\AssessmentService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAA0AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:35:26.654Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "IApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Data\\IApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\Interfaces\\Data\\IApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Data\\IApplicationDbContext.cs",
+              "RelativeToolTip": "NFS.Application\\Interfaces\\Data\\IApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:42:20.178Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ITokenService.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Services\\ITokenService.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\Interfaces\\Services\\ITokenService.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Services\\ITokenService.cs",
+              "RelativeToolTip": "NFS.Application\\Interfaces\\Services\\ITokenService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:33:04.298Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "UpdateProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\DTOs\\Auth\\UpdateProfileDto.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\DTOs\\Auth\\UpdateProfileDto.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\DTOs\\Auth\\UpdateProfileDto.cs",
+              "RelativeToolTip": "NFS.Application\\DTOs\\Auth\\UpdateProfileDto.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAADwvyAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:32:27.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\User.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\User.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\User.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAUwCUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T11:59:54.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RegisterDto.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\DTOs\\Auth\\RegisterDto.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\DTOs\\Auth\\RegisterDto.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\DTOs\\Auth\\RegisterDto.cs",
+              "RelativeToolTip": "NFS.Application\\DTOs\\Auth\\RegisterDto.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAuwC0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T14:31:46.139Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ITherapistService.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Services\\ITherapistService.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\Interfaces\\Services\\ITherapistService.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Interfaces\\Services\\ITherapistService.cs",
+              "RelativeToolTip": "NFS.Application\\Interfaces\\Services\\ITherapistService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAmwA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:22:19.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TherapistService.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Services\\TherapistService.cs",
+              "RelativeDocumentMoniker": "NFS.Application\\Services\\TherapistService.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Application\\Services\\TherapistService.cs",
+              "RelativeToolTip": "NFS.Application\\Services\\TherapistService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:19:10.412Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "TherapistSpecialization.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\TherapistSpecialization.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\TherapistSpecialization.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\TherapistSpecialization.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\TherapistSpecialization.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAzwAkAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:07:29.224Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "Specialization.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Specialization.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\Specialization.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Specialization.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\Specialization.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:08:15.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Therapist.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Therapist.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\Therapist.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Therapist.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\Therapist.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAuwCoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:06:36.911Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "Role.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Role.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\Role.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Role.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\Role.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAYwA4AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:06:24.958Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "Gender.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Enums\\Gender.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Enums\\Gender.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Enums\\Gender.cs",
+              "RelativeToolTip": "NFS.Domain\\Enums\\Gender.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:03:52.407Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "UserRoleMapping.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\UserRoleMapping.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\UserRoleMapping.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\UserRoleMapping.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\UserRoleMapping.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T12:01:18.041Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Patient.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Patient.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\Patient.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Patient.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\Patient.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAiwAoAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T11:57:19.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "Assessment.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Assessment.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\Assessment.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\Assessment.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\Assessment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T11:52:12.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "AssessmentResult.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\AssessmentResult.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\AssessmentResult.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\AssessmentResult.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\AssessmentResult.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwBMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T11:44:13.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "PatientMedicalHistory.cs",
+              "DocumentMoniker": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\PatientMedicalHistory.cs",
+              "RelativeDocumentMoniker": "NFS.Domain\\Entities\\PatientMedicalHistory.cs",
+              "ToolTip": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\NFS.Domain\\Entities\\PatientMedicalHistory.cs",
+              "RelativeToolTip": "NFS.Domain\\Entities\\PatientMedicalHistory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-08T11:48:27.848Z",
               "EditorCaption": ""
             }
           ]

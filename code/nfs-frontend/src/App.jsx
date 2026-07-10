@@ -23,10 +23,10 @@ function App() {
       {/* <PatientProfile /> */}
       {/* <Patients /> */}
       {/* <TimeTable /> */}
-      {/* <Chats /> */}
+      <Chats />
       {/* <Library /> */}
       {/* <Analysis /> */}
-      <QuizPage />
+      {/* <QuizPage /> */}
     </div>
   );
 }

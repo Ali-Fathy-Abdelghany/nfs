@@ -1,8 +1,7 @@
-﻿using nfs.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace nfs.Domain.Entities
+namespace NFS.Domain.Entities
 {
     public class Appointment
     {
@@ -18,8 +17,8 @@ namespace nfs.Domain.Entities
         [Required]
         public int SlotId { get; set; }
 
-        [ForeignKey("SlotId")]
-        public AvailabilitySlot AvailabilitySlot { get; set; }
+        [ForeignKey(nameof(SlotId))]
+        public AvailabilitySlot? AvailabilitySlot { get; set; }
 
         [Required]
         [MaxLength(20)]

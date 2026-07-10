@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using nfs.Application.DTOs;
-using nfs.Application.Interfaces;
-using nfs.Domain.Entities;
+using NFS.Application.DTOs;
+using NFS.Application.Interfaces;
+using NFS.Domain.Entities;
 
-namespace nfs.API.Controllers
+namespace NFS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,4 +1,4 @@
-namespace nfs.Domain.Enums
+namespace NFS.Domain.Enums
 {
     public enum AssessmentStatus
     {

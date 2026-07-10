@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace nfs.Domain.Entities
+namespace NFS.Domain.Entities
 {
     public class Session
     {
@@ -9,20 +9,19 @@ namespace nfs.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int AppointmentId { get; set; } // ربط مع جدول الحجوزات
+        public int AppointmentId { get; set; }
 
-        [ForeignKey("AppointmentId")]
-        public Appointment Appointment { get; set; }
+        [ForeignKey(nameof(AppointmentId))]
+        public Appointment? Appointment { get; set; }
 
-        public DateTime? ActualStartTime { get; set; } // وقت البداية الفعلي (علامة الاستفهام تعني أنه يمكن أن يكون null قبل تبدأ الجلسة)
-
-        public DateTime? ActualEndTime { get; set; } // وقت النهاية الفعلي
+        public DateTime? ActualStartTime { get; set; }
+        public DateTime? ActualEndTime { get; set; }
 
         [MaxLength(500)]
-        public string MeetingLink { get; set; } // رابط غرفة الفيديو (مثل Zoom أو WebRTC)
+        public string MeetingLink { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(20)]
-        public string Status { get; set; } = "Scheduled"; // حالة الجلسة (Scheduled, Active, Completed)
+        public string Status { get; set; } = "Scheduled";
     }
 }

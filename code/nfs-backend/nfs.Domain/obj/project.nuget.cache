@@ -1,12 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "20IgFmE0HKk=",
+  "dgSpecHash": "AeS++joPujQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Mega Store\\Desktop\\DEPI\\final project\\nfs\\code\\nfs-backend\\nfs.Domain\\nfs.Domain.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Mega Store\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.14\\microsoft.windowsdesktop.app.ref.9.0.14.nupkg.sha512",
-    "C:\\Users\\Mega Store\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.14\\microsoft.netcore.app.ref.9.0.14.nupkg.sha512",
-    "C:\\Users\\Mega Store\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.14\\microsoft.aspnetcore.app.ref.9.0.14.nupkg.sha512"
-  ],
+  "projectFilePath": "F:\\Tasks\\nfs\\code\\nfs-backend\\nfs-backend\\NFS.Domain\\NFS.Domain.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

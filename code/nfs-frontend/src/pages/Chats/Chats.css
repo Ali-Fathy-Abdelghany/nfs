@@ -92,6 +92,26 @@
   border-radius: 50%;
   background-color: #b91c1c; /* Solid Red-Brown from Figma */
   box-shadow: inset 0 0 0 2px #ffffff, 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.user-avatar-image,
+.chat-msg-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.user-avatar-fallback {
+  line-height: 1;
 }
 
 /* Main Layout Area */
@@ -364,6 +384,14 @@
   align-items: center;
   justify-content: center;
   font-size: 22px;
+  overflow: hidden;
+}
+
+.chat-header-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .chat-header-meta {
@@ -457,6 +485,7 @@
   font-size: 18px;
   flex-shrink: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
 .chat-msg-content {
@@ -754,4 +783,59 @@
     align-items: flex-start;
     gap: 12px;
   }
+}
+
+/* ── Sidebar Group / DM toggle ───────────────────────────────────────────── */
+.sidebar-mode-toggle {
+  display: flex;
+  gap: 8px;
+  background-color: #f1f5f9;
+  border-radius: 14px;
+  padding: 4px;
+}
+
+.sidebar-mode-btn {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.sidebar-mode-btn.active {
+  background-color: #0f766e;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
+}
+
+.sidebar-mode-btn:not(.active):hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+.dm-card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dm-card-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }

@@ -1,31 +1,27 @@
 using Microsoft.EntityFrameworkCore;
-using nfs.Domain.Entities;
-using nfs.Infrastructure.Data;
+using NFS.Domain.Entities;
+using NFS.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace nfs.Infrastructure.Repositories
+namespace NFS.Infrastructure.Repositories
 {
     public interface IAssessmentRepository
     {
-        Task<Assessment> GetAssessmentByIdAsync(int id);
+        Task<Assessment?> GetAssessmentByIdAsync(int id);
         Task<List<Assessment>> GetPatientAssessmentsAsync(int patientId);
         Task<List<Assessment>> GetTherapistAssessmentsAsync(int therapistId);
-        Task<List<Assessment>> GetAssessmentsByStatusAsync(string status);
-        Task<List<Assessment>> GetPendingAssessmentsAsync();
-        Task<List<Assessment>> GetCompletedAssessmentsAsync();
         Task<Assessment> CreateAssessmentAsync(Assessment assessment);
         Task<Assessment> UpdateAssessmentAsync(Assessment assessment);
         Task<bool> DeleteAssessmentAsync(int id);
         Task<bool> ExistsAsync(int id);
         Task<AssessmentResult> AddAssessmentResultAsync(AssessmentResult result);
         Task<List<AssessmentResult>> GetAssessmentResultsAsync(int assessmentId);
-        Task<AssessmentResult> GetAssessmentResultByIdAsync(int id);
+        Task<AssessmentResult?> GetAssessmentResultByIdAsync(int id);
         Task<bool> DeleteAssessmentResultAsync(int id);
         Task<int> GetAssessmentResultCountAsync(int assessmentId);
-        Task<List<Assessment>> GetAssessmentsByTypeAsync(string assessmentType);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -37,13 +33,13 @@ namespace nfs.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Assessment> GetAssessmentByIdAsync(int id)
+        public async Task<Assessment?> GetAssessmentByIdAsync(int id)
         {
             return await _context.Assessments
                 .Include(a => a.Patient)
                 .Include(a => a.Therapist)
                 .Include(a => a.Results)
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.AssessmentId == id);
         }
 
         public async Task<List<Assessment>> GetPatientAssessmentsAsync(int patientId)
@@ -53,7 +49,7 @@ namespace nfs.Infrastructure.Repositories
                 .Include(a => a.Therapist)
                 .Include(a => a.Results)
                 .Where(a => a.PatientId == patientId)
-                .OrderByDescending(a => a.AssessmentDate)
+                .OrderByDescending(a => a.CompletedAt)
                 .ToListAsync();
         }
 
@@ -64,47 +60,13 @@ namespace nfs.Infrastructure.Repositories
                 .Include(a => a.Therapist)
                 .Include(a => a.Results)
                 .Where(a => a.TherapistId == therapistId)
-                .OrderByDescending(a => a.AssessmentDate)
-                .ToListAsync();
-        }
-
-        public async Task<List<Assessment>> GetAssessmentsByStatusAsync(string status)
-        {
-            return await _context.Assessments
-                .Include(a => a.Patient)
-                .Include(a => a.Therapist)
-                .Include(a => a.Results)
-                .Where(a => a.Status == status)
-                .OrderByDescending(a => a.AssessmentDate)
-                .ToListAsync();
-        }
-
-        public async Task<List<Assessment>> GetPendingAssessmentsAsync()
-        {
-            return await _context.Assessments
-                .Include(a => a.Patient)
-                .Include(a => a.Therapist)
-                .Include(a => a.Results)
-                .Where(a => a.Status == "Pending")
-                .OrderByDescending(a => a.AssessmentDate)
-                .ToListAsync();
-        }
-
-        public async Task<List<Assessment>> GetCompletedAssessmentsAsync()
-        {
-            return await _context.Assessments
-                .Include(a => a.Patient)
-                .Include(a => a.Therapist)
-                .Include(a => a.Results)
-                .Where(a => a.Status == "Completed")
-                .OrderByDescending(a => a.AssessmentDate)
+                .OrderByDescending(a => a.CompletedAt)
                 .ToListAsync();
         }
 
         public async Task<Assessment> CreateAssessmentAsync(Assessment assessment)
         {
-            assessment.AssessmentDate = DateTime.UtcNow;
-            assessment.CreatedAt = DateTime.UtcNow;
+            assessment.CompletedAt = DateTime.UtcNow;
             _context.Assessments.Add(assessment);
             await _context.SaveChangesAsync();
             return assessment;
@@ -112,7 +74,6 @@ namespace nfs.Infrastructure.Repositories
 
         public async Task<Assessment> UpdateAssessmentAsync(Assessment assessment)
         {
-            assessment.UpdatedAt = DateTime.UtcNow;
             _context.Assessments.Update(assessment);
             await _context.SaveChangesAsync();
             return assessment;
@@ -131,12 +92,11 @@ namespace nfs.Infrastructure.Repositories
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _context.Assessments.AnyAsync(a => a.Id == id);
+            return await _context.Assessments.AnyAsync(a => a.AssessmentId == id);
         }
 
         public async Task<AssessmentResult> AddAssessmentResultAsync(AssessmentResult result)
         {
-            result.CreatedAt = DateTime.UtcNow;
             _context.AssessmentResults.Add(result);
             await _context.SaveChangesAsync();
             return result;
@@ -146,13 +106,13 @@ namespace nfs.Infrastructure.Repositories
         {
             return await _context.AssessmentResults
                 .Where(ar => ar.AssessmentId == assessmentId)
-                .OrderBy(ar => ar.QuestionNumber)
+                .OrderBy(ar => ar.AssessmentResultId)
                 .ToListAsync();
         }
 
-        public async Task<AssessmentResult> GetAssessmentResultByIdAsync(int id)
+        public async Task<AssessmentResult?> GetAssessmentResultByIdAsync(int id)
         {
-            return await _context.AssessmentResults.FirstOrDefaultAsync(ar => ar.Id == id);
+            return await _context.AssessmentResults.FirstOrDefaultAsync(ar => ar.AssessmentResultId == id);
         }
 
         public async Task<bool> DeleteAssessmentResultAsync(int id)
@@ -170,17 +130,6 @@ namespace nfs.Infrastructure.Repositories
         {
             return await _context.AssessmentResults
                 .CountAsync(ar => ar.AssessmentId == assessmentId);
-        }
-
-        public async Task<List<Assessment>> GetAssessmentsByTypeAsync(string assessmentType)
-        {
-            return await _context.Assessments
-                .Include(a => a.Patient)
-                .Include(a => a.Therapist)
-                .Include(a => a.Results)
-                .Where(a => a.AssessmentType == assessmentType)
-                .OrderByDescending(a => a.AssessmentDate)
-                .ToListAsync();
         }
     }
 }

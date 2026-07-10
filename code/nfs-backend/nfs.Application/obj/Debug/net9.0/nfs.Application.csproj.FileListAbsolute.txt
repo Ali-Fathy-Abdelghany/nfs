@@ -1,31 +1,52 @@
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.deps.json
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Domain.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\bin\Debug\net9.0\nfs.Domain.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\refint\nfs.Application.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.Application\obj\Debug\net9.0\ref\nfs.Application.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.deps.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Domain.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\bin\Debug\net9.0\nfs.Domain.pdb
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
 C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.sourcelink.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\refint\nfs.Application.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.Application\obj\Debug\net9.0\ref\nfs.Application.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.deps.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Domain.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Domain.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\refint\nfs.Application.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\ref\nfs.Application.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.deps.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\NFS.Domain.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\NFS.Domain.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\refint\nfs.Application.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\ref\nfs.Application.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.deps.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\nfs.Application.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\NFS.Domain.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\bin\Debug\net9.0\NFS.Domain.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.AssemblyReference.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfoInputs.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.AssemblyInfo.cs
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.csproj.CoreCompileInputs.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.sourcelink.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Appl.1CAA3C58.Up2Date
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\refint\nfs.Application.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\nfs.Application.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.Application\obj\Debug\net9.0\ref\nfs.Application.dll

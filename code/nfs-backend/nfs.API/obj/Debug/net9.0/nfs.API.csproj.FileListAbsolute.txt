@@ -1,349 +1,360 @@
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.csproj.AssemblyReference.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\rpswa.dswa.cache.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.AssemblyInfoInputs.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.AssemblyInfo.cs
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.csproj.CoreCompileInputs.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\appsettings.Development.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\appsettings.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.staticwebassets.endpoints.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.exe
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.deps.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.runtimeconfig.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.API.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Azure.Core.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Azure.Identity.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Humanizer.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Build.Locator.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Design.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Identity.Client.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Identity.Client.Extensions.Msal.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.OpenApi.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Mono.TextTemplating.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.ClientModel.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.CodeDom.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Composition.AttributedModel.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Composition.Convention.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Composition.Hosting.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Composition.Runtime.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Composition.TypedParts.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Drawing.Common.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Memory.Data.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Runtime.Caching.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Security.Permissions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Text.Json.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\System.Windows.Extensions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Domain.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Infrastructure.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Infrastructure.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\nfs.Domain.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\scopedcss\bundle\nfs.API.styles.css
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\staticwebassets.build.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\staticwebassets.build.json.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\staticwebassets.development.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\swae.build.ex.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.csproj.Up2Date
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\refint\nfs.API.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.pdb
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\nfs.API.genruntimeconfig.cache
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\ref\nfs.API.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\Mega Store\source\repos\nfs\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\appsettings.Development.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\appsettings.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.staticwebassets.endpoints.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.exe
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.deps.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.runtimeconfig.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.API.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Azure.Core.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Azure.Identity.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Humanizer.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Build.Locator.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Design.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Identity.Client.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Identity.Client.Extensions.Msal.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.OpenApi.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Mono.TextTemplating.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.ClientModel.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.CodeDom.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Composition.AttributedModel.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Composition.Convention.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Composition.Hosting.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Composition.Runtime.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Composition.TypedParts.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Drawing.Common.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Memory.Data.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Runtime.Caching.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Security.Permissions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Text.Json.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\System.Windows.Extensions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Application.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Domain.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Infrastructure.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Application.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Infrastructure.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\bin\Debug\net9.0\nfs.Domain.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.csproj.AssemblyReference.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\rpswa.dswa.cache.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.AssemblyInfoInputs.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.AssemblyInfo.cs
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.csproj.CoreCompileInputs.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.sourcelink.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\scopedcss\bundle\nfs.API.styles.css
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\staticwebassets.build.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\staticwebassets.build.json.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\staticwebassets.development.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\swae.build.ex.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.csproj.Up2Date
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\refint\nfs.API.dll
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.pdb
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\nfs.API.genruntimeconfig.cache
-C:\Users\Mega Store\Desktop\DEPI\final project\nfs\code\nfs-backend\nfs.API\obj\Debug\net9.0\ref\nfs.API.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.Development.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.staticwebassets.endpoints.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.exe
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.deps.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.runtimeconfig.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Core.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Identity.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Data.SqlClient.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.Extensions.Msal.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.OpenApi.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.ClientModel.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Drawing.Common.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Memory.Data.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Runtime.Caching.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Permissions.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Windows.Extensions.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Domain.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Domain.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.AssemblyReference.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.GeneratedMSBuildEditorConfig.editorconfig
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.AssemblyInfoInputs.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.AssemblyInfo.cs
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.CoreCompileInputs.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cs
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\scopedcss\bundle\nfs.API.styles.css
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.development.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\swae.build.ex.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.Up2Date
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\refint\nfs.API.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.pdb
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.genruntimeconfig.cache
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\ref\nfs.API.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Humanizer.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Build.Locator.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Design.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Mono.TextTemplating.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.CodeDom.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Composition.AttributedModel.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Composition.Convention.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Composition.Hosting.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Composition.Runtime.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Composition.TypedParts.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\fr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\it\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ja\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ko\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pl\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ru\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+E:\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.Development.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.staticwebassets.endpoints.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.exe
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.deps.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.runtimeconfig.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.API.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\AWSSDK.Core.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\AWSSDK.SecurityToken.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Core.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Identity.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\DnsClient.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Data.SqlClient.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.Extensions.Msal.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.OpenApi.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Bson.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Driver.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Driver.Core.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Libmongocrypt.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\SharpCompress.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Snappier.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.ClientModel.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Drawing.Common.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Memory.Data.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Runtime.Caching.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Permissions.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Windows.Extensions.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ZstdSharp.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\linux\native\libmongocrypt.so
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\osx\native\libmongocrypt.dylib
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\native\mongocrypt.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Chat.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Domain.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Chat.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Domain.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.csproj.AssemblyReference.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.GeneratedMSBuildEditorConfig.editorconfig
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.AssemblyInfoInputs.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.AssemblyInfo.cs
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.csproj.CoreCompileInputs.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.MvcApplicationPartsAssemblyInfo.cs
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.MvcApplicationPartsAssemblyInfo.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\scopedcss\bundle\NFS.API.styles.css
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.development.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.csproj.Up2Date
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\refint\NFS.API.dll
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.pdb
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\NFS.API.genruntimeconfig.cache
+f:\Downloads\f-nfs\f-nfs\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\ref\NFS.API.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.Development.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\appsettings.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.staticwebassets.endpoints.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.exe
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.deps.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.runtimeconfig.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.API.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\AWSSDK.Core.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\AWSSDK.SecurityToken.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Core.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Azure.Identity.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\DnsClient.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Data.SqlClient.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.InMemory.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.Relational.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Identity.Client.Extensions.Msal.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.OpenApi.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Bson.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Driver.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Driver.Core.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\MongoDB.Libmongocrypt.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\SharpCompress.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Snappier.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.ClientModel.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Drawing.Common.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Memory.Data.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Runtime.Caching.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Cryptography.ProtectedData.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Security.Permissions.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\System.Windows.Extensions.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\ZstdSharp.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\Microsoft.Data.SqlClient.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Data.SqlClient.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\linux\native\libmongocrypt.so
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\osx\native\libmongocrypt.dylib
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\native\mongocrypt.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Chat.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Domain.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Application.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\nfs.Infrastructure.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Chat.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\bin\Debug\net9.0\NFS.Domain.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.AssemblyReference.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.GeneratedMSBuildEditorConfig.editorconfig
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.AssemblyInfoInputs.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.AssemblyInfo.cs
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.CoreCompileInputs.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cs
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.MvcApplicationPartsAssemblyInfo.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.sourcelink.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\scopedcss\bundle\nfs.API.styles.css
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.json.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.development.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.csproj.Up2Date
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\refint\nfs.API.dll
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.pdb
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\nfs.API.genruntimeconfig.cache
+F:\Tasks\nfs\code\nfs-backend\nfs-backend\NFS.API\obj\Debug\net9.0\ref\nfs.API.dll

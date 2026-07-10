@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using nfs.Application.Interfaces;
-using nfs.Domain.Entities;
-using nfs.Infrastructure.Data;
+using NFS.Application.Interfaces;
+using NFS.Domain.Entities;
+using NFS.Infrastructure.Data;
 
-namespace nfs.Infrastructure.Repositories
+namespace NFS.Infrastructure.Repositories
 {
     public class SessionRepository : ISessionRepository
     {

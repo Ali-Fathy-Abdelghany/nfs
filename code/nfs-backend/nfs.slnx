@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="nfs.API/nfs.API.csproj" />
-  <Project Path="nfs.Application/nfs.Application.csproj" />
-  <Project Path="nfs.Domain/nfs.Domain.csproj" />
-  <Project Path="nfs.Infrastructure/nfs.Infrastructure.csproj" />
+  <Project Path="NFS.API/nfs.API.csproj" />
+  <Project Path="NFS.Application/nfs.Application.csproj" />
+  <Project Path="NFS.Domain/nfs.Domain.csproj" />
+  <Project Path="NFS.Infrastructure/nfs.Infrastructure.csproj" />
 </Solution>
