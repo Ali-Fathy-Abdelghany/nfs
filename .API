@@ -1,0 +1,379 @@
+[33mcommit 32ef39d226dfc6b02cc04c37f2d95d21c7b5459d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Ali_Fathy <alifathy793@gmail.com>
+Date:   Fri Jul 10 11:31:23 2026 +0300
+
+    Bulk Update
+
+D	Controllers/AssessmentsController.cs
+D	Controllers/PatientsController.cs
+D	Controllers/TherapistsController.cs
+D	Models/Assessment.cs
+D	Models/AssessmentResult.cs
+D	Models/PatientMedicalHistory.cs
+D	Models/Specialization.cs
+D	Models/TherapistSpecialization.cs
+D	Properties/launchSettings.json
+A	code/nfs-ai-engine/chatbot/Controller.cs
+A	code/nfs-ai-engine/chatbot/Models.cs
+A	code/nfs-ai-engine/chatbot/Program.cs
+A	code/nfs-ai-engine/chatbot/Service.cs
+A	code/nfs-ai-engine/chatbot/appseting.json
+A	code/nfs-ai-engine/chatbot/appsettings.json
+A	code/nfs-ai-engine/chatbot/chatbot.csproj
+M	code/nfs-backend/.gitignore
+D	code/nfs-backend/.gitkeep
+M	code/nfs-backend/.vs/ProjectEvaluation/nfs.metadata.v10.bin
+M	code/nfs-backend/.vs/ProjectEvaluation/nfs.projects.v10.bin
+M	code/nfs-backend/.vs/ProjectEvaluation/nfs.strings.v10.bin
+M	code/nfs-backend/.vs/nfs.slnx/DesignTimeBuild/.dtbcache.v2
+D	code/nfs-backend/.vs/nfs.slnx/FileContentIndex/e2160a35-eb41-4b6d-9503-5fa5f649987a.vsidx
+M	code/nfs-backend/.vs/nfs.slnx/v18/.futdcache.v2
+M	code/nfs-backend/.vs/nfs.slnx/v18/.suo
+M	code/nfs-backend/.vs/nfs.slnx/v18/DocumentLayout.backup.json
+M	code/nfs-backend/.vs/nfs.slnx/v18/DocumentLayout.json
+D	code/nfs-backend/Controllers/AssessmentController.cs
+D	code/nfs-backend/Controllers/PatientController.cs
+D	code/nfs-backend/Controllers/TherapistController.cs
+D	code/nfs-backend/DTOs/AssessmentDto.cs
+D	code/nfs-backend/DTOs/CreateAssessmentDto.cs
+D	code/nfs-backend/Data/AppDbContext.cs
+D	code/nfs-backend/Migrations/20260707151348_AddTherapistPatientAssessment.Designer.cs
+D	code/nfs-backend/Migrations/20260707151348_AddTherapistPatientAssessment.cs
+D	code/nfs-backend/Migrations/AppDbContextModelSnapshot.cs
+D	code/nfs-backend/Models/Assessment.cs
+D	code/nfs-backend/Models/Patient.cs
+D	code/nfs-backend/Models/Therapist.cs
+A	code/nfs-backend/NFS.API/Controllers/AssessmentsController.cs
+R095	code/nfs-backend/Controllers/AuthController.cs	code/nfs-backend/NFS.API/Controllers/AuthController.cs
+A	code/nfs-backend/NFS.API/Controllers/ChatController.cs
+A	code/nfs-backend/NFS.API/Controllers/PatientsController.cs
+R072	Controllers/SpecializationsController.cs	code/nfs-backend/NFS.API/Controllers/SpecializationsController.cs
+A	code/nfs-backend/NFS.API/Controllers/TherapistsController.cs
+R094	code/nfs-backend/Controllers/UsersController.cs	code/nfs-backend/NFS.API/Controllers/UsersController.cs
+R098	code/nfs-backend/Middlewares/GlobalExceptionMiddleware.cs	code/nfs-backend/NFS.API/Middlewares/GlobalExceptionMiddleware.cs
+R090	code/nfs-backend/nfs.Application/DTOs/AppointmentDto.cs	code/nfs-backend/NFS.Application/DTOs/Appointment/AppointmentDto.cs
+R090	code/nfs-backend/nfs.Application/DTOs/CreateAppointmentDto.cs	code/nfs-backend/NFS.Application/DTOs/Appointment/CreateAppointmentDto.cs
+A	code/nfs-backend/NFS.Application/DTOs/Assessment/AssessmentDto.cs
+R053	code/nfs-backend/DTOs/AssessmentDtos.cs	code/nfs-backend/NFS.Application/DTOs/Assessment/AssessmentDtos.cs
+A	code/nfs-backend/NFS.Application/DTOs/Assessment/CreateAssessmentDto.cs
+R094	code/nfs-backend/DTOs/CreateTherapistDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/CreateTherapistDto.cs
+R086	code/nfs-backend/DTOs/ForgotPasswordDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/ForgotPasswordDto.cs
+R089	code/nfs-backend/DTOs/LoginDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/LoginDto.cs
+R092	code/nfs-backend/DTOs/LoginResponseDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/LoginResponseDto.cs
+R089	code/nfs-backend/DTOs/RefreshTokenDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/RefreshTokenDto.cs
+R094	code/nfs-backend/DTOs/RegisterDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/RegisterDto.cs
+A	code/nfs-backend/NFS.Application/DTOs/Auth/RescheduleAppointmentDto.cs
+R090	code/nfs-backend/DTOs/ResetPasswordDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/ResetPasswordDto.cs
+R093	code/nfs-backend/DTOs/UpdatePatientDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/UpdatePatientDto.cs
+R092	code/nfs-backend/DTOs/UpdateProfileDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/UpdateProfileDto.cs
+R093	code/nfs-backend/DTOs/UpdateTherapistDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/UpdateTherapistDto.cs
+R091	code/nfs-backend/DTOs/UserProfileDto.cs	code/nfs-backend/NFS.Application/DTOs/Auth/UserProfileDto.cs
+R094	code/nfs-backend/DTOs/CreatePatientDto.cs	code/nfs-backend/NFS.Application/DTOs/Patient/CreatePatientDto.cs
+R095	code/nfs-backend/DTOs/PatientDto.cs	code/nfs-backend/NFS.Application/DTOs/Patient/PatientDto.cs
+R099	code/nfs-backend/DTOs/PatientDtos.cs	code/nfs-backend/NFS.Application/DTOs/Patient/PatientDtos.cs
+R090	code/nfs-backend/nfs.Application/DTOs/CreateSessionNoteDto.cs	code/nfs-backend/NFS.Application/DTOs/Session/CreateSessionNoteDto.cs
+R087	code/nfs-backend/nfs.Application/DTOs/SessionDtos.cs	code/nfs-backend/NFS.Application/DTOs/Session/SessionDtos.cs
+R096	code/nfs-backend/DTOs/TherapistDto.cs	code/nfs-backend/NFS.Application/DTOs/Therapist/TherapistDto.cs
+R099	code/nfs-backend/DTOs/TherapistDtos.cs	code/nfs-backend/NFS.Application/DTOs/Therapist/TherapistDtos.cs
+R092	code/nfs-backend/Helpers/JwtSettings.cs	code/nfs-backend/NFS.Application/Helpers/JwtSettings.cs
+A	code/nfs-backend/NFS.Application/Helpers/PasswordHelper.cs
+A	code/nfs-backend/NFS.Application/Interfaces/Data/IApplicationDbContext.cs
+R089	code/nfs-backend/nfs.Application/Interfaces/IAppointmentRepository.cs	code/nfs-backend/NFS.Application/Interfaces/Repositories/IAppointmentRepository.cs
+R073	code/nfs-backend/nfs.Application/Interfaces/ISessionRepository.cs	code/nfs-backend/NFS.Application/Interfaces/Repositories/ISessionRepository.cs
+R067	code/nfs-backend/Services/IAssessmentService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/IAssessmentService.cs
+R085	code/nfs-backend/Services/IAuthService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/IAuthService.cs
+R078	code/nfs-backend/Services/IPatientService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/IPatientService.cs
+R078	code/nfs-backend/Services/ITherapistService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/ITherapistService.cs
+R078	code/nfs-backend/Services/ITokenService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/ITokenService.cs
+R070	code/nfs-backend/Services/IUserService.cs	code/nfs-backend/NFS.Application/Interfaces/Services/IUserService.cs
+R074	code/nfs-backend/Services/AssessmentService.cs	code/nfs-backend/NFS.Application/Services/AssessmentService.cs
+R083	code/nfs-backend/Services/AuthService.cs	code/nfs-backend/NFS.Application/Services/AuthService.cs
+R083	code/nfs-backend/Services/PatientService.cs	code/nfs-backend/NFS.Application/Services/PatientService.cs
+A	code/nfs-backend/NFS.Application/Services/TherapistService.cs
+R080	code/nfs-backend/Services/TokenService.cs	code/nfs-backend/NFS.Application/Services/TokenService.cs
+R087	code/nfs-backend/Services/UserService.cs	code/nfs-backend/NFS.Application/Services/UserService.cs
+A	code/nfs-backend/NFS.Chat/ChatHub.cs
+A	code/nfs-backend/NFS.Chat/ChatSeeder.cs
+A	code/nfs-backend/NFS.Chat/Class1.cs
+A	code/nfs-backend/NFS.Chat/Extensions/ServiceCollectionExtensions.cs
+A	code/nfs-backend/NFS.Chat/Models/ChatMessage.cs
+A	code/nfs-backend/NFS.Chat/NFS.Chat.csproj
+A	code/nfs-backend/NFS.Chat/Repositories/ChatRepository.cs
+A	code/nfs-backend/NFS.Chat/Repositories/IChatRepository.cs
+R087	code/nfs-backend/Models/Role.cs	code/nfs-backend/NFS.Domain/Entities/Role.cs
+R085	code/nfs-backend/Models/User.cs	code/nfs-backend/NFS.Domain/Entities/User.cs
+R084	code/nfs-backend/Models/UserRoleMapping.cs	code/nfs-backend/NFS.Domain/Entities/UserRoleMapping.cs
+R069	code/nfs-backend/Enums/Gender.cs	code/nfs-backend/NFS.Domain/Enums/Gender.cs
+R076	code/nfs-backend/Enums/UserRole.cs	code/nfs-backend/NFS.Domain/Enums/UserRole.cs
+A	code/nfs-backend/NFS.Infrastructure/Data/DbSeeder.cs
+A	code/nfs-backend/NFS.Infrastructure/Helpers/JwtSettings.cs
+R092	code/nfs-backend/Helpers/PasswordHelper.cs	code/nfs-backend/NFS.Infrastructure/Helpers/PasswordHelper.cs
+A	code/nfs-backend/NFS.Infrastructure/Migrations/20260708234919_InitialCreate.Designer.cs
+A	code/nfs-backend/NFS.Infrastructure/Migrations/20260708234919_InitialCreate.cs
+D	code/nfs-backend/NfsApp.csproj
+D	code/nfs-backend/Program.cs
+D	code/nfs-backend/Properties/launchSettings.json
+D	code/nfs-backend/Services/TherapistService.cs
+D	code/nfs-backend/appsettings.Development.json.example
+M	code/nfs-backend/appsettings.json
+A	code/nfs-backend/global.json
+M	code/nfs-backend/nfs.API/Controllers/AppointmentsController.cs
+M	code/nfs-backend/nfs.API/Controllers/SessionsController.cs
+D	code/nfs-backend/nfs.API/Controllers/WeatherForecastController.cs
+M	code/nfs-backend/nfs.API/Program.cs
+M	code/nfs-backend/nfs.API/Properties/launchSettings.json
+D	code/nfs-backend/nfs.API/WeatherForecast.cs
+M	code/nfs-backend/nfs.API/appsettings.json
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Humanizer.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Bcl.AsyncInterfaces.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Build.Locator.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.CodeAnalysis.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Design.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Relational.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Caching.Abstractions.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Caching.Memory.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.DependencyModel.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Logging.Abstractions.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Logging.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Options.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Microsoft.OpenApi.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/Mono.TextTemplating.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.CodeDom.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Composition.AttributedModel.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Composition.Convention.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Composition.Hosting.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Composition.Runtime.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Composition.TypedParts.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/System.Text.Json.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/appsettings.json
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.resources.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.API.deps.json
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.API.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.API.exe
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.API.pdb
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Application.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Application.pdb
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Domain.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Domain.pdb
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Infrastructure.dll
+M	code/nfs-backend/nfs.API/bin/Debug/net9.0/nfs.Infrastructure.pdb
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+D	code/nfs-backend/nfs.API/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
+M	code/nfs-backend/nfs.API/nfs.API.csproj
+M	code/nfs-backend/nfs.API/nfs.API.http
+D	code/nfs-backend/nfs.API/obj/Debug/net9.0/ApiEndpoints.json
+D	code/nfs-backend/nfs.API/obj/Debug/net9.0/EndpointInfo/nfs.API.OpenApiFiles.cache
+D	code/nfs-backend/nfs.API/obj/Debug/net9.0/EndpointInfo/nfs.API.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/apphost.exe
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.AssemblyInfo.cs
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.AssemblyInfoInputs.cache
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.GeneratedMSBuildEditorConfig.editorconfig
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.MvcApplicationPartsAssemblyInfo.cs
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.assets.cache
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.csproj.AssemblyReference.cache
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.csproj.CoreCompileInputs.cache
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.csproj.FileListAbsolute.txt
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.dll
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.genruntimeconfig.cache
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.pdb
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/nfs.API.sourcelink.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/ref/nfs.API.dll
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/refint/nfs.API.dll
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/rjsmrazor.dswa.cache.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/rpswa.dswa.cache.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/staticwebassets.build.json
+M	code/nfs-backend/nfs.API/obj/Debug/net9.0/staticwebassets.build.json.cache
+D	code/nfs-backend/nfs.API/obj/Debug/net9.0/staticwebassets.references.upToDateCheck.txt
+M	code/nfs-backend/nfs.API/obj/nfs.API.csproj.nuget.dgspec.json
+M	code/nfs-backend/nfs.API/obj/nfs.API.csproj.nuget.g.props
+M	code/nfs-backend/nfs.API/obj/nfs.API.csproj.nuget.g.targets
+M	code/nfs-backend/nfs.API/obj/project.assets.json
+M	code/nfs-backend/nfs.API/obj/project.nuget.cache
+D	code/nfs-backend/nfs.Application/DTOs/RescheduleAppointmentDto.cs
+M	code/nfs-backend/nfs.Application/bin/Debug/net9.0/nfs.Application.deps.json
+M	code/nfs-backend/nfs.Application/bin/Debug/net9.0/nfs.Application.dll
+M	code/nfs-backend/nfs.Application/bin/Debug/net9.0/nfs.Application.pdb
+M	code/nfs-backend/nfs.Application/bin/Debug/net9.0/nfs.Domain.dll
+M	code/nfs-backend/nfs.Application/bin/Debug/net9.0/nfs.Domain.pdb
+M	code/nfs-backend/nfs.Application/nfs.Application.csproj
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.AssemblyInfo.cs
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.AssemblyInfoInputs.cache
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.GeneratedMSBuildEditorConfig.editorconfig
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.GlobalUsings.g.cs
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.assets.cache
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.csproj.AssemblyReference.cache
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.csproj.CoreCompileInputs.cache
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.csproj.FileListAbsolute.txt
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.dll
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.pdb
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/nfs.Application.sourcelink.json
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/ref/nfs.Application.dll
+M	code/nfs-backend/nfs.Application/obj/Debug/net9.0/refint/nfs.Application.dll
+M	code/nfs-backend/nfs.Application/obj/nfs.Application.csproj.nuget.dgspec.json
+M	code/nfs-backend/nfs.Application/obj/nfs.Application.csproj.nuget.g.props
+M	code/nfs-backend/nfs.Application/obj/nfs.Application.csproj.nuget.g.targets
+M	code/nfs-backend/nfs.Application/obj/project.assets.json
+M	code/nfs-backend/nfs.Application/obj/project.nuget.cache
+M	code/nfs-backend/nfs.Domain/Entities/Appointment.cs
+M	code/nfs-backend/nfs.Domain/Entities/Assessment.cs
+M	code/nfs-backend/nfs.Domain/Entities/AssessmentResult.cs
+M	code/nfs-backend/nfs.Domain/Entities/AvailabilitySlot.cs
+M	code/nfs-backend/nfs.Domain/Entities/Patient.cs
+M	code/nfs-backend/nfs.Domain/Entities/PatientMedicalHistory.cs
+M	code/nfs-backend/nfs.Domain/Entities/Session.cs
+M	code/nfs-backend/nfs.Domain/Entities/SessionNote.cs
+M	code/nfs-backend/nfs.Domain/Entities/Specialization.cs
+M	code/nfs-backend/nfs.Domain/Entities/Therapist.cs
+M	code/nfs-backend/nfs.Domain/Entities/TherapistSpecialization.cs
+M	code/nfs-backend/nfs.Domain/Enums/AssessmentEnums.cs
+M	code/nfs-backend/nfs.Domain/Enums/TherapistStatus.cs
+M	code/nfs-backend/nfs.Domain/bin/Debug/net9.0/nfs.Domain.deps.json
+M	code/nfs-backend/nfs.Domain/bin/Debug/net9.0/nfs.Domain.dll
+M	code/nfs-backend/nfs.Domain/bin/Debug/net9.0/nfs.Domain.pdb
+M	code/nfs-backend/nfs.Domain/nfs.Domain.csproj
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.AssemblyInfo.cs
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.AssemblyInfoInputs.cache
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.GeneratedMSBuildEditorConfig.editorconfig
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.GlobalUsings.g.cs
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.assets.cache
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.csproj.CoreCompileInputs.cache
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.csproj.FileListAbsolute.txt
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.dll
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.pdb
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/nfs.Domain.sourcelink.json
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/ref/nfs.Domain.dll
+M	code/nfs-backend/nfs.Domain/obj/Debug/net9.0/refint/nfs.Domain.dll
+M	code/nfs-backend/nfs.Domain/obj/nfs.Domain.csproj.nuget.dgspec.json
+M	code/nfs-backend/nfs.Domain/obj/nfs.Domain.csproj.nuget.g.props
+M	code/nfs-backend/nfs.Domain/obj/project.assets.json
+M	code/nfs-backend/nfs.Domain/obj/project.nuget.cache
+M	code/nfs-backend/nfs.Infrastructure/Data/ApplicationDbContext.cs
+D	code/nfs-backend/nfs.Infrastructure/Migrations/20260705170514_InitialCreate.Designer.cs
+D	code/nfs-backend/nfs.Infrastructure/Migrations/20260705170514_InitialCreate.cs
+M	code/nfs-backend/nfs.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
+M	code/nfs-backend/nfs.Infrastructure/Repositories/AppointmentRepository.cs
+M	code/nfs-backend/nfs.Infrastructure/Repositories/AssessmentRepository.cs
+M	code/nfs-backend/nfs.Infrastructure/Repositories/PatientRepository.cs
+M	code/nfs-backend/nfs.Infrastructure/Repositories/SessionRepository.cs
+M	code/nfs-backend/nfs.Infrastructure/Repositories/TherapistRepository.cs
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Application.dll
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Application.pdb
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Domain.dll
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Domain.pdb
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Infrastructure.deps.json
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Infrastructure.dll
+M	code/nfs-backend/nfs.Infrastructure/bin/Debug/net9.0/nfs.Infrastructure.pdb
+M	code/nfs-backend/nfs.Infrastructure/nfs.Infrastructure.csproj
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.AssemblyInfo.cs
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.AssemblyInfoInputs.cache
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.GlobalUsings.g.cs
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.assets.cache
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.csproj.AssemblyReference.cache
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.csproj.CoreCompileInputs.cache
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.csproj.FileListAbsolute.txt
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.dll
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.genruntimeconfig.cache
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.pdb
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/nfs.Infrastructure.sourcelink.json
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/ref/nfs.Infrastructure.dll
+M	code/nfs-backend/nfs.Infrastructure/obj/Debug/net9.0/refint/nfs.Infrastructure.dll
+M	code/nfs-backend/nfs.Infrastructure/obj/nfs.Infrastructure.csproj.nuget.dgspec.json
+M	code/nfs-backend/nfs.Infrastructure/obj/nfs.Infrastructure.csproj.nuget.g.props
+M	code/nfs-backend/nfs.Infrastructure/obj/nfs.Infrastructure.csproj.nuget.g.targets
+M	code/nfs-backend/nfs.Infrastructure/obj/project.assets.json
+M	code/nfs-backend/nfs.Infrastructure/obj/project.nuget.cache
+M	code/nfs-backend/nfs.slnx
+M	code/nfs-frontend/package-lock.json
+M	code/nfs-frontend/package.json
+M	code/nfs-frontend/src/App.jsx
+A	code/nfs-frontend/src/hooks/useChatHub.js
+M	code/nfs-frontend/src/pages/Chats/Chats.css
+M	code/nfs-frontend/src/pages/Chats/Chats.jsx
+D	nfs
+D	nfs.sln
