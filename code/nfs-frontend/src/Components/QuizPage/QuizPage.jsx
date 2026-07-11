@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './QuizPage.css';
 
 const questionsData = [
@@ -76,6 +77,7 @@ const questionsData = [
 ];
 
 const QuizPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0); 
   const [answers, setAnswers] = useState({}); 
   
@@ -91,7 +93,7 @@ const QuizPage = () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      console.log("تم الانتهاء بنجاح وإرسال كامل الإجابات:", answers);
+      navigate('/login');
     }
   };
 

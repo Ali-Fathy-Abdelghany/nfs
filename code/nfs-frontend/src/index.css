@@ -1,19 +1,77 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+@import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  width: 100%;
-  overflow-x: hidden;
-  font-family: "Cairo", sans-serif;
-}
+/*
+  Design token architecture mirrored from the Figma variable structure.
+  Three connected collections:
+    1. Brand  (primitives)  -> raw palette values, no semantics.
+    2. Alias  (semantic)    -> reference brand primitives, mode-aware.
+    3. Mapped (component)   -> reference aliases, consumed by UI.
+  The connection points are the var() references flowing brand -> alias -> mapped.
+*/
 
 :root {
-  --primary-color: #0f766e;
+  /* ---------- 1. BRAND COLLECTION (primitives) ---------- */
+  --brand-teal-900: #115e57;
+  --brand-teal-800: #0f766e;
+  --brand-teal-700: #316764;
+  --brand-teal-500: #2a5c58;
+  --brand-teal-300: #83b9b5;
+  --brand-teal-200: #a6cec5;
+  --brand-teal-100: #e6f0ef;
+  --brand-teal-50: #f7fafa;
 
-  --primary-light: rgba(15, 118, 110, 0.1);
+  --brand-neutral-900: #0f172a;
+  --brand-neutral-700: #334155;
+  --brand-neutral-500: #64748b;
+  --brand-neutral-300: #cbd5e1;
+  --brand-neutral-100: #f1f5f9;
+  --brand-neutral-0: #ffffff;
+
+  --brand-rose-500: #f43f5e;
+  --brand-amber-500: #f59e0b;
+  --brand-green-500: #059669;
+
+  /* ---------- 2. ALIAS COLLECTION (semantic, light mode) ---------- */
+  --color-primary: var(--brand-teal-800);
+  --color-primary-hover: var(--brand-teal-900);
+  --color-primary-strong: var(--brand-teal-700);
+  --color-primary-soft: var(--brand-teal-200);
+  --color-primary-subtle: var(--brand-teal-100);
+  --color-accent: var(--brand-teal-300);
+
+  --color-surface: var(--brand-neutral-0);
+  --color-surface-muted: var(--brand-teal-50);
+  --color-border: var(--brand-neutral-300);
+
+  --color-text: var(--brand-neutral-900);
+  --color-text-muted: var(--brand-neutral-500);
+  --color-on-primary: var(--brand-neutral-0);
+
+  --color-danger: var(--brand-rose-500);
+  --color-warning: var(--brand-amber-500);
+  --color-success: var(--brand-green-500);
+
+  /* ---------- 3. MAPPED COLLECTION (component tokens) ---------- */
+  --button-bg: var(--color-primary);
+  --button-bg-hover: var(--color-primary-hover);
+  --button-text: var(--color-on-primary);
+  --card-bg: var(--color-surface);
+  --page-bg: var(--color-surface-muted);
+  --input-border: var(--color-border);
+  --input-border-focus: var(--color-primary);
+  --nav-active-bg: var(--color-primary-soft);
+  --nav-active-text: var(--color-primary);
+
+  /* backward-compatible aliases used across existing styles */
+  --primary-color: var(--color-primary);
+  --primary-light: var(--color-primary-subtle);
+}
+
+/* Alias collection: dark mode override (only aliases change, brand + mapped stay wired) */
+[data-theme="dark"] {
+  --color-surface: var(--brand-neutral-900);
+  --color-surface-muted: #0b1220;
+  --color-border: var(--brand-neutral-700);
+  --color-text: var(--brand-neutral-0);
+  --color-text-muted: var(--brand-neutral-300);
 }

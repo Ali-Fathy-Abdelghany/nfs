@@ -8,7 +8,8 @@ namespace NFS.Infrastructure.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context)
         {
-            await context.Database.EnsureCreatedAsync();
+            // Apply pending migrations without dropping the database
+            await context.Database.MigrateAsync();
 
             if (!await context.Roles.AnyAsync())
             {
@@ -20,7 +21,8 @@ namespace NFS.Infrastructure.Data
                 await context.SaveChangesAsync();
             }
 
-            if (await context.Users.AnyAsync())
+            // Only skip seeding if both users and appointments already exist
+            if (await context.Users.AnyAsync() && await context.Appointments.AnyAsync())
                 return;
 
             var clientRole = await context.Roles.FirstAsync(r => r.RoleName == "CLIENT");
@@ -86,6 +88,37 @@ namespace NFS.Infrastructure.Data
                 IsBooked = false
             });
 
+            await context.SaveChangesAsync();
+
+            // ---- Seed Reservations (Appointments + Sessions) ----
+            // Create an appointment linking the patient and therapist using the slot we just created.
+            var appointment = new Appointment
+            {
+                PatientId = patient.PatientId,
+                DoctorId = therapist.TherapistId,
+                SlotId = context.AvailabilitySlots.First().Id,
+                Status = "Confirmed",
+                CreatedAt = DateTime.UtcNow
+            };
+            context.Appointments.Add(appointment);
+            await context.SaveChangesAsync();
+
+            // Mark the slot as booked.
+            var slot = context.AvailabilitySlots.First(a => a.Id == appointment.SlotId);
+            slot.IsBooked = true;
+            // Persist the slot change before creating the session
+            await context.SaveChangesAsync();
+
+            // Create a corresponding session for the appointment.
+            var session = new Session
+            {
+                AppointmentId = appointment.Id,
+                ActualStartTime = null,
+                ActualEndTime = null,
+                MeetingLink = "https://meet.example.com/12345",
+                Status = "Scheduled"
+            };
+            context.Sessions.Add(session);
             await context.SaveChangesAsync();
         }
     }

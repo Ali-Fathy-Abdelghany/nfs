@@ -1,16 +1,29 @@
-# React + Vite
+# nafs — React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+منصة نفس للصحة النفسية — واجهة أمامية مبنية بـ React و Vite.
 
-Currently, two official plugins are available:
+## التشغيل
 
-- [@vitejs/plugin-react](https:
-- [@vitejs/plugin-react-swc](https:
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Linting
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https:
+- `npm run lint` — Oxlint
+- `npm run lint:eslint` — ESLint
 
-## Expanding the ESLint configuration
+## البنية
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https:
+- **صفحات المستخدم:** تسجيل الدخول، لوحة التحكم، الدفع، حجز الطبيب
+- **صفحات الطبيب (teammate):** الملف الشخصي، الجلسات، المحادثات، التحليل، المكتبة، وغيرها
+
+## React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR.
+
+Plugins available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc)

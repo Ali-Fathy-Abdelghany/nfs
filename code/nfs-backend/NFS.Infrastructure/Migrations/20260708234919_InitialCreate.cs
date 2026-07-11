@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -269,7 +269,7 @@ namespace NFS.Infrastructure.Migrations
                         column: x => x.TherapistId,
                         principalTable: "Therapists",
                         principalColumn: "TherapistId",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -339,13 +339,13 @@ namespace NFS.Infrastructure.Migrations
                         column: x => x.AssessmentId,
                         principalTable: "Assessments",
                         principalColumn: "AssessmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AssessmentResults_Patients_PatientId",
                         column: x => x.PatientId,
                         principalTable: "Patients",
                         principalColumn: "PatientId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
