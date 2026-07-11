@@ -1,32 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../../components/layout/Header";
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { useSchedule, acceptSession, addAvailability } from '../../store/scheduleStore';
+import { fetchDoctorAvailability } from '../../api/appointments';
+import { fetchPatients } from '../../api/patients';
+import { useAuth } from '../../context/AuthContext';
 
 function TimeTable() {
+  const { user } = useAuth();
   const { sessions: storeSessions, availability: storeAvailability } = useSchedule();
-  const [calendarView, setCalendarView] = useState('week'); // 'day' | 'week' | 'month'
+  const [calendarView, setCalendarView] = useState('week');
   const [showAddModal, setShowAddModal] = useState(false);
   
-  // التحكم الكامل في مدى التواريخ من الـ Inputs
   const [startDate, setStartDate] = useState('2026-10-22');
   const [endDate, setEndDate] = useState('2026-10-28');
 
   const [form, setForm] = useState({ date: '2026-10-22', from: '', to: '' });
 
-  // المواعيد والجلسات المحفوظة ديناميكياً
-  const [dynamicSessions, setDynamicSessions] = useState([
-    { id: 's1', patient: 'أحمد عبدالله', date: '2026-10-27', time: '10:00 ص', type: 'أونلاين' },
-    { id: 's2', patient: 'نورة السديري', date: '2026-10-25', time: '11:00 ص', type: 'حضوري' }
-  ]);
+  const [dynamicSessions, setDynamicSessions] = useState([]);
+  const [dynamicAvailability, setDynamicAvailability] = useState([]);
+  const [requests, setRequests] = useState([]);
 
-  const [dynamicAvailability, setDynamicAvailability] = useState([
-    { id: 'a1', date: '2026-10-22', from: '09:00 ص', to: '10:00 ص' }
-  ]);
-
-  const [requests, setRequests] = useState([
-    { id: 'tr1', name: 'نهى محمود', note: 'يرغب في حجز أول جلسة استشارية للتعامل مع القلق الوظيفي.', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100', date: '2026-10-26', time: '11:00 ص', sessionType: 'أونلاين' },
-  ]);
+  useEffect(() => {
+    const doctorId = user?.therapistId || user?.userId || user?.id;
+    if (!doctorId) return;
+    fetchDoctorAvailability(doctorId)
+      .then((res) => {
+        const slots = (res.data || []).map((s) => ({
+          id: s.id,
+          date: new Date(s.startTime).toISOString().split('T')[0],
+          from: new Date(s.startTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+          to: new Date(s.endTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+        }));
+        setDynamicAvailability(slots);
+      })
+      .catch(console.error);
+    fetchPatients()
+      .then((res) => {
+        const pending = (res.data || []).slice(0, 3).map((p, i) => ({
+          id: `req-${p.patientId}`,
+          name: `${p.firstName} ${p.lastName}`,
+          note: p.notes || p.medicalHistory || 'طلب جلسة استشارية',
+          img: p.profileImageUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100',
+          date: new Date().toISOString().split('T')[0],
+          time: '11:00 ص',
+          sessionType: 'أونلاين',
+        }));
+        setRequests(pending);
+      })
+      .catch(console.error);
+  }, [user]);
 
   const TIME_SLOTS = ['09:00 ص', '10:00 ص', '11:00 ص', '12:00 م', '01:00 م', '02:00 م', '03:00 م'];
   const WEEK_DAYS_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];

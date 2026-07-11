@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchPatients } from '../../api/patients';
+import { fetchUserSessions } from '../../api/sessions';
+import { useAuth } from '../../context/AuthContext';
 
 function Dashboard() {
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const today = new Date().toLocaleDateString('ar-EG', {
         weekday: 'long',
@@ -12,14 +16,33 @@ function Dashboard() {
     });
 
     const [hoveredItem, setHoveredItem] = useState(null);
-    
-    const [patients, setPatients] = useState([
-        { id: 1, name: "سارة أحمد", time: "04:00 م", type: "online", typeText: "أونلاين", icon: "fa-video", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" },
-        { id: 2, name: "محمد علي", time: "05:30 م", type: "clinic", typeText: "في العيادة", icon: "fa-house-medical", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150" },
-        { id: 3, name: "ياسمين ممدوح", time: "07:00 م", type: "online", typeText: "أونلاين", icon: "fa-video", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150" }
-    ]);
-
+    const [patients, setPatients] = useState([]);
+    const [totalPatients, setTotalPatients] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        fetchPatients()
+            .then((res) => setTotalPatients((res.data || []).length))
+            .catch(console.error);
+        const userId = user?.userId || user?.id;
+        if (!userId) return;
+        fetchUserSessions(userId)
+            .then((res) => {
+                const todaySessions = (res.data || [])
+                    .filter((s) => s.actualStartTime && new Date(s.actualStartTime).toDateString() === new Date().toDateString())
+                    .map((s, i) => ({
+                        id: s.id || i,
+                        name: s.doctorName || 'مريض',
+                        time: s.actualStartTime ? new Date(s.actualStartTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
+                        type: 'online',
+                        typeText: s.type || 'أونلاين',
+                        icon: 'fa-video',
+                        img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+                    }));
+                setPatients(todaySessions);
+            })
+            .catch(console.error);
+    }, [user]);
 
     const handleCancelSession = (id) => {
         if(window.confirm("هل أنت متأكد من رغبتك في إلغاء هذه الجلسة؟")) {
@@ -33,7 +56,7 @@ function Dashboard() {
             {/* هيدر الترحيب العلوي */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-[#EBEEEE] pb-5">
                 <div className="text-right space-y-1">
-                    <h2 className="text-2xl font-black text-slate-800 tracking-tight transition-colors duration-300 hover:text-[#316764]">مرحباً، د. مريم أحمد</h2>
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight transition-colors duration-300 hover:text-[#316764]">مرحباً، د. {user?.firstName || 'مريم'} {user?.lastName || 'أحمد'}</h2>
                     <p className="text-xs text-slate-400 font-medium">{today}</p>
                 </div>
                 <div className="bg-gradient-to-r from-teal-50 to-emerald-50/50 text-[#316764] px-4 py-2 rounded-2xl text-xs font-bold border border-teal-100/70 shadow-3xs transition-all duration-300 hover:scale-105 hover:shadow-xs">
@@ -48,7 +71,7 @@ function Dashboard() {
                     <div className="text-right space-y-1">
                         <span className="text-xs font-bold text-slate-400 block">إجمالي المرضى</span>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-black text-slate-800">128 مريض</span>
+                            <span className="text-xl font-black text-slate-800">{totalPatients} مريض</span>
                             <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-100">+12%</span>
                         </div>
                     </div>

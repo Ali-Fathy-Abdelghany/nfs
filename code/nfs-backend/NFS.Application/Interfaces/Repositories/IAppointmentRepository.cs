@@ -1,4 +1,5 @@
-﻿using NFS.Domain.Entities;
+﻿using NFS.Application.DTOs;
+using NFS.Domain.Entities;
 
 namespace NFS.Application.Interfaces
 {
@@ -9,6 +10,8 @@ namespace NFS.Application.Interfaces
         Task<Appointment?> GetAppointmentByIdAsync(int id);
 
         Task<IEnumerable<Appointment>> GetAppointmentsByPatientIdAsync(int patientId);
+
+        Task<IEnumerable<PatientAppointmentDto>> GetPatientAppointmentsDetailedAsync(int patientId);
 
         Task UpdateAppointmentStatusAsync(int appointmentId, string status);
 

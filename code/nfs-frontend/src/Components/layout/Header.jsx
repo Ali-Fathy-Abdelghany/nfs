@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, Bell, ArrowRight, BookOpen, User, BookA, LogOut } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Header = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
-  // جلب نوع المستخدم الحالي لمعرفة أي واجهة نعرض (طبيب أم مريض)
-  const userRole = localStorage.getItem('userRole') || 'patient'; 
+  const userRole = localStorage.getItem('userRole') || 'patient';
 
   const handleNavigation = (tabId) => {
     setActiveTab?.(tabId); 
@@ -18,9 +19,9 @@ const Header = ({ activeTab, setActiveTab }) => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userRole');
-    navigate('/auth'); 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/auth');
   };
 
   return (

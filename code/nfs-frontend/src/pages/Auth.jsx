@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Input from '../components/ui/Input';
-import { login } from '../api/auth'; // new API helper
+import { login } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
+import { resolveUserRole } from '../api/config';
+import { ensurePatientRecord } from '../api/patientHelpers';
 
 const quotes = [
   "السلام الداخلي يبدأ في اللحظة التي تختار فيها ألا تسمح لحدث أو شخص آخر بالتحكم في عواطفك.",
@@ -17,6 +20,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login: setAuth } = useAuth();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,9 +37,17 @@ const Auth = () => {
       if (!result || !result.accessToken) {
         throw new Error('Invalid login response');
       }
-      localStorage.setItem('accessToken', result.accessToken);
-      const userRole = result.role || fallbackRole;
-      localStorage.setItem('userRole', userRole);
+      const userRole = resolveUserRole(result.roles) || fallbackRole;
+      let sessionData = result;
+      if (userRole === 'user') {
+        try {
+          const patientId = await ensurePatientRecord(result.userId);
+          sessionData = { ...result, patientId };
+        } catch (e) {
+          console.error('Failed to ensure patient record', e);
+        }
+      }
+      setAuth(sessionData);
       if (userRole === 'doctor') {
         navigate('/doctor/dashboard');
       } else {

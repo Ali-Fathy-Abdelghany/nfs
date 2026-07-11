@@ -1,9 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import { fetchUserSessions } from '../api/sessions';
+import { fetchPatientAppointments } from '../api/appointments';
 import { useAuth } from '../context/AuthContext';
 
+function mapAppointmentToSession(appointment) {
+  const startTime = appointment.actualStartTime || appointment.scheduledStartTime;
+  return {
+    id: appointment.sessionId || `appt-${appointment.id}`,
+    appointmentId: appointment.id,
+    actualStartTime: startTime,
+    actualEndTime: appointment.actualEndTime || appointment.scheduledEndTime,
+    status: appointment.status,
+    doctorName: appointment.doctorName,
+    type: appointment.type || 'أونلاين',
+    notes: appointment.notes || '',
+  };
+}
 
 function Sessions() {
     const [sessions, setSessions] = useState([]);
@@ -11,10 +24,14 @@ function Sessions() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      if (!user?.id) return;
-      fetchUserSessions(user.id)
-        .then(res => setSessions(res.data))
-        .catch(err => console.error(err))
+      const patientId = user?.patientId || user?.userId || user?.id;
+      if (!patientId) {
+        setLoading(false);
+        return;
+      }
+      fetchPatientAppointments(patientId)
+        .then((res) => setSessions((res.data || []).map(mapAppointmentToSession)))
+        .catch((err) => console.error(err))
         .finally(() => setLoading(false));
     }, [user]);
     const [activeFilter, setActiveFilter] = useState('الكل');
@@ -62,18 +79,19 @@ function Sessions() {
         if (session.status) {
             const statusUpper = session.status.toUpperCase();
             if (statusUpper === 'COMPLETED' || statusUpper === 'منتهية') return 'منتهية';
-            if (statusUpper === 'ACTIVE' || statusUpper === 'IN PROGRESS') return 'مؤكدة';
-            if (statusUpper === 'PENDING' || statusUpper === 'SCHEDULED' || statusUpper === 'مؤكدة') return 'مؤكدة';
             if (statusUpper === 'CANCELLED') return 'منتهية';
+            if (statusUpper === 'PENDING') return 'في انتظار الموافقة';
+            if (statusUpper === 'ACTIVE' || statusUpper === 'IN PROGRESS' || statusUpper === 'INPROGRESS') return 'مؤكدة';
+            if (statusUpper === 'RESCHEDULED' || statusUpper === 'SCHEDULED' || statusUpper === 'CONFIRMED') return 'مؤكدة';
         }
         return 'مؤكدة';
     };
 
-    // دالة تحويل وتنسيق التواريخ من الـ API
     const formatSessionDate = (session) => {
-        if (!session.actualStartTime) return { dateStr: 'غير محدد', timeStr: 'غير محدد', dateObj: new Date() };
+        const timeSource = session.actualStartTime || session.scheduledStartTime;
+        if (!timeSource) return { dateStr: 'غير محدد', timeStr: 'غير محدد', dateObj: new Date() };
         try {
-            const dateObj = new Date(session.actualStartTime);
+            const dateObj = new Date(timeSource);
             
             // خيارات تنسيق التاريخ باللغة العربية
             const dateOptions = { day: 'numeric', month: 'long', year: 'numeric', calendar: 'gregory' };
@@ -95,8 +113,8 @@ function Sessions() {
         
         // ترتيب زمني تصاعدي (من الأقدم للأحدث)
         result.sort((a, b) => {
-            const timeA = a.actualStartTime ? new Date(a.actualStartTime).getTime() : 0;
-            const timeB = b.actualStartTime ? new Date(b.actualStartTime).getTime() : 0;
+            const timeA = new Date(a.actualStartTime || 0).getTime();
+            const timeB = new Date(b.actualStartTime || 0).getTime();
             return timeA - timeB;
         });
 
@@ -207,7 +225,11 @@ function Sessions() {
                         </div>
 
                         {/* قائمة الجلسات المفلترة */}
-                        {processedSessions.length === 0 ? (
+                        {loading ? (
+                            <div className="bg-white p-12 rounded-2xl border border-[#EBEEEE] text-center shadow-xs">
+                                <p className="text-gray-400 text-sm m-0">جاري تحميل الحجوزات...</p>
+                            </div>
+                        ) : processedSessions.length === 0 ? (
                             <div className="bg-white p-12 rounded-2xl border border-[#EBEEEE] text-center shadow-xs">
                                 <i className="fa-regular fa-calendar-xmark text-gray-300 text-4xl mb-3 block"></i>
                                 <p className="text-gray-400 text-sm m-0">لا توجد جلسات في هذا القسم حالياً.</p>

@@ -1,26 +1,32 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom'; 
 import { Star, ShieldCheck, Video, Calendar, Clock, ArrowRight, Bell, Settings, Award, Users, BookOpen } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 
 const DoctorCheckoutPage = () => {
-  const navigate = useNavigate(); // 2. تفعيل التوجيه الذكي
+  const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = React.useState('home');
 
-  const doctorData = {
+  const doctorData = location.state?.doctor || {
     name: "د. فيصل العمر",
-    title: "استشاري الطب النفسي والعلاج السلوكي المعرفي",
+    specialty: "استشاري الطب النفسي والعلاج السلوكي المعرفي",
     rating: 4.9,
     reviews: 120,
     date: "غداً، الأربعاء", 
     time: "4:00 م",
     duration: "٥٠ دقيقة",
-    avatar: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=256&q=80"
+    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=256&q=80"
   };
 
+  const slot = location.state?.slot;
+  const appointmentDate = slot?.startTime
+    ? new Date(slot.startTime).toLocaleString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
+    : doctorData.date;
+
   const handleBooking = () => {
-    navigate('/payments', { state: { doctorData: doctorData } });
+    navigate('/payments', { state: { doctorData, slot } });
   };
 
   return (
@@ -38,7 +44,7 @@ const DoctorCheckoutPage = () => {
             
             <div className="relative z-10 space-y-2.5 text-center sm:text-right">
               <h1 className="text-2xl font-black text-[#181C1D] tracking-tight">{doctorData.name}</h1>
-              <p className="text-[#48747B] text-xs font-medium">{doctorData.title}</p>
+              <p className="text-[#48747B] text-xs font-medium">{doctorData.specialty || doctorData.title}</p>
               
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
                 <div className="flex items-center gap-1 text-[11px] text-[#48747B] bg-[#E6F0F0]/50 px-2.5 py-1 rounded-full">
@@ -60,7 +66,7 @@ const DoctorCheckoutPage = () => {
             <div className="relative z-10 flex-shrink-0">
               <div className="absolute inset-0 bg-gradient-to-t from-[#093E39]/20 to-transparent rounded-2xl z-10" />
               <img 
-                src={doctorData.avatar} 
+                src={doctorData.image || doctorData.avatar}
                 alt={doctorData.name} 
                 className="w-28 h-28 rounded-2xl object-cover border-[3px] border-white shadow-md shadow-gray-200"
               />
@@ -136,7 +142,7 @@ const DoctorCheckoutPage = () => {
                   <div className="space-y-2 text-[10px] text-gray-500 pt-1 border-t border-gray-50">
                     <div className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-[#48747B]" />
-                      <span>متاح {doctorData.date}، {doctorData.time}</span>
+                      <span>متاح {appointmentDate}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Video className="w-3.5 h-3.5 text-[#48747B]" />

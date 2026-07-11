@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../api/auth';
+import { register, login } from '../api/auth';
+import { ensurePatientRecord } from '../api/patientHelpers';
 
 const UserSignup = () => {
   const navigate = useNavigate();
@@ -34,7 +35,8 @@ const UserSignup = () => {
   };
   try {
     await register(payload);
-    // Registration successful – redirect to login page
+    const loginResult = await login({ email: formData.email, password: formData.password });
+    await ensurePatientRecord(loginResult.userId);
     navigate('/login');
   } catch (err) {
     console.error('Registration failed', err);

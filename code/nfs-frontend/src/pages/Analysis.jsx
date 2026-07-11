@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Sidebar from '../components/Sidebar/Sidebar';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, CartesianGrid } from 'recharts';
+import { fetchPatients } from '../api/patients';
+import { fetchAssessments } from '../api/assessments';
 
 function Analysis() {
+  const [patientCount, setPatientCount] = useState(0);
+  const [assessmentCount, setAssessmentCount] = useState(0);
+
+  useEffect(() => {
+    fetchPatients()
+      .then((res) => setPatientCount((res.data || []).length))
+      .catch(console.error);
+    fetchAssessments()
+      .then((res) => setAssessmentCount((res.data || []).length))
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] flex flex-col justify-between font-['Cairo',sans-serif]" style={{ direction: 'rtl' }}>
       <Header />

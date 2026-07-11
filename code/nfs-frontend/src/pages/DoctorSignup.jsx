@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
+import { register, login } from '../api/auth';
+import { createTherapist } from '../api/therapists';
 
 const DoctorSignup = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -12,6 +16,44 @@ const DoctorSignup = () => {
     bio: "",
     password: ""
   });
+
+  const handleSubmit = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const [firstName = "", ...rest] = formData.fullName.split(' ');
+      const lastName = rest.join(' ');
+      const registerPayload = {
+        firstName,
+        lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: "",
+        gender: 0,
+        dateOfBirth: new Date().toISOString(),
+        role: 1, // THERAPIST
+      };
+      await register(registerPayload);
+      const loginResult = await login({ email: formData.email, password: formData.password });
+      const userId = loginResult.userId;
+
+      await createTherapist({
+        userId,
+        specialization: formData.specialty,
+        bio: formData.bio,
+        experienceYears: 1,
+        hourlyRate: 150,
+        qualifications: formData.license,
+      });
+
+      navigate('/verification');
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'فشل إنشاء الحساب المهني');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FDFDFD] flex items-center justify-center p-6 font-sans">
@@ -46,12 +88,15 @@ const DoctorSignup = () => {
 
             <Input type="password" placeholder="كلمة المرور" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
 
+            {error && <p className="text-red-600 text-sm">{error}</p>}
+
             <button
               type="button"
-              onClick={() => navigate('/verification')}
-              className="w-full py-4 bg-[#2A5C58] text-white rounded-full font-bold hover:bg-[#1f4a46] transition-all shadow-lg shadow-[#2A5C58]/20"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full py-4 bg-[#2A5C58] text-white rounded-full font-bold hover:bg-[#1f4a46] transition-all shadow-lg shadow-[#2A5C58]/20 disabled:opacity-50"
             >
-              إنشاء حساب مهني
+              {loading ? 'جاري إنشاء الحساب...' : 'إنشاء حساب مهني'}
             </button>
           </form>
         </div>

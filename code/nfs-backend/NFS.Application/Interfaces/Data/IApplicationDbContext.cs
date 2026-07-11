@@ -17,6 +17,7 @@ namespace NFS.Application.Interfaces.Data
         DbSet<AvailabilitySlot> AvailabilitySlots { get; }
         DbSet<Session> Sessions { get; }
         DbSet<SessionNote> SessionNotes { get; }
+        DbSet<DiaryEntry> DiaryEntries { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

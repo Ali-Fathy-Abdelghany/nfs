@@ -49,19 +49,8 @@ namespace NFS.API.Controllers
         [HttpGet("patient/{patientId}")]
         public async Task<IActionResult> GetByPatient(int patientId)
         {
-            var appointments = await _appointmentRepository.GetAppointmentsByPatientIdAsync(patientId);
-
-            var result = appointments.Select(a => new AppointmentDto
-            {
-                Id = a.Id,
-                PatientId = a.PatientId,
-                DoctorId = a.DoctorId,
-                SlotId = a.SlotId,
-                Status = a.Status,
-                CreatedAt = a.CreatedAt
-            });
-
-            return Ok(result);
+            var appointments = await _appointmentRepository.GetPatientAppointmentsDetailedAsync(patientId);
+            return Ok(appointments);
         }
 
         [HttpPut("reschedule")]

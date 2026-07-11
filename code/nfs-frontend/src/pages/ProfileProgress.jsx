@@ -4,6 +4,9 @@ import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
 import { Sparkles, Clock, CalendarCheck, Play, BookOpen, Award, TrendingUp, X } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { fetchUserProfile } from '../api/users';
+import { fetchAssessments } from '../api/assessments';
+import { useAuth } from '../context/AuthContext';
 
 const daysOfWeek = ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
 
@@ -26,9 +29,25 @@ const AVATAR_OPTIONS = [
 function ProfileProgress() {
   const [moodData, setMoodData] = useState([]);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
+  const [assessments, setAssessments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [currentAvatar, setCurrentAvatar] = useState(AVATAR_OPTIONS[0]);
+
+  useEffect(() => {
+    fetchUserProfile()
+      .then((res) => setProfile(res.data))
+      .catch(console.error);
+    fetchAssessments()
+      .then((res) => {
+        const patientId = user?.userId || user?.id;
+        const mine = (res.data || []).filter((a) => !patientId || a.patientId === patientId);
+        setAssessments(mine);
+      })
+      .catch(console.error);
+  }, [user]);
 
   useEffect(() => {
     const savedMoods = JSON.parse(localStorage.getItem('userMoods') || '[]');
@@ -59,7 +78,7 @@ function ProfileProgress() {
         <section className="flex flex-row items-center justify-between border-b border-neutral-100 pb-6">
           <div className="text-right space-y-1">
             <h1 className="text-3xl md:text-4xl font-black text-neutral-950 tracking-tight">الملف الشخصي والتقدم</h1>
-            <p className="text-neutral-500 font-medium">مرحباً سارة، إليك نظرة على رحلتك نحو التوازن النفسي.</p>
+            <p className="text-neutral-500 font-medium">مرحباً {profile?.firstName || user?.firstName || 'سارة'}، إليك نظرة على رحلتك نحو التوازن النفسي.</p>
           </div>
 
           {/* الأفاتار والاسم بجانب العنوان */}

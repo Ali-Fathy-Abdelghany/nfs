@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './QuizPage.css';
+import { createAssessment } from '../../api/assessments';
+import { useAuth } from '../../context/AuthContext';
 
 const questionsData = [
   {
@@ -78,8 +80,10 @@ const questionsData = [
 
 const QuizPage = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [currentStep, setCurrentStep] = useState(0); 
-  const [answers, setAnswers] = useState({}); 
+  const [answers, setAnswers] = useState({});
+  const [submitting, setSubmitting] = useState(false);
   
   const totalSteps = questionsData.length; 
   const currentQuestion = questionsData[currentStep];
@@ -89,11 +93,30 @@ const QuizPage = () => {
     setAnswers({ ...answers, [questionId]: value });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
-    } else {
+      return;
+    }
+    const patientId = user?.patientId || user?.userId || user?.id;
+    if (!patientId) {
       navigate('/login');
+      return;
+    }
+    try {
+      setSubmitting(true);
+      await createAssessment({
+        patientId,
+        title: 'تقييم أولي - الواحة الآمنة',
+        answersJson: JSON.stringify(answers),
+        score: Object.keys(answers).length,
+      });
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+      alert('تعذر حفظ التقييم، حاول مرة أخرى');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -261,7 +284,7 @@ const QuizPage = () => {
           onClick={handleNext}
           disabled={!answers[currentQuestion.id]} 
         >
-          {currentStep === totalSteps - 1 ? 'إنهاء وإرسال' : 'التالي'}
+          {currentStep === totalSteps - 1 ? (submitting ? 'جاري الإرسال...' : 'إنهاء وإرسال') : 'التالي'}
         </button>
       </div>
 

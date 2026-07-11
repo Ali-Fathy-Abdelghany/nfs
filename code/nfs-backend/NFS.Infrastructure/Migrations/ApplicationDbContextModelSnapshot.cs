@@ -229,6 +229,44 @@ namespace NFS.Infrastructure.Migrations
                     b.ToTable("PatientMedicalHistories", (string)null);
                 });
 
+            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mood")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("DiaryEntries", (string)null);
+                });
+
             modelBuilder.Entity("NFS.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("RoleId")
@@ -607,6 +645,17 @@ namespace NFS.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("NFS.Domain.Entities.PatientMedicalHistory", b =>
+                {
+                    b.HasOne("NFS.Domain.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
                 {
                     b.HasOne("NFS.Domain.Entities.Patient", "Patient")
                         .WithMany()

@@ -16,6 +16,8 @@ namespace NFS.Chat
         /// </summary>
         public static async Task SeedAsync(IChatRepository chatRepository, IMongoDatabase mongoDatabase)
         {
+            await SeedRoomsAsync(chatRepository, mongoDatabase);
+
             var collection = mongoDatabase.GetCollection<ChatMessage>("ChatMessages");
 
             // Skip if any messages already exist
@@ -176,6 +178,51 @@ namespace NFS.Chat
             await collection.InsertManyAsync(allMessages);
 
             Console.WriteLine($"[ChatSeeder] ✅ Seeded {allMessages.Count} chat messages into MongoDB.");
+        }
+
+        private static async Task SeedRoomsAsync(IChatRepository chatRepository, IMongoDatabase mongoDatabase)
+        {
+            var roomsCollection = mongoDatabase.GetCollection<ChatRoom>("ChatRooms");
+            var roomCount = await roomsCollection.CountDocumentsAsync(FilterDefinition<ChatRoom>.Empty);
+            if (roomCount > 0)
+                return;
+
+            var defaultRooms = new List<ChatRoom>
+            {
+                new ChatRoom
+                {
+                    Id = "room_1",
+                    Name = "مساحة الهدوء",
+                    Description = "مساحة لمشاركة الدعم الهادئ والتفريغ عن الضغوط.",
+                    Avatar = "🦊",
+                    CreatedBy = "2",
+                    MemberIds = new List<string> { "1", "2" },
+                    CreatedAt = DateTime.UtcNow.AddDays(-30)
+                },
+                new ChatRoom
+                {
+                    Id = "room_2",
+                    Name = "دعم القلق الصباحي",
+                    Description = "مساحة مخصصة للحديث عن نوبات وتحديات القلق الصباحي.",
+                    Avatar = "🐨",
+                    CreatedBy = "2",
+                    MemberIds = new List<string> { "1", "2" },
+                    CreatedAt = DateTime.UtcNow.AddDays(-20)
+                },
+                new ChatRoom
+                {
+                    Id = "room_3",
+                    Name = "تأملات جماعية",
+                    Description = "جلسات تأمل جماعية للراحة النفسية والصفاء الذهني.",
+                    Avatar = "🐼",
+                    CreatedBy = "2",
+                    MemberIds = new List<string> { "2" },
+                    CreatedAt = DateTime.UtcNow.AddDays(-10)
+                }
+            };
+
+            await roomsCollection.InsertManyAsync(defaultRooms);
+            Console.WriteLine($"[ChatSeeder] ✅ Seeded {defaultRooms.Count} chat rooms into MongoDB.");
         }
     }
 }

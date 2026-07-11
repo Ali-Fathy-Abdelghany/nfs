@@ -1,37 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import doctorImg from "../../assets/sara.png";
 import "./DoctorProfile.css";
-import ProfileFooter from "./ProfileFooter"; 
+import ProfileFooter from "./ProfileFooter";
+import { fetchTherapistById } from "../../api/therapists";
+import { updateUserProfile } from "../../api/users";
+import { useAuth } from "../../context/AuthContext";
+
 function DoctorProfile() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
    
-  // قراءة دور المستخدم الحالي ديناميكياً من الـ localStorage اللي تم حفظه عند تسجيل الدخول
   const currentUserRole = localStorage.getItem('userRole') || 'user';
 
-  // استقبال داتا الطبيب الممررة من صفحة الـ Booking، أو استخدام الداتا الافتراضية كـ Fallback
-  const doctorData = location.state?.doctor || {
+  const defaultDoctor = {
     name: "د. سارة الأحمد",
     specialty: "معالجة نفسية مختصة في العلاج السلوكي المعرفي",
     availability: "متاح اليوم",
     sessions: "+1,200",
     rating: "4.9",
     experience: "12 سنة",
-    bio: "أؤمن بأن الرحلة نحو الشفاء تبدأ من خلق مساحة آمنة ومقبولة تماماً. منهجي يعتمد على الدمج بين العلاج السلوكي المعرفي (CBT) والتعاطف الذاتي لمساعدتك على فهم أنماط تفكيرك وتحقيق التوازن النفسي الذي تطمح إليه. نحن لا نعالج المشاكل فحسب، بل نبني معاً أدوات صمود دائمة.",
-    specialties: [
-      "القلق والتوتر المزمن",
-      "العلاقات الزوجية",
-      "الاكتئاب",
-      "اضطرابات ما بعد الصدمة",
-      "تقدير الذات",
-    ],
-    image: doctorImg
+    bio: "أؤمن بأن الرحلة نحو الشفاء تبدأ من خلق مساحة آمنة ومقبولة تماماً.",
+    specialties: ["القلق والتوتر المزمن", "العلاقات الزوجية", "الاكتئاب"],
+    image: doctorImg,
   };
 
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState(doctorData);
+  const [profile, setProfile] = useState(location.state?.doctor || defaultDoctor);
+
+  useEffect(() => {
+    const therapistId = location.state?.doctor?.therapistId || location.state?.doctor?.id;
+    if (!therapistId) return;
+    fetchTherapistById(therapistId)
+      .then((res) => {
+        const t = res.data;
+        setProfile({
+          therapistId: t.therapistId,
+          name: `د. ${t.firstName} ${t.lastName}`,
+          specialty: t.specialization,
+          availability: "متاح للحجز",
+          sessions: t.experienceYears ? `+${t.experienceYears * 50}` : '+100',
+          rating: t.rating?.toFixed(1) || '4.8',
+          experience: t.experienceYears ? `${t.experienceYears} سنة` : '5 سنوات',
+          hourlyRate: t.hourlyRate || 250,
+          bio: t.bio || '',
+          specialties: t.qualifications ? t.qualifications.split(',').map((s) => s.trim()) : [t.specialization],
+          image: t.profileImageUrl || doctorImg,
+        });
+      })
+      .catch(console.error);
+  }, [location.state]);
+
+  const handleSave = async () => {
+    if (currentUserRole !== 'doctor') {
+      setIsEditing(false);
+      return;
+    }
+    try {
+      const [firstName = '', ...rest] = (profile.name || '').replace('د. ', '').split(' ');
+      await updateUserProfile({
+        firstName,
+        lastName: rest.join(' '),
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+      alert('تعذر حفظ التغييرات');
+    }
+  };
 
   const update = (key, value) => setProfile({ ...profile, [key]: value });
 
@@ -48,7 +86,7 @@ function DoctorProfile() {
             <div className="profile-edit-toolbar">
               <button
                 className={`profile-edit-toggle ${isEditing ? "saving" : ""}`}
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
               >
                 <i className={`fa-solid ${isEditing ? "fa-floppy-disk" : "fa-pen-to-square"}`}></i>
                 {isEditing ? " حفظ التغييرات" : " تعديل الملف الشخصي"}
@@ -258,7 +296,12 @@ function DoctorProfile() {
           </section>
         </div>
       </main>
-       {currentUserRole === 'user' && <ProfileFooter />}
+       {currentUserRole !== 'doctor' && (
+         <ProfileFooter
+           doctor={profile}
+           hourlyRate={profile.hourlyRate || 250}
+         />
+       )}
       
     </div>
   );

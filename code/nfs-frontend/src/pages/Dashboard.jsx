@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom'; 
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, User, Sparkles, Activity, BookOpen, HeartHandshake, Play, Pause, X, Home, Compass, MessageCircle, BookAIcon, Book } from 'lucide-react';
 import GratitudeJournal from '../components/ui/GratitudeJournal';
@@ -8,6 +8,9 @@ import Booking from './booking';
 
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { useAuth } from '../context/AuthContext';
+import { fetchUserProfile } from '../api/users';
+import { fetchDiariesByPatient, createDiaryEntry, updateDiaryEntry, mapDiaryToEntry } from '../api/diaries';
 
 const quotes = [
   { text: "الهدوء ليس غياب الفوضى، بل هو السلام في منتصفها.", author: "إلهام اليوم" },
@@ -167,19 +170,28 @@ const LiveSession = ({ onClose }) => (
   </div>
 );
 
-const SupportCircle = ({ onClose }) => (
+const SupportCircle = ({ onClose, onGoToChats }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div className="bg-white w-full max-w-md rounded-3xl p-6 text-center space-y-4 relative">
       <button onClick={onClose} className="absolute top-4 left-4 p-1.5 hover:bg-neutral-100 rounded-full"><X className="w-5 h-5" /></button>
       <h3 className="text-xl font-black pt-4">دائرة الدعم الآمنة</h3>
       <p className="text-sm text-neutral-500">مساحة لمشاركة مشاعرك بسلام وسرية تامة مع المجتمع.</p>
+      <button
+        onClick={onGoToChats}
+        className="w-full py-3 bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white rounded-full font-bold shadow-md hover:opacity-90 transition-all"
+      >
+        الدخول إلى المحادثات
+      </button>
     </div>
   </div>
 );
 
 // --- المكون الرئيسي (Dashboard) ---
 export default function Dashboard() {
-  const location = useLocation(); 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
 
   const [activeTab, setActiveTab] = useState(location.state?.targetTab || 'home');
   const [activeQuoteIdx, setActiveQuoteIdx] = useState(0);
@@ -196,10 +208,7 @@ export default function Dashboard() {
 
   const [userMoodText, setUserMoodText] = useState('مرتاح ومستقر');
 
-  const [entries, setEntries] = useState(() => {
-    const saved = localStorage.getItem("my_entries");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [entries, setEntries] = useState([]);
 
   useEffect(() => {
     if (location.state?.targetTab) {
@@ -207,18 +216,40 @@ export default function Dashboard() {
     }
   }, [location.state]);
 
-  const handleSaveEntry = (newEntry) => {
-    const updatedEntries = [
-      ...entries, 
-      { 
-        ...newEntry, 
-        id: Date.now(), 
-        date: new Date().toISOString()
-      }
-    ];
-    setEntries(updatedEntries);
-    localStorage.setItem("my_entries", JSON.stringify(updatedEntries));
-    setShowJournal(false);
+  useEffect(() => {
+    fetchUserProfile()
+      .then((res) => setProfile(res.data))
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const patientId = user?.patientId || user?.userId || user?.id;
+    if (!patientId) return;
+    fetchDiariesByPatient(patientId)
+      .then((res) => setEntries((res.data || []).map(mapDiaryToEntry)))
+      .catch(console.error);
+  }, [user]);
+
+  const handleSaveEntry = async (newEntry) => {
+    const patientId = user?.patientId || user?.userId || user?.id;
+    if (!patientId) {
+      alert('يرجى تسجيل الدخول أولاً');
+      return;
+    }
+    try {
+      const res = await createDiaryEntry({
+        patientId,
+        title: newEntry.title,
+        content: newEntry.content,
+        mood: newEntry.mood,
+      });
+      const saved = mapDiaryToEntry(res.data);
+      setEntries((prev) => [saved, ...prev]);
+      setShowJournal(false);
+    } catch (err) {
+      console.error(err);
+      alert('تعذر حفظ المذكرة');
+    }
   };
 
   const handleNextQuote = () => {
@@ -266,12 +297,18 @@ export default function Dashboard() {
     window.location.reload();
   };
 
-  const handleUpdateEntry = (updatedEntry) => {
-    const updatedEntries = entries.map(item => 
-      item.id === updatedEntry.id ? updatedEntry : item
-    );
-    setEntries(updatedEntries);
-    localStorage.setItem("my_entries", JSON.stringify(updatedEntries));
+  const handleUpdateEntry = async (updatedEntry) => {
+    try {
+      await updateDiaryEntry(updatedEntry.id, {
+        title: updatedEntry.title,
+        content: updatedEntry.content,
+        mood: updatedEntry.mood,
+      });
+      setEntries((prev) => prev.map((item) => (item.id === updatedEntry.id ? updatedEntry : item)));
+    } catch (err) {
+      console.error(err);
+      alert('تعذر تحديث المذكرة');
+    }
   };
 
   return (
@@ -286,7 +323,7 @@ export default function Dashboard() {
             <motion.div key="home-tab" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} className="space-y-12">
               <section className="relative text-right space-y-2">
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-4xl md:text-5xl font-black text-neutral-950 tracking-tight">مرحباً بك</h1>
+                  <h1 className="text-4xl md:text-5xl font-black text-neutral-950 tracking-tight">مرحباً {profile?.firstName || user?.firstName || 'بك'}</h1>
                   <p className="text-lg text-neutral-500 font-medium">كيف حالك اليوم؟ (أنت تشعر بـ: <span className="text-[#0F766E] font-bold">{userMoodText}</span>)</p>
                   <button 
   onClick={() => setActiveTab('booking')} // التعديل هنا
@@ -372,7 +409,7 @@ export default function Dashboard() {
                     <p className="text-xs text-neutral-500 leading-relaxed">دوّن ٣ أشياء دافئة تشعر بالامتنان وتصالح مع قلبك وتفاصيل يومك.</p>
                   </div>
 
-                  <div onClick={() => setShowSupport(true)} className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100">
+                  <div onClick={() => navigate('/doctor/chats')} className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100">
                     <div className="w-12 h-12 bg-[#E6F0EF] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <HeartHandshake className="text-[#0F766E] w-6 h-6" />
                     </div>
@@ -431,7 +468,7 @@ export default function Dashboard() {
 
           {activeTab === 'booking' && (
   <motion.div key="booking-tab" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }}>
-    <Booking />
+    <Booking preselectedDoctor={location.state?.preselectedDoctor} />
   </motion.div>
 )}
         </AnimatePresence>
@@ -474,7 +511,15 @@ export default function Dashboard() {
           />
         )}
         {showLive && <LiveSession onClose={() => setShowLive(false)} />}
-        {showSupport && <SupportCircle onClose={() => setShowSupport(false)} />}
+        {showSupport && (
+          <SupportCircle
+            onClose={() => setShowSupport(false)}
+            onGoToChats={() => {
+              setShowSupport(false);
+              navigate('/doctor/chats');
+            }}
+          />
+        )}
       </AnimatePresence>
 
     </div>

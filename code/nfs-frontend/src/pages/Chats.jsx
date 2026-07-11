@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useChatHub } from "../hooks/useChatHub";
+import { useAuth } from "../context/AuthContext";
+import { fetchChatHistory, fetchChatRooms, createChatRoom, joinChatRoom, leaveChatRoom, mapRoomFromApi } from "../api/chat";
 import {
     Send,
     Search,
@@ -15,79 +17,100 @@ import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
 function Chats() {
-    const [rooms, setRooms] = useState([
-        {
-            id: "room_1",
-            name: "مساحة الهدوء",
-            membersCount: 8,
-            avatar: "🦊",
-            description: "مساحة لمشاركة الدعم الهادئ والتفريغ عن الضغوط.",
-            joined: true,
-        },
-        {
-            id: "room_2",
-            name: "دعم القلق الصباحي",
-            membersCount: 22,
-            avatar: "🐨",
-            description: "مساحة مخصصة للحديث عن نوبات وتحديات القلق الصباحي.",
-            joined: true,
-        },
-        {
-            id: "room_3",
-            name: "تأملات جماعية",
-            membersCount: 15,
-            avatar: "🐼",
-            description: "جلسات تأمل جماعية للراحة النفسية والصفاء الذهني.",
-            joined: false,
-        },
-    ]);
-
-    const [activeRoomId, setActiveRoomId] = useState("room_1");
+    const { user } = useAuth();
+    const [rooms, setRooms] = useState([]);
+    const [roomsLoading, setRoomsLoading] = useState(true);
+    const [activeRoomId, setActiveRoomId] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [inputMsg, setInputMsg] = useState("");
 
     const messagesEndRef = useRef(null);
+    const [conversations, setConversations] = useState({});
 
-    const [conversations, setConversations] = useState({
-        room_1: [
-            { id: 1, sender: "other", senderName: "الأرنب الحكيم", avatar: "🐰", text: "أشعر ببعض الضغط اليوم، كيف تتعاملون مع تراكم المهام؟", time: "10:30 ص" },
-            { id: 2, isTip: true, text: 'نصيحة "نفس" الذكية: جرب قاعدة الخمس دقائق، ابدأ بأصغر مهمة الآن.' },
-            { id: 3, sender: "me", senderName: "أنت (الأسد الشجاع)", avatar: "🦁", text: "أهلاً بك! عادةً ما أبدأ بكتابة كل شيء في ورقة، هذا يساعدني على تصفية ذهني", time: "10:32 ص" },
-            { id: 4, sender: "other", senderName: "الفيل الهادئ", avatar: "🐘", text: "أتفق معك يا صديقي، التنظيم الورقي يعطي شعوراً بالسيطرة.", time: "10:35 ص" },
-        ],
-        room_2: [
-            { id: 10, sender: "other", senderName: "الباندا المسترخي", avatar: "🐼", text: "كل صباح أصحى بحس بضيق وتوتر بدون أي سبب واضح، هل ده طبيعي؟", time: "08:00 ص" },
-            { id: 11, sender: "me", senderName: "أنت (الأسد الشجاع)", avatar: "🦁", text: "أهلاً بك، طبيعي جداً. جرب تاخد دقيقتين شهيق وزفير بطيء قبل ما تقوم من السرير.", time: "08:03 ص" },
-            { id: 12, sender: "other", senderName: "السلحفاة الصبورة", avatar: "🐢", text: "فعلاً، التنفس الصباحي بيساعد جداً، وتجنب شرب القهوة فوراً كمان بيفرق.", time: "08:05 ص" },
-        ],
-        room_3: [
-            { id: 20, sender: "other", senderName: "القطة اللطيفة", avatar: "🐱", text: "جلسة التنفس والتأمل الجماعي الصباحية اليوم كانت مريحة للأعصاب جداً.", time: "07:15 ص" },
-            { id: 21, sender: "me", senderName: "أنت (الأسد الشجاع)", avatar: "🦁", text: "سعيد جداً إنها عجبتك، أنا كمان حسيت بهدوء ذهني كبير النهاردة.", time: "07:18 ص" },
-        ],
-    });
+    const userId = user?.userId || user?.id;
+    const { messages, connectionRef, connectionStatus, joinGroup, leaveGroup, sendMessage } = useChatHub(userId);
 
-    const toggleJoin = (id) => {
-        setRooms(prevRooms => prevRooms.map(r => r.id === id ? { ...r, joined: !r.joined } : r));
+    const loadRooms = async () => {
+        try {
+            setRoomsLoading(true);
+            const res = await fetchChatRooms();
+            const mapped = (res.data || []).map(mapRoomFromApi);
+            setRooms(mapped);
+            if (mapped.length > 0) {
+                setActiveRoomId((current) => current || mapped.find((r) => r.joined)?.id || mapped[0].id);
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setRoomsLoading(false);
+        }
     };
 
-    const createNewGroup = () => {
+    useEffect(() => {
+        loadRooms();
+    }, []);
+
+    const toggleJoin = async (id) => {
+        const room = rooms.find((r) => r.id === id);
+        if (!room) return;
+        try {
+            const res = room.joined ? await leaveChatRoom(id) : await joinChatRoom(id);
+            const updated = mapRoomFromApi(res.data);
+            setRooms((prev) => prev.map((r) => (r.id === id ? updated : r)));
+            if (!room.joined) {
+                setActiveRoomId(id);
+                if (connectionStatus === "connected") joinGroup(id);
+            } else if (connectionStatus === "connected") {
+                leaveGroup(id);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("تعذر تحديث العضوية في المساحة");
+        }
+    };
+
+    const createNewGroup = async () => {
         const name = prompt("ما هو اسم المساحة الجديدة؟");
-        if (name) {
-            const newRoom = { id: Date.now().toString(), name, membersCount: 1, avatar: "🌱", joined: true, description: "" };
-            setRooms(prev => [...prev, newRoom]);
+        if (!name?.trim()) return;
+        const description = prompt("وصف المساحة (اختياري):") || "";
+        try {
+            const res = await createChatRoom({ name: name.trim(), description: description.trim() });
+            const newRoom = mapRoomFromApi(res.data);
+            setRooms((prev) => [newRoom, ...prev]);
             setActiveRoomId(newRoom.id);
+            setConversations((prev) => ({ ...prev, [newRoom.id]: [] }));
+            if (connectionStatus === "connected") joinGroup(newRoom.id);
+        } catch (err) {
+            console.error(err);
+            alert("تعذر إنشاء المساحة الجديدة. تأكد من تسجيل الدخول.");
         }
     };
 
     const myRooms = rooms.filter(r => r.joined && (searchQuery ? r.name.includes(searchQuery) : true));
     const discoverRooms = rooms.filter(r => !r.joined && (searchQuery ? r.name.includes(searchQuery) : true));
+    const selectedRoom = rooms.find((r) => r.id === activeRoomId) || rooms[0];
+
+    useEffect(() => {
+        if (!activeRoomId) return;
+        fetchChatHistory(activeRoomId)
+            .then((res) => {
+                const history = (res.data || []).map((msg) => ({
+                    id: msg.id,
+                    sender: String(msg.senderId) === String(user?.userId || user?.id) ? 'me' : 'other',
+                    senderName: String(msg.senderId) === String(user?.userId || user?.id) ? 'أنت' : 'عضو',
+                    avatar: String(msg.senderId) === String(user?.userId || user?.id) ? '🦁' : '🐰',
+                    text: msg.content,
+                    time: new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+                    roomId: msg.roomId,
+                }));
+                setConversations((prev) => ({ ...prev, [activeRoomId]: history }));
+            })
+            .catch(console.error);
+    }, [activeRoomId, user]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [conversations, activeRoomId]);
-
-    const userId = "placeholderUserId";
-    const { messages, connectionRef, connectionStatus, joinGroup, sendMessage } = useChatHub(userId);
 
   // Join the active room when connection is ready
   useEffect(() => {
@@ -97,7 +120,19 @@ function Chats() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [connectionStatus, activeRoomId]);
 
-  const activeMessages = messages.filter((msg) => msg.RoomId === activeRoomId || msg.roomId === activeRoomId);
+  const activeMessages = [
+    ...(conversations[activeRoomId] || []),
+    ...messages
+      .filter((msg) => msg.roomId === activeRoomId || msg.RoomId === activeRoomId)
+      .map((msg) => ({
+        id: msg.id || Date.now(),
+        sender: 'other',
+        senderName: msg.senderName || 'عضو',
+        avatar: msg.avatar || '🐰',
+        text: msg.content || msg.text,
+        time: msg.time || new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+      })),
+  ];
 
   const handleSendMessage = (e) => {
     if (e) e.preventDefault();
@@ -155,6 +190,10 @@ function Chats() {
                         <div className="bg-white rounded-2xl border border-slate-200/60 shadow-xs p-4">
                             <h3 className="text-xs font-bold text-slate-400 mb-3 tracking-wider text-right">مساحاتي</h3>
                             <div className="space-y-2 max-h-[220px] overflow-y-auto pl-1">
+                                {roomsLoading && <p className="text-xs text-slate-400 text-center py-4">جاري تحميل المساحات...</p>}
+                                {!roomsLoading && myRooms.length === 0 && (
+                                    <p className="text-xs text-slate-400 text-center py-4">لا توجد مساحات منضم إليها</p>
+                                )}
                                 {myRooms.map(room => (
                                     <div 
                                         key={room.id} 
@@ -224,7 +263,8 @@ function Chats() {
                     {/* العمود الأيسر (نافذة الدردشة الكاملة) */}
                     <div className="lg:col-span-2 space-y-4 order-1 lg:order-2">
                         <div className="bg-white rounded-2xl border border-slate-200/60 shadow-xs overflow-hidden h-[580px] flex flex-col justify-between">
-                            {selectedRoom?.joined ? (
+                            {selectedRoom ? (
+                            selectedRoom.joined ? (
                                 <>
                                     {/* هيدر المحادثة */}
                                     <div className="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-white z-10 shadow-2xs">
@@ -313,6 +353,11 @@ function Chats() {
                                     >
                                         انضم الآن للمحادثة
                                     </button>
+                                </div>
+                            )
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-50/20">
+                                    <p className="text-slate-500 text-sm">لا توجد مساحات بعد. أنشئ مساحة جديدة للبدء.</p>
                                 </div>
                             )}
                         </div>

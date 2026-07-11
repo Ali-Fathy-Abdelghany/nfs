@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from "../components/layout/Header";
 import Sidebar from '../components/Sidebar/Sidebar';
+import { fetchPatientById, fetchPatientMedicalHistory } from '../api/patients';
+import { fetchUserSessions } from '../api/sessions';
 
 const chartData = {
     week: [
@@ -22,26 +24,52 @@ const chartData = {
     ]
 };
 
-const sessionsHistory = [
-    { id: 12, title: "الجلسة الثانية عشر", date: "28 يونيو 2026", time: "04:00 مساءً", mode: "حضوري", duration: "50 دقيقة", status: "مكتملة", symptoms: "أرق خفيف، تحسن استجابة القلق", recommendations: "الاستمرار على تمارين التجذير اليومية وتنظيم ساعات النوم قبل العمل بـ ساعتين." },
-    { id: 11, title: "الجلسة الحادية عشر", date: "21 يونيو 2026", time: "05:30 مساءً", mode: "أونلاين", duration: "50 دقيقة", status: "مكتملة", symptoms: "توتر حاد بسبب ضغط تسليمات العمل", recommendations: "تطبيق استراتيجية الـ Time-boxing وتقليل الكافيين بعد الساعة 4 عصراً." },
-    { id: 10, title: "الجلسة العاشرة", date: "14 يونيو 2026", time: "04:00 مساءً", mode: "حضوري", duration: "60 دقيقة", status: "مكتملة", symptoms: "بداية المتابعة، نوبات هلع متكررة", recommendations: "فهم محفزات الـ Panic attacks الأساسية وتدوينها فور حدوثها." },
-    { id: 9, title: "الجلسة التاسعة", date: "7 يونيو 2026", time: "04:00 مساءً", mode: "حضوري", duration: "50 دقيقة", status: "مكتملة", symptoms: "تحسن طفيف في جودة النوم ونقص معدل الكوابيس", recommendations: "تجنب مناقشة مشاكل العمل قبل النوم والالتزام بتمارين التنفس العميق." },
-    { id: 8, title: "الجلسة الثامنة", date: "31 مايو 2026", time: "06:00 مساءً", mode: "أونلاين", duration: "50 دقيقة", status: "مكتملة", symptoms: "تراجع مؤقت في المزاج بسبب ضغوطات عائلية", recommendations: "فصل التفكير في المشاكل الشخصية وتطبيق تقنيات التفريغ الانفعالي الكتابي." }
-];
-
 function PatientProfile() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const patientFromState = location.state?.patient;
+    const [patient, setPatient] = useState(null);
+    const [sessionsHistory, setSessionsHistory] = useState([]);
     const [activeFilter, setActiveFilter] = useState('week');
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
-    const [isAllSessionsModalOpen, setIsAllSessionsModalOpen] = useState(false); // State لـ بوب اب "كل الجلسات"
+    const [isAllSessionsModalOpen, setIsAllSessionsModalOpen] = useState(false);
     const [selectedSession, setSelectedSession] = useState(null);
+    const [allMeetingNotes, setAllMeetingNotes] = useState([]);
 
-    const [allMeetingNotes, setAllMeetingNotes] = useState([
-        { id: 1, date: "28 يونيو 2026", session: "الجلسة #12", text: "أظهرت سارة تحسناً ملحوظاً في إدارة نوبات القلق الصباحية. ناقشنا تقنية التجذير 5-4-3-2-1 وأبدت استجابة جيدة. لا تزال تعاني من بعض الأرق المرتبط بضغط العمل، قمنا بتعديل خطة النوم لتشمل تمارين استرخاء عضلات تدريجي." },
-        { id: 2, date: "21 يونيو 2026", session: "الجلسة #11", text: "كانت الجلسة عبر الإنترنت، ركزنا على تتبع الأفكار التلقائية السلبية المصاحبة لنوبات الهلع عند حدوث مواقف مفاجئة في بيئة العمل، وأوصينا بكتابة المذكرات اليومية." },
-        { id: 3, date: "14 يونيو 2026", session: "الجلسة #10", text: "بداية الخطة العلاجية السلوكية المعرفية (CBT)، شرح المفهوم وتحديد الأهداف العامة مع المريضة لقياس التطور." }
-    ]);
+    useEffect(() => {
+        const patientId = patientFromState?.patientId || patientFromState?.id;
+        if (!patientId) return;
+        fetchPatientById(patientId)
+            .then((res) => setPatient(res.data))
+            .catch(console.error);
+        fetchPatientMedicalHistory(patientId)
+            .then((res) => {
+                const notes = (res.data || []).map((h, i) => ({
+                    id: h.patientMedicalHistoryId || i,
+                    date: new Date(h.createdAt).toLocaleDateString('ar-EG'),
+                    session: `سجل #${i + 1}`,
+                    text: h.notes,
+                }));
+                setAllMeetingNotes(notes.length ? notes : []);
+            })
+            .catch(console.error);
+        fetchUserSessions(patientId)
+            .then((res) => {
+                const sessions = (res.data || []).map((s, i) => ({
+                    id: s.id,
+                    title: `الجلسة ${i + 1}`,
+                    date: s.actualStartTime ? new Date(s.actualStartTime).toLocaleDateString('ar-EG') : '-',
+                    time: s.actualStartTime ? new Date(s.actualStartTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
+                    mode: s.type || 'أونلاين',
+                    duration: '50 دقيقة',
+                    status: s.status === 'COMPLETED' ? 'مكتملة' : 'مجدولة',
+                    symptoms: s.notes || '',
+                    recommendations: s.notes || '',
+                }));
+                setSessionsHistory(sessions);
+            })
+            .catch(console.error);
+    }, [patientFromState]);
 
     const [editingNoteId, setEditingNoteId] = useState(null);
     const [editingText, setEditingText] = useState("");
@@ -56,7 +84,8 @@ function PatientProfile() {
         setEditingNoteId(null);
     };
 
-    const lastSessionNote = allMeetingNotes.find(note => note.id === 1);
+    const lastSessionNote = allMeetingNotes[0];
+    const patientName = patient ? `${patient.firstName} ${patient.lastName}` : patientFromState?.name || 'المريض';
 
     return (
         <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] flex flex-col justify-between font-['Cairo',sans-serif]" style={{ direction: 'rtl' }}>
@@ -76,16 +105,16 @@ function PatientProfile() {
                     <div className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-3xs p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300 hover:shadow-2xs">
                         <div className="flex items-center gap-4 text-right">
                             <img
-                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150"
+                                src={patient?.profileImageUrl || patientFromState?.img || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'}
                                 alt="بروفايل المريض"
                                 className="w-16 h-16 rounded-[20px] object-cover border border-[#E6E9E9]"
                             />
                             <div className="space-y-1">
-                                <h3 className="text-xl font-black text-[#181C1D]">سارة محمود</h3>
+                                <h3 className="text-xl font-black text-[#181C1D]">{patientName}</h3>
                                 <div className="flex items-center gap-2 text-[#707978] text-xs font-medium">
-                                    <span className="flex items-center gap-1"><i className="fa-solid fa-cake-candles text-[10px]"></i> 24 عاماً</span>
+                                    <span className="flex items-center gap-1"><i className="fa-solid fa-envelope text-[10px]"></i> {patient?.email || '-'}</span>
                                     <span className="text-[#E6E9E9]">|</span>
-                                    <span className="flex items-center gap-1"><i className="fa-solid fa-calendar-day text-[10px]"></i> بدأت منذ 4 أشهر</span>
+                                    <span className="flex items-center gap-1"><i className="fa-solid fa-calendar-day text-[10px]"></i> {patient?.createdAt ? new Date(patient.createdAt).toLocaleDateString('ar-EG') : 'متابعة نشطة'}</span>
                                 </div>
                             </div>
                         </div>

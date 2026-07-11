@@ -1,16 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../../components/layout/Header";
 import Sidebar from '../../Components/Sidebar/Sidebar';
+import { fetchPatients } from '../../api/patients';
 import './Patients.css';
-
-const PATIENTS = [
-  { id: 1, name: 'سارة أحمد', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', condition: 'اضطراب قلق حاد', status: 'نشط', last: '28 يونيو 2026', next: '05 يوليو 2026', nextClass: 'upcoming', mood: '😊', moodTitle: 'تحسن ملحوظ', sessions: 12, joinOrder: 5 },
-  { id: 2, name: 'محمد علي', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', condition: 'نوبات هلع', status: 'نشط', last: '25 يونيو 2026', next: '02 يوليو 2026', nextClass: 'upcoming', mood: '😟', moodTitle: 'مجهد / قلق', sessions: 8, joinOrder: 3 },
-  { id: 3, name: 'رانيا مصطفى', img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150', condition: 'اكتئاب موسمي', status: 'في إجازة', last: '18 يونيو 2026', next: 'في إجازة', nextClass: 'leave-status', mood: '😐', moodTitle: 'مستقر', sessions: 15, joinOrder: 2 },
-  { id: 4, name: 'أحمد خالد', img: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150', condition: 'اضطراب النوم والأرق', status: 'مكتمل', last: '12 يونيو 2026', next: 'تم الاستكمال', nextClass: 'completed-status', mood: '😁', moodTitle: 'تعافي تام', sessions: 20, joinOrder: 1 },
-  { id: 5, name: 'ياسمين عمر', img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150', condition: 'إدارة ضغوط العمل', status: 'نشط', last: '29 يونيو 2026', next: '06 يوليو 2026', nextClass: 'upcoming', mood: '✨😎', moodTitle: 'متحمس / إيجابي', sessions: 4, joinOrder: 6 },
-];
 
 const STATUS_FILTERS = ['الكل', 'نشط', 'في إجازة', 'مكتمل'];
 const SORT_OPTIONS = [
@@ -22,23 +15,50 @@ const SORT_OPTIONS = [
 const statusClass = (status) =>
   status === 'نشط' ? 'text-active' : status === 'في إجازة' ? 'text-vacation' : 'text-completed';
 
+function mapPatient(p) {
+  return {
+    id: p.patientId,
+    patientId: p.patientId,
+    name: `${p.firstName} ${p.lastName}`,
+    img: p.profileImageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    condition: p.medicalHistory || p.notes || 'متابعة نفسية',
+    status: 'نشط',
+    last: p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-EG') : '-',
+    next: 'قيد المتابعة',
+    nextClass: 'upcoming',
+    mood: '😊',
+    moodTitle: 'متابعة',
+    sessions: 0,
+    joinOrder: p.patientId,
+  };
+}
+
 function Patients() {
   const navigate = useNavigate();
-  const viewProfile = () => navigate('/doctor/patient-profile');
+  const viewProfile = (patient) => navigate('/doctor/patient-profile', { state: { patient } });
 
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [activeStatus, setActiveStatus] = useState('الكل');
   const [sortBy, setSortBy] = useState('latest');
   const [sortOpen, setSortOpen] = useState(false);
 
+  useEffect(() => {
+    fetchPatients()
+      .then((res) => setPatients((res.data || []).map(mapPatient)))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   const visiblePatients = useMemo(() => {
-    let list = PATIENTS.filter((p) => activeStatus === 'الكل' || p.status === activeStatus);
+    let list = patients.filter((p) => activeStatus === 'الكل' || p.status === activeStatus);
     list = [...list].sort((a, b) => {
       if (sortBy === 'name') return a.name.localeCompare(b.name, 'ar');
       if (sortBy === 'sessions') return b.sessions - a.sessions;
       return b.joinOrder - a.joinOrder;
     });
     return list;
-  }, [activeStatus, sortBy]);
+  }, [activeStatus, sortBy, patients]);
 
   const activeSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
 
@@ -57,7 +77,7 @@ function Patients() {
                 <div className="stat-card-box">
                   <div className="stat-card-info">
                     <span className="stat-card-title">إجمالي المرضى</span>
-                    <h3 className="stat-card-number">{PATIENTS.length}</h3>
+                    <h3 className="stat-card-number">{patients.length}</h3>
                   </div>
                   <div className="stat-card-icon icon-patients"><i className="fa-solid fa-user-group"></i></div>
                 </div>
@@ -125,7 +145,8 @@ function Patients() {
               </div>
 
               <div className="patients-cards-list">
-                {visiblePatients.length === 0 && (
+                {loading && <p className="patients-empty-text">جاري تحميل المرضى...</p>}
+                {!loading && visiblePatients.length === 0 && (
                   <p className="patients-empty-text">لا يوجد مرضى في هذه الفئة</p>
                 )}
 
@@ -159,7 +180,7 @@ function Patients() {
                       <span className="mood-emoji" title={p.moodTitle}>{p.mood}</span>
                     </div>
 
-                    <button className="view-patient-profile-btn" onClick={viewProfile}>
+                    <button className="view-patient-profile-btn" onClick={() => viewProfile(p)}>
                       <i className="fa-regular fa-id-card"></i>
                       عرض الملف
                     </button>

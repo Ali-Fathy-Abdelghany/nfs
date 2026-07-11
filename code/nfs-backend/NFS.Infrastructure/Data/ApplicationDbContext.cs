@@ -26,6 +26,7 @@ namespace NFS.Infrastructure.Data
         public DbSet<AvailabilitySlot> AvailabilitySlots => Set<AvailabilitySlot>();
         public DbSet<Session> Sessions => Set<Session>();
         public DbSet<SessionNote> SessionNotes => Set<SessionNote>();
+        public DbSet<DiaryEntry> DiaryEntries => Set<DiaryEntry>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -202,6 +203,16 @@ namespace NFS.Infrastructure.Data
             {
                 entity.ToTable("SessionNotes");
                 entity.HasKey(n => n.Id);
+            });
+
+            modelBuilder.Entity<DiaryEntry>(entity =>
+            {
+                entity.ToTable("DiaryEntries");
+                entity.HasKey(d => d.Id);
+                entity.HasOne(d => d.Patient)
+                    .WithMany()
+                    .HasForeignKey(d => d.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
