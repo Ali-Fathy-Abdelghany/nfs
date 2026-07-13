@@ -3,7 +3,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localho
 export function resolveUserRole(roles) {
   if (!roles?.length) return 'user';
   const normalized = roles.map((r) => String(r).toUpperCase());
-  if (normalized.includes('THERAPIST') || normalized.includes('ADMIN')) return 'doctor';
+  if (normalized.includes('ADMIN')) return 'admin';
+  if (normalized.includes('THERAPIST')) return 'doctor';
   return 'user';
 }
 

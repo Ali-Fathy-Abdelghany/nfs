@@ -29,6 +29,7 @@ import Patients from "./pages/Patients/Patients";
 import Meetings from "./pages/Meetings/Meetings";
 
 import TimeTable from "./pages/TimeTable/TimeTable";
+import AdminPage from "./pages/Admin/AdminPage";
 
 // مكونات أخرى
 import QuizPage from "./Components/QuizPage/QuizPage";
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/user-signup" element={<UserSignup />} />
                 <Route path="/verification" element={<Verification />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin" element={<AdminPage />} />
 
                 <Route
                     path="/doctor-checkout"
@@ -69,6 +71,7 @@ function App() {
                 <Route path="/doctor/patients" element={<Patients />} />
                 <Route path="/doctor/meetings" element={<Meetings />} />
                 <Route path="/doctor/sessions" element={<Sessions />} />
+                <Route path="/sessions" element={<Sessions />} />
                 <Route path="/doctor/timetable" element={<TimeTable />} />
                 <Route path="/doctor/chats" element={<Chats />} />
                 <Route path="/doctor/library" element={<Library />} />

@@ -75,3 +75,18 @@
   --color-text: var(--brand-neutral-0);
   --color-text-muted: var(--brand-neutral-300);
 }
+
+/* Breathing exercise: 4s expand (inhale) + 4s contract (exhale) = 8s cycle */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.breathing-circle {
+  animation: breathe 8s ease-in-out infinite;
+}

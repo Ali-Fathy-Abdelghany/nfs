@@ -40,9 +40,20 @@ export async function logout() {
 }
 
 export function persistAuthSession(loginResponse, extra = {}) {
-  const { accessToken, refreshToken, userId, email, firstName, lastName, roles } = loginResponse;
+  const { accessToken, refreshToken, userId, email, firstName, lastName, roles, patientId, therapistId } = loginResponse;
   const userRole = resolveUserRole(roles);
-  const user = { id: userId, userId, email, firstName, lastName, roles, userRole, patientId: loginResponse.patientId, ...extra };
+  const user = {
+    id: userId,
+    userId,
+    email,
+    firstName,
+    lastName,
+    roles,
+    userRole,
+    patientId: patientId ?? loginResponse.patientId,
+    therapistId: therapistId ?? loginResponse.therapistId,
+    ...extra,
+  };
 
   localStorage.setItem('token', accessToken);
   localStorage.setItem('accessToken', accessToken);

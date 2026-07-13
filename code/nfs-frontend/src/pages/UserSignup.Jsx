@@ -2,13 +2,27 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register, login } from '../api/auth';
 import { ensurePatientRecord } from '../api/patientHelpers';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { getApiErrorMessage } from '../utils/apiError';
+
+const inputClass =
+  'w-full px-4 py-3.5 bg-[#F7FAFA] border border-gray-100 rounded-2xl text-right text-sm focus:outline-none focus:border-[#316764] transition';
 
 const UserSignup = () => {
   const navigate = useNavigate();
+  const { login: setAuth } = useAuth();
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
+    phone: '',
+    gender: '1',
+    dateOfBirth: '',
+    country: 'مصر',
+    governorate: '',
   });
 
   const handleChange = (e) => {
@@ -16,45 +30,49 @@ const UserSignup = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  // Build payload matching backend RegisterDto (using available fields)
-  const [firstName = "", ...rest] = formData.fullName.split(' ');
-  const lastName = rest.join(' ');
-  const payload = {
-    firstName,
-    lastName,
-    email: formData.email,
-    password: formData.password,
-    phone: "",
-    gender: 0,
-    dateOfBirth: new Date().toISOString(),
-    profileImageUrl: "",
-    country: "",
-    governorate: "",
-    role: 0,
+    e.preventDefault();
+    setLoading(true);
+    const [firstName = '', ...rest] = formData.fullName.trim().split(/\s+/);
+    const lastName = rest.join(' ') || firstName;
+    const payload = {
+      firstName,
+      lastName,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phone || null,
+      gender: Number(formData.gender),
+      dateOfBirth: formData.dateOfBirth
+        ? new Date(formData.dateOfBirth).toISOString()
+        : null,
+      profileImageUrl: null,
+      country: formData.country || null,
+      governorate: formData.governorate || null,
+      role: 0,
+    };
+    try {
+      await register(payload);
+      const loginResult = await login({
+        email: formData.email,
+        password: formData.password,
+      });
+      const patientId = await ensurePatientRecord(loginResult.userId);
+      setAuth({ ...loginResult, patientId });
+      navigate('/quiz');
+    } catch (err) {
+      console.error('Registration failed', err);
+      toast.error(getApiErrorMessage(err, err.message || 'فشل التسجيل'));
+    } finally {
+      setLoading(false);
+    }
   };
-  try {
-    await register(payload);
-    const loginResult = await login({ email: formData.email, password: formData.password });
-    await ensurePatientRecord(loginResult.userId);
-    navigate('/login');
-  } catch (err) {
-    console.error('Registration failed', err);
-    alert(err.message || 'Registration failed');
-  }
-};
 
   return (
-    <div className="min-h-screen w-full bg-[#F7FAFA] flex flex-row-reverse overflow-hidden font-sans">
-      
-      {/* الجانب الأيمن: الصورة والعبارة الملهمة */}
-      <div className="hidden md:flex md:w-1/2 relative bg-cover bg-center items-center justify-center p-12"
-           style={{ backgroundImage: `url('/forest-path.jpg')` }}>
-        
-        {/* الطبقة الضبابية الفوقية (Overlay) */}
+    <div className="min-h-screen w-full bg-[#F7FAFA] flex flex-row-reverse overflow-hidden font-['Cairo',sans-serif]">
+      <div
+        className="hidden md:flex md:w-1/2 relative bg-cover bg-center items-center justify-center p-12"
+        style={{ backgroundImage: `url('/forest-path.jpg')` }}
+      >
         <div className="absolute inset-0 bg-black/10 backdrop-blur-[2px]"></div>
-
-        {/* الكارت الزجاجي الداخلي (Glassmorphism Card) */}
         <div className="relative z-10 bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl p-8 max-w-sm text-center text-white shadow-xl">
           <div className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-xl">⚡</span>
@@ -66,113 +84,159 @@ const UserSignup = () => {
         </div>
       </div>
 
-      {/* الجانب الأيسر: فورم التسجيل */}
-      <div className="w-full md:w-1/2 flex flex-col p-8 md:p-12 justify-between bg-white">
-        
-        {/* الهيدر العلوي للفورم */}
+      <div className="w-full md:w-1/2 flex flex-col p-8 md:p-12 justify-between bg-white overflow-y-auto">
         <div className="flex justify-between items-center flex-row-reverse w-full">
           <span className="text-[#316764] font-bold text-xl tracking-wide">نفس</span>
-          <button 
-            onClick={() => navigate('/login')} 
+          <button
+            onClick={() => navigate('/login')}
             className="text-gray-400 font-medium hover:text-gray-600 transition text-sm"
           >
             Log in
           </button>
         </div>
 
-        {/* محتوى الـ Form */}
-        <div className="max-w-md w-full mx-auto my-auto pt-8">
+        <div className="max-w-md w-full mx-auto my-auto py-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-[#2A5C58] mb-2">ابدأ رحلتك نحو السلام النفسي</h2>
-            <p className="text-gray-400 text-sm">خطوات بسيطة تفصلك عن بيئة آمنة تدعم صحتك النفسية.</p>
+            <p className="text-gray-400 text-sm">بعد التسجيل ستكمل تقييماً قصيراً لفهم احتياجاتك.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* حقل الاسم الكامل */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col text-right">
               <label className="text-gray-600 text-xs font-bold mb-2">الاسم الكامل</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="fullName"
                 placeholder="أدخل اسمك بالكامل"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full px-4 py-3.5 bg-[#F7FAFA] border border-gray-100 rounded-2xl text-right text-sm focus:outline-none focus:border-[#316764] transition"
+                className={inputClass}
                 required
               />
             </div>
 
-            {/* حقل البريد الإلكتروني */}
             <div className="flex flex-col text-right">
               <label className="text-gray-600 text-xs font-bold mb-2">البريد الإلكتروني</label>
-              <input 
-                type="email" 
+              <input
+                type="email"
                 name="email"
                 placeholder="example@mail.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3.5 bg-[#F7FAFA] border border-gray-100 rounded-2xl text-left text-sm focus:outline-none focus:border-[#316764] transition"
+                className={`${inputClass} text-left`}
                 required
               />
             </div>
 
-            {/* حقل كلمة المرور */}
-            <div className="flex flex-col text-right">
-              <label className="text-gray-600 text-xs font-bold mb-2">كلمة المرور</label>
-              <div className="relative">
-                <input 
-                  type="password" 
-                  name="password"
-                  placeholder="••••••••"
-                  value={formData.password}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col text-right">
+                <label className="text-gray-600 text-xs font-bold mb-2">رقم الهاتف</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="01xxxxxxxxx"
+                  value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3.5 bg-[#F7FAFA] border border-gray-100 rounded-2xl text-left text-sm focus:outline-none focus:border-[#316764] transition"
+                  className={`${inputClass} text-left`}
                   required
+                />
+              </div>
+              <div className="flex flex-col text-right">
+                <label className="text-gray-600 text-xs font-bold mb-2">النوع</label>
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className={inputClass}
+                  required
+                >
+                  <option value="1">أنثى</option>
+                  <option value="0">ذكر</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex flex-col text-right">
+              <label className="text-gray-600 text-xs font-bold mb-2">تاريخ الميلاد</label>
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                className={`${inputClass} text-left`}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col text-right">
+                <label className="text-gray-600 text-xs font-bold mb-2">الدولة</label>
+                <input
+                  type="text"
+                  name="country"
+                  placeholder="مصر"
+                  value={formData.country}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+              <div className="flex flex-col text-right">
+                <label className="text-gray-600 text-xs font-bold mb-2">المحافظة</label>
+                <input
+                  type="text"
+                  name="governorate"
+                  placeholder="القاهرة"
+                  value={formData.governorate}
+                  onChange={handleChange}
+                  className={inputClass}
                 />
               </div>
             </div>
 
-            {/* زر إنشاء الحساب (عند الضغط عليه سيوجه لـ /login) */}
-            <button 
-              type="submit" 
-              className="w-full py-4 bg-[#316764] text-white rounded-2xl font-bold shadow-md hover:bg-[#254f4c] transition mt-4 text-center"
+            <div className="flex flex-col text-right">
+              <label className="text-gray-600 text-xs font-bold mb-2">كلمة المرور</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                className={`${inputClass} text-left`}
+                minLength={6}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-4 bg-[#316764] text-white rounded-2xl font-bold shadow-md hover:bg-[#254f4c] transition mt-2 text-center disabled:opacity-60"
             >
-              إنشاء الحساب
+              {loading ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب والمتابعة للتقييم'}
             </button>
           </form>
 
-          {/* أزرار تسجيل الدخول البديلة */}
-          <div className="grid grid-cols-2 gap-4 mt-6">
-            <button className="flex items-center justify-center gap-2 py-3 border border-gray-100 rounded-2xl bg-[#F7FAFA] hover:bg-gray-50 transition text-sm text-gray-600 font-medium">
-              <span>آبل</span>
-              <span className="text-base">🍎</span>
-            </button>
-            <button className="flex items-center justify-center gap-2 py-3 border border-gray-100 rounded-2xl bg-[#F7FAFA] hover:bg-gray-50 transition text-sm text-gray-600 font-medium">
-              <span>جوجل</span>
-              <span className="text-base">🌐</span>
-            </button>
-          </div>
-
-          {/* روابط المساعدة البديلة */}
           <div className="text-center mt-8 space-y-2">
-            <button 
-              onClick={() => navigate('/select-role')} 
+            <button
+              onClick={() => navigate('/select-role')}
               className="text-xs text-gray-400 hover:underline block mx-auto"
             >
               العودة للصفحة السابقة
             </button>
             <p className="text-xs text-gray-400">
-              لديك حساب بالفعل؟ <span onClick={() => navigate('/login')} className="text-[#316764] font-bold cursor-pointer hover:underline">تسجيل الدخول</span>
+              لديك حساب بالفعل؟{' '}
+              <span
+                onClick={() => navigate('/login')}
+                className="text-[#316764] font-bold cursor-pointer hover:underline"
+              >
+                تسجيل الدخول
+              </span>
             </p>
           </div>
         </div>
 
-        {/* حقوق الملكية */}
-        <div className="text-center text-xs text-gray-300 pt-4">
-          © 2026 Nafs Sanctuary. All rights reserved.
-        </div>
+        <div className="text-center text-xs text-gray-300 pt-4">© 2026 Nafs Sanctuary. All rights reserved.</div>
       </div>
-
     </div>
   );
 };

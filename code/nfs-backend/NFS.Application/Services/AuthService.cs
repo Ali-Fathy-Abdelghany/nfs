@@ -82,6 +82,15 @@ namespace NFS.Application.Services
             user.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
+            var patientId = await _context.Patients
+                .Where(p => p.UserId == user.UserId)
+                .Select(p => (int?)p.PatientId)
+                .FirstOrDefaultAsync();
+            var therapistId = await _context.Therapists
+                .Where(t => t.UserId == user.UserId)
+                .Select(t => (int?)t.TherapistId)
+                .FirstOrDefaultAsync();
+
             return new LoginResponseDto
             {
                 AccessToken = accessToken,
@@ -91,7 +100,9 @@ namespace NFS.Application.Services
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Roles = roles
+                Roles = roles,
+                PatientId = patientId,
+                TherapistId = therapistId
             };
         }
 
@@ -132,6 +143,15 @@ namespace NFS.Application.Services
             user.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
+            var patientId = await _context.Patients
+                .Where(p => p.UserId == user.UserId)
+                .Select(p => (int?)p.PatientId)
+                .FirstOrDefaultAsync();
+            var therapistId = await _context.Therapists
+                .Where(t => t.UserId == user.UserId)
+                .Select(t => (int?)t.TherapistId)
+                .FirstOrDefaultAsync();
+
             return new LoginResponseDto
             {
                 AccessToken = newAccessToken,
@@ -141,7 +161,9 @@ namespace NFS.Application.Services
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Roles = roles
+                Roles = roles,
+                PatientId = patientId,
+                TherapistId = therapistId
             };
         }
 

@@ -22,28 +22,35 @@ namespace NFS.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var appointment = new Appointment
+            try
             {
-                PatientId = dto.PatientId,
-                DoctorId = dto.DoctorId,
-                SlotId = dto.SlotId,
-                Status = "Pending",
-                CreatedAt = DateTime.UtcNow
-            };
+                var appointment = new Appointment
+                {
+                    PatientId = dto.PatientId,
+                    DoctorId = dto.DoctorId,
+                    SlotId = dto.SlotId,
+                    Status = "Pending",
+                    CreatedAt = DateTime.UtcNow
+                };
 
-            var createdAppointment = await _appointmentRepository.CreateAppointmentAsync(appointment);
+                var createdAppointment = await _appointmentRepository.CreateAppointmentAsync(appointment);
 
-            var resultDto = new AppointmentDto
+                var resultDto = new AppointmentDto
+                {
+                    Id = createdAppointment.Id,
+                    PatientId = createdAppointment.PatientId,
+                    DoctorId = createdAppointment.DoctorId,
+                    SlotId = createdAppointment.SlotId,
+                    Status = createdAppointment.Status,
+                    CreatedAt = createdAppointment.CreatedAt
+                };
+
+                return Ok(resultDto);
+            }
+            catch (InvalidOperationException ex)
             {
-                Id = createdAppointment.Id,
-                PatientId = createdAppointment.PatientId,
-                DoctorId = createdAppointment.DoctorId,
-                SlotId = createdAppointment.SlotId,
-                Status = createdAppointment.Status,
-                CreatedAt = createdAppointment.CreatedAt
-            };
-
-            return Ok(resultDto);
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpGet("patient/{patientId}")]
@@ -51,6 +58,34 @@ namespace NFS.API.Controllers
         {
             var appointments = await _appointmentRepository.GetPatientAppointmentsDetailedAsync(patientId);
             return Ok(appointments);
+        }
+
+        [HttpGet("doctor/{doctorId}")]
+        public async Task<IActionResult> GetByDoctor(int doctorId)
+        {
+            var appointments = await _appointmentRepository.GetDoctorAppointmentsDetailedAsync(doctorId);
+            return Ok(appointments);
+        }
+
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateAppointmentStatusDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.Status))
+                return BadRequest(new { message = "Status is required" });
+
+            var appointment = await _appointmentRepository.GetAppointmentByIdAsync(id);
+            if (appointment == null)
+                return NotFound(new { message = "Appointment not found" });
+
+            try
+            {
+                await _appointmentRepository.UpdateAppointmentStatusAsync(id, dto.Status);
+                return Ok(new { message = "Status updated", status = dto.Status });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpPut("reschedule")]
@@ -87,6 +122,40 @@ namespace NFS.API.Controllers
             });
 
             return Ok(result);
+        }
+
+        [HttpPost("availability")]
+        public async Task<IActionResult> CreateAvailability([FromBody] CreateAvailabilitySlotDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (dto.EndTime <= dto.StartTime)
+                return BadRequest(new { message = "EndTime must be after StartTime" });
+
+            try
+            {
+                var slot = await _appointmentRepository.CreateAvailabilitySlotAsync(new AvailabilitySlot
+                {
+                    DoctorId = dto.DoctorId,
+                    StartTime = dto.StartTime,
+                    EndTime = dto.EndTime,
+                    IsBooked = false
+                });
+
+                return Ok(new
+                {
+                    slot.Id,
+                    slot.DoctorId,
+                    slot.StartTime,
+                    slot.EndTime,
+                    slot.IsBooked
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
     }
 }

@@ -1,28 +1,143 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Header from "../components/layout/Header";
 import Sidebar from '../components/Sidebar/Sidebar';
 import { fetchPatientById, fetchPatientMedicalHistory } from '../api/patients';
+import { fetchPatientAppointments } from '../api/appointments';
+import { fetchDiariesByPatient } from '../api/diaries';
 import { fetchUserSessions } from '../api/sessions';
 
-const chartData = {
-    week: [
-        { name: 'السبت', المزاج: 6 },
-        { name: 'الأحد', المزاج: 4 },
-        { name: 'الإثنين', المزاج: 7 },
-        { name: 'الثلاثاء', المزاج: 5 },
-        { name: 'الأربعاء', المزاج: 8 },
-        { name: 'الخميس', المزاج: 7.4 },
-        { name: 'الجمعة', المزاج: 9 },
-    ],
-    month: [
-        { name: 'الأسبوع 1', المزاج: 5 },
-        { name: 'الأسبوع 2', المزاج: 6.5 },
-        { name: 'الأسبوع 3', المزاج: 7.4 },
-        { name: 'الأسبوع 4', المزاج: 8.2 },
-    ]
+const WEEKDAY_AR = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+
+const MOOD_SCORE = {
+  سعيد: 9,
+  هادئ: 7,
+  قلق: 4,
+  حزين: 2,
 };
+
+const EMPTY_WEEK = WEEKDAY_AR.map((name) => ({ name, المزاج: 0 }));
+const EMPTY_MONTH = [1, 2, 3, 4].map((n) => ({ name: `الأسبوع ${n}`, المزاج: 0 }));
+
+function moodToScore(mood) {
+  if (mood == null || mood === '') return null;
+  const numeric = Number(mood);
+  if (!Number.isNaN(numeric) && numeric >= 1 && numeric <= 10) return numeric;
+  return MOOD_SCORE[String(mood).trim()] ?? null;
+}
+
+function buildMoodChart(diaries) {
+  const now = new Date();
+  const weekBuckets = Array.from({ length: 7 }, () => []);
+  const monthBuckets = Array.from({ length: 4 }, () => []);
+
+  (diaries || []).forEach((entry) => {
+    const score = moodToScore(entry.mood);
+    if (score == null || !entry.createdAt) return;
+    const date = new Date(entry.createdAt);
+    if (Number.isNaN(date.getTime())) return;
+
+    const dayDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    if (dayDiff >= 0 && dayDiff < 7) {
+      weekBuckets[date.getDay()].push(score);
+    }
+    if (dayDiff >= 0 && dayDiff < 28) {
+      const weekIndex = Math.min(3, Math.floor(dayDiff / 7));
+      // reverse so week 1 is oldest within the month window
+      monthBuckets[3 - weekIndex].push(score);
+    }
+  });
+
+  const avg = (arr) => (arr.length ? +(arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1) : 0);
+
+  return {
+    week: WEEKDAY_AR.map((name, i) => ({ name, المزاج: avg(weekBuckets[i]) })),
+    month: monthBuckets.map((scores, i) => ({ name: `الأسبوع ${i + 1}`, المزاج: avg(scores) })),
+  };
+}
+
+function deriveClinicalTags(patient) {
+  const source = [patient?.medicalHistory, patient?.notes].filter(Boolean).join(' ');
+  if (!source.trim()) return ['متابعة نفسية'];
+
+  const parts = source
+    .split(/[,،|/;\n]+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length > 1 && t.length < 40);
+
+  const unique = [...new Set(parts)];
+  return unique.length ? unique.slice(0, 6) : [source.slice(0, 40)];
+}
+
+function mapAppointmentToSession(appointment, index) {
+  const start = appointment.actualStartTime || appointment.scheduledStartTime;
+  const end = appointment.actualEndTime || appointment.scheduledEndTime;
+  let duration = '50 دقيقة';
+  if (start && end) {
+    const mins = Math.round((new Date(end) - new Date(start)) / 60000);
+    if (mins > 0) duration = `${mins} دقيقة`;
+  }
+
+  const statusUpper = String(appointment.status || '').toUpperCase();
+  const status =
+    statusUpper === 'COMPLETED' ? 'مكتملة' :
+    statusUpper === 'CANCELLED' ? 'ملغاة' :
+    'مجدولة';
+
+  return {
+    id: appointment.sessionId || appointment.id || index,
+    title: `الجلسة ${index + 1}`,
+    date: start ? new Date(start).toLocaleDateString('ar-EG') : '-',
+    time: start ? new Date(start).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
+    mode: appointment.type || 'أونلاين',
+    duration,
+    status,
+    symptoms: appointment.notes || 'لا توجد ملاحظات',
+    recommendations: appointment.notes || 'لا توجد توصيات',
+    startTime: start ? new Date(start) : null,
+  };
+}
+
+function mapSessionDto(s, index) {
+  const start = s.actualStartTime;
+  const end = s.actualEndTime;
+  let duration = '50 دقيقة';
+  if (start && end) {
+    const mins = Math.round((new Date(end) - new Date(start)) / 60000);
+    if (mins > 0) duration = `${mins} دقيقة`;
+  }
+  const statusUpper = String(s.status || '').toUpperCase();
+  return {
+    id: s.id || index,
+    title: `الجلسة ${index + 1}`,
+    date: start ? new Date(start).toLocaleDateString('ar-EG') : '-',
+    time: start ? new Date(start).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
+    mode: s.type || 'أونلاين',
+    duration,
+    status: statusUpper === 'COMPLETED' ? 'مكتملة' : 'مجدولة',
+    symptoms: s.notes || 'لا توجد ملاحظات',
+    recommendations: s.notes || 'لا توجد توصيات',
+    startTime: start ? new Date(start) : null,
+  };
+}
+
+function formatNextAppointment(appointment) {
+  if (!appointment) return null;
+  const start = appointment.scheduledStartTime || appointment.actualStartTime;
+  if (!start) return null;
+  const date = new Date(start);
+  const end = appointment.scheduledEndTime || appointment.actualEndTime;
+  let durationLabel = '50 دقيقة';
+  if (end) {
+    const mins = Math.round((new Date(end) - date) / 60000);
+    if (mins > 0) durationLabel = `${mins} دقيقة`;
+  }
+  return {
+    dateLabel: date.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' }),
+    timeLabel: `من الساعة ${date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' })} (${durationLabel})`,
+  };
+}
 
 function PatientProfile() {
     const navigate = useNavigate();
@@ -30,45 +145,118 @@ function PatientProfile() {
     const patientFromState = location.state?.patient;
     const [patient, setPatient] = useState(null);
     const [sessionsHistory, setSessionsHistory] = useState([]);
+    const [nextAppointment, setNextAppointment] = useState(null);
+    const [chartData, setChartData] = useState({ week: EMPTY_WEEK, month: EMPTY_MONTH });
     const [activeFilter, setActiveFilter] = useState('week');
     const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
     const [isAllSessionsModalOpen, setIsAllSessionsModalOpen] = useState(false);
     const [selectedSession, setSelectedSession] = useState(null);
     const [allMeetingNotes, setAllMeetingNotes] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const patientId = patientFromState?.patientId || patientFromState?.id;
-        if (!patientId) return;
-        fetchPatientById(patientId)
-            .then((res) => setPatient(res.data))
-            .catch(console.error);
-        fetchPatientMedicalHistory(patientId)
-            .then((res) => {
-                const notes = (res.data || []).map((h, i) => ({
-                    id: h.patientMedicalHistoryId || i,
-                    date: new Date(h.createdAt).toLocaleDateString('ar-EG'),
+        if (!patientId) {
+            setLoading(false);
+            return;
+        }
+
+        let cancelled = false;
+
+        async function loadProfile() {
+            setLoading(true);
+            try {
+                const [patientRes, historyRes, appointmentsRes, diariesRes] = await Promise.all([
+                    fetchPatientById(patientId),
+                    fetchPatientMedicalHistory(patientId),
+                    fetchPatientAppointments(patientId),
+                    fetchDiariesByPatient(patientId),
+                ]);
+
+                if (cancelled) return;
+
+                const patientData = patientRes.data;
+                setPatient(patientData);
+
+                const historyNotes = (historyRes.data || []).map((h, i) => ({
+                    id: h.patientMedicalHistoryId || `mh-${i}`,
+                    date: h.createdAt ? new Date(h.createdAt).toLocaleDateString('ar-EG') : '-',
                     session: `سجل #${i + 1}`,
-                    text: h.notes,
+                    text: h.notes || '',
                 }));
-                setAllMeetingNotes(notes.length ? notes : []);
-            })
-            .catch(console.error);
-        fetchUserSessions(patientId)
-            .then((res) => {
-                const sessions = (res.data || []).map((s, i) => ({
-                    id: s.id,
-                    title: `الجلسة ${i + 1}`,
-                    date: s.actualStartTime ? new Date(s.actualStartTime).toLocaleDateString('ar-EG') : '-',
-                    time: s.actualStartTime ? new Date(s.actualStartTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
-                    mode: s.type || 'أونلاين',
-                    duration: '50 دقيقة',
-                    status: s.status === 'COMPLETED' ? 'مكتملة' : 'مجدولة',
-                    symptoms: s.notes || '',
-                    recommendations: s.notes || '',
-                }));
-                setSessionsHistory(sessions);
-            })
-            .catch(console.error);
+
+                if (historyNotes.length) {
+                    setAllMeetingNotes(historyNotes);
+                } else if (patientData?.notes || patientData?.medicalHistory) {
+                    setAllMeetingNotes([{
+                        id: 'profile-notes',
+                        date: patientData.createdAt
+                            ? new Date(patientData.createdAt).toLocaleDateString('ar-EG')
+                            : '-',
+                        session: 'ملف المريض',
+                        text: patientData.notes || patientData.medicalHistory,
+                    }]);
+                } else {
+                    setAllMeetingNotes([]);
+                }
+
+                const appointments = appointmentsRes.data || [];
+                const now = new Date();
+                const upcoming = appointments
+                    .filter((a) => {
+                        const status = String(a.status || '').toUpperCase();
+                        if (status === 'CANCELLED' || status === 'COMPLETED') return false;
+                        const start = a.scheduledStartTime || a.actualStartTime;
+                        return start && new Date(start) >= now;
+                    })
+                    .sort((a, b) => new Date(a.scheduledStartTime || a.actualStartTime) - new Date(b.scheduledStartTime || b.actualStartTime));
+
+                setNextAppointment(upcoming[0] || null);
+
+                let sessions = appointments
+                    .slice()
+                    .sort((a, b) => {
+                        const aTime = new Date(a.actualStartTime || a.scheduledStartTime || 0);
+                        const bTime = new Date(b.actualStartTime || b.scheduledStartTime || 0);
+                        return bTime - aTime;
+                    })
+                    .map(mapAppointmentToSession);
+
+                if (!sessions.length) {
+                    const userId = patientData?.userId || patientFromState?.userId;
+                    if (userId) {
+                        try {
+                            const sessionsRes = await fetchUserSessions(userId);
+                            if (!cancelled) {
+                                sessions = (sessionsRes.data || []).map(mapSessionDto);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    }
+                }
+
+                if (!cancelled) setSessionsHistory(sessions);
+
+                const diaries = diariesRes.data || [];
+                const built = buildMoodChart(diaries);
+                const hasWeekData = built.week.some((d) => d.المزاج > 0);
+                const hasMonthData = built.month.some((d) => d.المزاج > 0);
+                if (!cancelled) {
+                    setChartData({
+                        week: hasWeekData ? built.week : EMPTY_WEEK,
+                        month: hasMonthData ? built.month : EMPTY_MONTH,
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
+
+        loadProfile();
+        return () => { cancelled = true; };
     }, [patientFromState]);
 
     const [editingNoteId, setEditingNoteId] = useState(null);
@@ -86,6 +274,13 @@ function PatientProfile() {
 
     const lastSessionNote = allMeetingNotes[0];
     const patientName = patient ? `${patient.firstName} ${patient.lastName}` : patientFromState?.name || 'المريض';
+    const clinicalTags = useMemo(
+        () => deriveClinicalTags(patient || patientFromState),
+        [patient, patientFromState]
+    );
+    const nextSessionDisplay = formatNextAppointment(nextAppointment);
+    const chartPoints = chartData[activeFilter] || EMPTY_WEEK;
+    const hasMoodData = chartPoints.some((d) => d.المزاج > 0);
 
     return (
         <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] flex flex-col justify-between font-['Cairo',sans-serif]" style={{ direction: 'rtl' }}>
@@ -100,6 +295,9 @@ function PatientProfile() {
 
                 {/* 2. المحتوى الرئيسي على اليسار */}
                 <div className="flex-1 w-full space-y-6 pb-12 text-right">
+                    {loading && (
+                        <p className="text-sm text-[#707978]">جاري تحميل بيانات المريض...</p>
+                    )}
                     
                     {/* هيدر معلومات المريض العلوي */}
                     <div className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-3xs p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300 hover:shadow-2xs">
@@ -111,8 +309,14 @@ function PatientProfile() {
                             />
                             <div className="space-y-1">
                                 <h3 className="text-xl font-black text-[#181C1D]">{patientName}</h3>
-                                <div className="flex items-center gap-2 text-[#707978] text-xs font-medium">
+                                <div className="flex items-center gap-2 text-[#707978] text-xs font-medium flex-wrap">
                                     <span className="flex items-center gap-1"><i className="fa-solid fa-envelope text-[10px]"></i> {patient?.email || '-'}</span>
+                                    {patient?.phone && (
+                                        <>
+                                            <span className="text-[#E6E9E9]">|</span>
+                                            <span className="flex items-center gap-1"><i className="fa-solid fa-phone text-[10px]"></i> {patient.phone}</span>
+                                        </>
+                                    )}
                                     <span className="text-[#E6E9E9]">|</span>
                                     <span className="flex items-center gap-1"><i className="fa-solid fa-calendar-day text-[10px]"></i> {patient?.createdAt ? new Date(patient.createdAt).toLocaleDateString('ar-EG') : 'متابعة نشطة'}</span>
                                 </div>
@@ -151,9 +355,14 @@ function PatientProfile() {
                                 </div>
                             </div>
 
-                            <div className="w-full h-44">
+                            <div className="w-full h-44 relative">
+                                {!hasMoodData && (
+                                    <div className="absolute inset-0 flex items-center justify-center text-xs text-[#707978] z-10">
+                                        لا توجد بيانات مزاج من يوميات المريض بعد
+                                    </div>
+                                )}
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={chartData[activeFilter]} margin={{ top: 10, right: -15, left: -20, bottom: 0 }}>
+                                    <AreaChart data={chartPoints} margin={{ top: 10, right: -15, left: -20, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="colorMood" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor="#316764" stopOpacity={0.2}/>
@@ -162,7 +371,7 @@ function PatientProfile() {
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#F7FAFA" vertical={false} />
                                         <XAxis dataKey="name" stroke="#707978" fontSize={11} tickLine={false} axisLine={false} dy={8} />
-                                        <YAxis domain={[1, 10]} stroke="#707978" fontSize={11} tickLine={false} axisLine={false} tickCount={5} />
+                                        <YAxis domain={[0, 10]} stroke="#707978" fontSize={11} tickLine={false} axisLine={false} tickCount={5} />
                                         <Tooltip
                                             contentStyle={{
                                                 backgroundColor: '#ffffff',
@@ -192,18 +401,31 @@ function PatientProfile() {
                             <div className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-3xs p-5 space-y-4">
                                 <h4 className="text-sm font-black text-[#181C1D]">الحالة الإكلينيكية</h4>
                                 <div className="flex flex-wrap gap-2 justify-start">
-                                    <span className="text-[11px] font-bold text-[#316764] bg-[#F7FAFA] px-2.5 py-1 rounded-lg border border-[#E6E9E9]">Anxiety</span>
-                                    <span className="text-[11px] font-bold text-[#316764] bg-[#F7FAFA] px-2.5 py-1 rounded-lg border border-[#E6E9E9]">CBT Patient</span>
-                                    <span className="text-[11px] font-bold text-[#316764] bg-[#F7FAFA] px-2.5 py-1 rounded-lg border border-[#E6E9E9]">Insomnia</span>
-                                    <span className="text-[11px] font-bold text-[#316764] bg-[#F7FAFA] px-2.5 py-1 rounded-lg border border-[#E6E9E9]">Self-Esteem</span>
+                                    {clinicalTags.map((tag) => (
+                                        <span
+                                            key={tag}
+                                            className="text-[11px] font-bold text-[#316764] bg-[#F7FAFA] px-2.5 py-1 rounded-lg border border-[#E6E9E9]"
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
 
                             <div className="bg-[#316764] rounded-[24px] shadow-3xs p-5 space-y-3 text-white">
                                 <span className="text-[10px] tracking-wider font-bold text-teal-100/80 block">الجلسة القادمة</span>
                                 <div className="space-y-0.5">
-                                    <h5 className="text-base font-black">الثلاثاء، 12 أكتوبر</h5>
-                                    <p className="text-xs text-teal-50/90 font-medium">من الساعة 04:00 مساءً (50 دقيقة)</p>
+                                    {nextSessionDisplay ? (
+                                        <>
+                                            <h5 className="text-base font-black">{nextSessionDisplay.dateLabel}</h5>
+                                            <p className="text-xs text-teal-50/90 font-medium">{nextSessionDisplay.timeLabel}</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <h5 className="text-base font-black">لا توجد جلسة قادمة</h5>
+                                            <p className="text-xs text-teal-50/90 font-medium">لم يتم حجز موعد بعد</p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -216,6 +438,9 @@ function PatientProfile() {
                         <div className="md:col-span-1 bg-white rounded-[24px] border border-[#E6E9E9] shadow-3xs p-5 space-y-4">
                             <h4 className="text-sm font-black text-[#181C1D]">سجل الجلسات</h4>
                             <div className="space-y-2">
+                                {sessionsHistory.length === 0 && (
+                                    <p className="text-xs text-[#707978]">لا توجد جلسات مسجّلة</p>
+                                )}
                                 {sessionsHistory.slice(0, 3).map((session) => (
                                     <div 
                                         key={session.id}
@@ -251,7 +476,11 @@ function PatientProfile() {
                                 <span className="text-[11px] text-[#707978] font-medium">{lastSessionNote?.date}</span>
                             </div>
 
-                            {editingNoteId === lastSessionNote?.id ? (
+                            {!lastSessionNote ? (
+                                <p className="text-xs text-[#707978] leading-relaxed bg-[#F7FAFA] p-4 rounded-2xl border border-[#E6E9E9]">
+                                    لا توجد ملاحظات طبية لهذا المريض بعد
+                                </p>
+                            ) : editingNoteId === lastSessionNote?.id ? (
                                 <div className="space-y-3">
                                     <textarea
                                         value={editingText}
@@ -336,6 +565,9 @@ function PatientProfile() {
                             </button>
                         </div>
                         <div className="space-y-3">
+                            {sessionsHistory.length === 0 && (
+                                <p className="text-xs text-[#707978]">لا توجد جلسات مسجّلة</p>
+                            )}
                             {sessionsHistory.map((session) => (
                                 <div 
                                     key={session.id}
@@ -345,7 +577,7 @@ function PatientProfile() {
                                     className="flex justify-between items-center p-4 bg-[#F7FAFA] hover:bg-teal-50/30 hover:border-[#316764]/30 rounded-2xl border border-[#E6E9E9] cursor-pointer transition-all duration-200 group"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-2,5 h-2,5 rounded-full bg-[#316764]"></div>
+                                        <div className="w-2.5 h-2.5 rounded-full bg-[#316764]"></div>
                                         <div>
                                             <span className="text-xs font-black text-[#181C1D] block">{session.title}</span>
                                             <span className="text-[10px] text-[#707978] font-medium">{session.date} | {session.time}</span>
@@ -375,6 +607,9 @@ function PatientProfile() {
                             </button>
                         </div>
                         <div className="space-y-4">
+                            {allMeetingNotes.length === 0 && (
+                                <p className="text-xs text-[#707978]">لا توجد ملاحظات</p>
+                            )}
                             {allMeetingNotes.map((note) => (
                                 <div key={note.id} className="p-4 rounded-xl border border-[#E6E9E9] bg-[#F7FAFA] space-y-2">
                                     <div className="flex justify-between items-center">

@@ -17,6 +17,7 @@ namespace NFS.Application.DTOs
         public decimal HourlyRate { get; set; }
         public decimal Rating { get; set; }
         public string? Qualifications { get; set; }
+        public bool IsVerified { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

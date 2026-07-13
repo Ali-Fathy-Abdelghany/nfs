@@ -27,6 +27,7 @@ namespace NFS.Infrastructure.Data
         public DbSet<Session> Sessions => Set<Session>();
         public DbSet<SessionNote> SessionNotes => Set<SessionNote>();
         public DbSet<DiaryEntry> DiaryEntries => Set<DiaryEntry>();
+        public DbSet<Payment> Payments => Set<Payment>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -213,6 +214,25 @@ namespace NFS.Infrastructure.Data
                     .WithMany()
                     .HasForeignKey(d => d.PatientId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.ToTable("Payments");
+                entity.HasKey(p => p.Id);
+                entity.Property(p => p.Amount).HasColumnType("decimal(18,2)");
+                entity.HasOne(p => p.Patient)
+                    .WithMany()
+                    .HasForeignKey(p => p.PatientId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(p => p.Doctor)
+                    .WithMany()
+                    .HasForeignKey(p => p.DoctorId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(p => p.Appointment)
+                    .WithMany()
+                    .HasForeignKey(p => p.AppointmentId)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
         }
     }

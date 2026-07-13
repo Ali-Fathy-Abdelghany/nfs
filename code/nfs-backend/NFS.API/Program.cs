@@ -109,6 +109,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITherapistService, TherapistService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
+builder.Services.AddScoped<IPaymentGateway, FakePaymentGateway>();
 builder.Services.AddChatServices(builder.Configuration.GetSection("MongoSettings"));
 
 // CORS — SetIsOriginAllowed is required alongside AllowCredentials for SignalR WebSockets.

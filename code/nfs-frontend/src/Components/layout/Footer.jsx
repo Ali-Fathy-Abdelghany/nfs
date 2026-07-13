@@ -11,7 +11,7 @@ const Footer = () => {
         const path = location.pathname;
         if (path === "/dashboard" || path === "/") return "home";
         if (path.includes("/doctor/chats")) return "chat";
-        if (path.includes("/doctor/sessions")) return "sessions";
+        if (path.includes("/sessions")) return "sessions";
         if (path.includes("/doctor/library")) return "explore";
         if (path.includes("/profile-progress")) return "profile";
         return "";
@@ -54,7 +54,7 @@ const Footer = () => {
 
             {/* جلساتي */}
             <button
-                onClick={() => navigate("/doctor/sessions")}
+                onClick={() => navigate("/sessions")}
                 className={`flex flex-col items-center justify-center px-4 py-2 rounded-2xl transition-all duration-300 outline-none
           ${
               activeTab === "sessions"

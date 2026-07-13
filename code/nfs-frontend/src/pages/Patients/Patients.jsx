@@ -19,9 +19,12 @@ function mapPatient(p) {
   return {
     id: p.patientId,
     patientId: p.patientId,
+    userId: p.userId,
     name: `${p.firstName} ${p.lastName}`,
     img: p.profileImageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
     condition: p.medicalHistory || p.notes || 'متابعة نفسية',
+    medicalHistory: p.medicalHistory,
+    notes: p.notes,
     status: 'نشط',
     last: p.createdAt ? new Date(p.createdAt).toLocaleDateString('ar-EG') : '-',
     next: 'قيد المتابعة',

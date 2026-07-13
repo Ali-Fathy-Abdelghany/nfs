@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&display=swap');
+
+.nfs-toast-viewport {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: min(420px, calc(100vw - 1.5rem));
+  pointer-events: none;
+  font-family: 'Cairo', sans-serif;
+}
+
+.nfs-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  border: 1px solid #e6e9e9;
+  box-shadow: 0 12px 32px rgba(24, 28, 29, 0.12);
+  animation: nfs-toast-in 0.28s ease-out;
+  direction: rtl;
+  text-align: right;
+}
+
+.nfs-toast__icon {
+  font-size: 1.05rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.nfs-toast__message {
+  margin: 0;
+  flex: 1;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: #181c1d;
+}
+
+.nfs-toast__close {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: #f7fafa;
+  color: #707978;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nfs-toast__close:hover {
+  background: #e6e9e9;
+  color: #181c1d;
+}
+
+.nfs-toast--success {
+  border-color: rgba(49, 103, 100, 0.28);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7f6 100%);
+}
+
+.nfs-toast--success .nfs-toast__icon {
+  color: #316764;
+}
+
+.nfs-toast--error {
+  border-color: rgba(244, 63, 94, 0.28);
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+}
+
+.nfs-toast--error .nfs-toast__icon {
+  color: #e11d48;
+}
+
+.nfs-toast--warning {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+}
+
+.nfs-toast--warning .nfs-toast__icon {
+  color: #d97706;
+}
+
+.nfs-toast--info {
+  border-color: rgba(131, 185, 181, 0.45);
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafa 100%);
+}
+
+.nfs-toast--info .nfs-toast__icon {
+  color: #316764;
+}
+
+@keyframes nfs-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .nfs-toast-viewport {
+    top: auto;
+    bottom: 1.25rem;
+  }
+
+  @keyframes nfs-toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}

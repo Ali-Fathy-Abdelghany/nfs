@@ -11,6 +11,8 @@ import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
 import { fetchUserProfile } from '../api/users';
 import { fetchDiariesByPatient, createDiaryEntry, updateDiaryEntry, mapDiaryToEntry } from '../api/diaries';
+import { useToast } from '../context/ToastContext';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const quotes = [
   { text: "الهدوء ليس غياب الفوضى، بل هو السلام في منتصفها.", author: "إلهام اليوم" },
@@ -145,18 +147,31 @@ const ProfileStats = ({ onClearStorage }) => (
   </div>
 );
 
-const BreathingExercise = ({ onClose }) => (
-  <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div className="bg-white w-full max-w-md rounded-3xl p-6 text-center space-y-6 relative">
-      <button onClick={onClose} className="absolute top-4 left-4 p-1.5 hover:bg-neutral-100 rounded-full"><X className="w-5 h-5" /></button>
-      <h3 className="text-xl font-black pt-4">تمرين التنفس ٤-٧-٨</h3>
-      <div className="w-32 h-32 bg-[#E6F0EF] rounded-full mx-auto flex items-center justify-center animate-pulse">
-        <span className="text-[#0F766E] font-bold">شهيق...</span>
+const BREATH_PHASE_MS = 4000; // 4s inhale + 4s exhale = 8s cycle
+
+const BreathingExercise = ({ onClose }) => {
+  const [isInhale, setIsInhale] = useState(true);
+
+  useEffect(() => {
+    const id = setInterval(() => setIsInhale((prev) => !prev), BREATH_PHASE_MS);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-md rounded-3xl p-6 text-center space-y-6 relative">
+        <button onClick={onClose} className="absolute top-4 left-4 p-1.5 hover:bg-neutral-100 rounded-full"><X className="w-5 h-5" /></button>
+        <h3 className="text-xl font-black pt-4">تمرين التنفس ٤-٧-٨</h3>
+        <div className="breathing-circle w-32 h-32 bg-[#E6F0EF] rounded-full mx-auto flex items-center justify-center">
+          <span className="text-[#0F766E] font-bold">{isInhale ? 'شهيق...' : 'زفير...'}</span>
+        </div>
+        <p className="text-sm text-neutral-500">
+          {isInhale ? 'خذ شهيقاً عميقاً ببطء من الأنف' : 'أخرج الزفير ببطء من الفم'}
+        </p>
       </div>
-      <p className="text-sm text-neutral-500">خذ شهيقاً عميقاً ببطء من الأنف</p>
     </div>
-  </div>
-);
+  );
+};
 
 const LiveSession = ({ onClose }) => (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
@@ -191,6 +206,7 @@ export default function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
   const [profile, setProfile] = useState(null);
 
   const [activeTab, setActiveTab] = useState(location.state?.targetTab || 'home');
@@ -233,7 +249,7 @@ export default function Dashboard() {
   const handleSaveEntry = async (newEntry) => {
     const patientId = user?.patientId || user?.userId || user?.id;
     if (!patientId) {
-      alert('يرجى تسجيل الدخول أولاً');
+      toast.warning('يرجى تسجيل الدخول أولاً');
       return;
     }
     try {
@@ -246,9 +262,10 @@ export default function Dashboard() {
       const saved = mapDiaryToEntry(res.data);
       setEntries((prev) => [saved, ...prev]);
       setShowJournal(false);
+      toast.success('تم حفظ المذكرة');
     } catch (err) {
       console.error(err);
-      alert('تعذر حفظ المذكرة');
+      toast.error(getApiErrorMessage(err, 'تعذر حفظ المذكرة'));
     }
   };
 
@@ -305,9 +322,10 @@ export default function Dashboard() {
         mood: updatedEntry.mood,
       });
       setEntries((prev) => prev.map((item) => (item.id === updatedEntry.id ? updatedEntry : item)));
+      toast.success('تم تحديث المذكرة');
     } catch (err) {
       console.error(err);
-      alert('تعذر تحديث المذكرة');
+      toast.error(getApiErrorMessage(err, 'تعذر تحديث المذكرة'));
     }
   };
 
@@ -355,19 +373,38 @@ export default function Dashboard() {
               </section>
 
               <section className="grid grid-cols-1 md:grid-cols-12 gap-6 text-right">
-                <div className="md:col-span-8 bg-white border border-neutral-100 rounded-3xl overflow-hidden relative flex flex-col justify-between min-h-[300px] hover:shadow-sm transition-all group">
-                  <div className="p-8 flex-1 flex flex-col justify-between z-10 space-y-6">
+                <div className="md:col-span-8 bg-white border border-neutral-100 rounded-3xl overflow-hidden flex flex-col md:flex-row-reverse min-h-[280px] hover:shadow-sm transition-all group">
+                  {/* النص على اليمين */}
+                  <div className="flex-1 p-6 md:p-8 flex flex-col justify-between gap-4 min-w-0 z-10 bg-white">
                     <div className="space-y-3">
-                      <div className="bg-[#E6F0EF] backdrop-blur-md inline-flex px-3.5 py-1 rounded-full text-xs font-black text-[#0F766E] border border-[#0F766E]/20">جلسة بث مباشر قادمة</div>
-                      <h3 className="text-3xl font-extrabold text-neutral-900 leading-tight">تأمل السكينة<br />العميقة</h3>
-                      <p className="text-neutral-500 font-medium text-xs max-w-xs leading-relaxed">انضم إلى الجلسة المباشرة لتخفيف الضغط العصبي مع د. سارة للتركيز على تنظيم ضربات القلب.</p>
+                      <div className="bg-[#E6F0EF] inline-flex px-3.5 py-1 rounded-full text-xs font-black text-[#0F766E] border border-[#0F766E]/20">
+                        جلسة بث مباشر قادمة
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-extrabold text-neutral-900 leading-tight">
+                        تأمل السكينة العميقة
+                      </h3>
+                      <p className="text-neutral-500 font-medium text-sm leading-relaxed">
+                        انضم إلى الجلسة المباشرة لتخفيف الضغط العصبي مع د. سارة للتركيز على تنظيم ضربات القلب.
+                      </p>
                     </div>
-                    <button onClick={() => setShowLive(true)} className="bg-[#0F766E] text-white font-bold py-3.5 px-7 rounded-full w-fit hover:bg-[#316764] hover:shadow-md transition-all active:scale-95 flex items-center gap-1.5">
-                      <span>انضم الآن للبث المباشر</span>
-                    </button>
                   </div>
-                  <div className="absolute left-0 bottom-0 top-0 w-full md:w-[45%] opacity-20 md:opacity-100 z-0 overflow-hidden">
-                    <img className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-[2000ms]" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80" alt="Zen bamboo" />
+
+                  {/* الصورة على اليسار مع زر الانضمام */}
+                  <div className="relative w-full md:w-[42%] h-48 md:h-auto shrink-0 overflow-hidden">
+                    <img
+                      className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-[2000ms]"
+                      src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80"
+                      alt="Zen bamboo"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 inset-x-4 flex justify-center">
+                      <button
+                        onClick={() => setShowLive(true)}
+                        className="bg-[#0F766E] text-white text-xs md:text-sm font-bold py-3 px-5 rounded-full w-full max-w-[220px] hover:bg-[#316764] hover:shadow-md transition-all active:scale-95"
+                      >
+                        انضم الآن للبث المباشر
+                      </button>
+                    </div>
                   </div>
                 </div>
 

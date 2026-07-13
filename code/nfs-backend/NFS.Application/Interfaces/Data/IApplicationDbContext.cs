@@ -18,6 +18,7 @@ namespace NFS.Application.Interfaces.Data
         DbSet<Session> Sessions { get; }
         DbSet<SessionNote> SessionNotes { get; }
         DbSet<DiaryEntry> DiaryEntries { get; }
+        DbSet<Payment> Payments { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

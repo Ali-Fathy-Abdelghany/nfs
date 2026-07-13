@@ -12,7 +12,9 @@ const Header = ({ activeTab, setActiveTab }) => {
 
   const handleNavigation = (tabId) => {
     setActiveTab?.(tabId); 
-    if (userRole === 'doctor') {
+    if (userRole === 'admin') {
+      navigate('/admin');
+    } else if (userRole === 'doctor') {
       navigate('/doctor/dashboard', { state: { targetTab: tabId } });
     } else {
       navigate('/dashboard', { state: { targetTab: tabId } });
@@ -34,6 +36,9 @@ const Header = ({ activeTab, setActiveTab }) => {
           <span>نفس</span>
           {userRole === 'doctor' && (
             <span className="text-teal-600 font-bold text-[10px] bg-[#E6F0EF] px-2 py-0.5 rounded-md border border-[#0F766E]/10">بوابة الطبيب</span>
+          )}
+          {userRole === 'admin' && (
+            <span className="text-teal-600 font-bold text-[10px] bg-[#E6F0EF] px-2 py-0.5 rounded-md border border-[#0F766E]/10">لوحة الإدارة</span>
           )}
         </div>
       </div>
@@ -141,7 +146,7 @@ const Header = ({ activeTab, setActiveTab }) => {
   // هنا التعديل: التوجيه لنفس مسار الـ Footer
   onClick={() => {
     setActiveTab?.('sessions');
-    navigate('/doctor/sessions'); 
+    navigate('/sessions'); 
   }}
   title="جلساتي"
 >

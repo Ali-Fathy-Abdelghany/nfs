@@ -13,11 +13,16 @@ namespace NFS.Application.Interfaces
 
         Task<IEnumerable<PatientAppointmentDto>> GetPatientAppointmentsDetailedAsync(int patientId);
 
+        Task<IEnumerable<DoctorAppointmentDto>> GetDoctorAppointmentsDetailedAsync(int doctorId);
+
         Task UpdateAppointmentStatusAsync(int appointmentId, string status);
 
         Task<bool> CancelAppointmentAsync(int id);
 
         Task<bool> RescheduleAppointmentAsync(int id, int newSlotId);
         Task<IEnumerable<AvailabilitySlot>> GetAvailableSlotsByDoctorIdAsync(int doctorId);
+        Task<AvailabilitySlot> CreateAvailabilitySlotAsync(AvailabilitySlot slot);
+        Task<bool> HasOverlappingSlotAsync(int doctorId, DateTime start, DateTime end, int? excludeSlotId = null);
+        Task<bool> HasOverlappingAppointmentAsync(int doctorId, DateTime start, DateTime end, int? excludeAppointmentId = null);
     }
 }

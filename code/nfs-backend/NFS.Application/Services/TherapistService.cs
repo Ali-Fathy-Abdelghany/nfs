@@ -115,6 +115,7 @@ namespace NFS.Application.Services
             HourlyRate = t.HourlyRate,
             Rating = t.Rating,
             Qualifications = t.Qualifications,
+            IsVerified = t.IsVerified,
             CreatedAt = t.CreatedAt
         };
     }

@@ -1,205 +1,294 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; 
-import { Star, ShieldCheck, Video, Calendar, Clock, ArrowRight, Bell, Settings, Award, Users, BookOpen } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  Star,
+  ShieldCheck,
+  Video,
+  Calendar,
+  Clock,
+  Award,
+  ArrowRight,
+} from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import { fetchTherapistById } from '../api/therapists';
+
+function formatSlotDate(startTime) {
+  if (!startTime) return null;
+  return new Date(startTime).toLocaleDateString('ar-EG', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+}
+
+function formatSlotTime(startTime) {
+  if (!startTime) return null;
+  return new Date(startTime).toLocaleTimeString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function slotDurationMinutes(slot) {
+  if (!slot?.startTime || !slot?.endTime) return 50;
+  const mins = Math.round((new Date(slot.endTime) - new Date(slot.startTime)) / 60000);
+  return mins > 0 ? mins : 50;
+}
 
 const DoctorCheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeTab, setActiveTab] = React.useState('home');
+  const [activeTab, setActiveTab] = useState('home');
+  const [doctor, setDoctor] = useState(location.state?.doctor || null);
+  const [loading, setLoading] = useState(false);
+  const slot = location.state?.slot || null;
 
-  const doctorData = location.state?.doctor || {
-    name: "د. فيصل العمر",
-    specialty: "استشاري الطب النفسي والعلاج السلوكي المعرفي",
-    rating: 4.9,
-    reviews: 120,
-    date: "غداً، الأربعاء", 
-    time: "4:00 م",
-    duration: "٥٠ دقيقة",
-    image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=256&q=80"
-  };
+  useEffect(() => {
+    const therapistId = location.state?.doctor?.therapistId || location.state?.doctor?.id;
+    if (!therapistId) return;
 
-  const slot = location.state?.slot;
-  const appointmentDate = slot?.startTime
-    ? new Date(slot.startTime).toLocaleString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })
-    : doctorData.date;
+    let cancelled = false;
+    async function refresh() {
+      setLoading(true);
+      try {
+        const res = await fetchTherapistById(therapistId);
+        const t = res.data;
+        if (cancelled || !t) return;
+        setDoctor((prev) => ({
+          ...(prev || {}),
+          id: t.therapistId,
+          therapistId: t.therapistId,
+          name: `د. ${t.firstName} ${t.lastName}`,
+          specialty: t.specialization || prev?.specialty || '',
+          rating: t.rating != null ? Number(t.rating).toFixed(1) : prev?.rating || '4.5',
+          experience: t.experienceYears ? `${t.experienceYears} سنة` : prev?.experience,
+          experienceYears: t.experienceYears,
+          hourlyRate: t.hourlyRate ?? prev?.hourlyRate ?? 250,
+          image: t.profileImageUrl || prev?.image,
+          bio: t.bio || prev?.bio || '',
+          specialties: t.qualifications
+            ? t.qualifications.split(/[,،]/).map((s) => s.trim()).filter(Boolean)
+            : prev?.specialties || (t.specialization ? [t.specialization] : []),
+          email: t.email,
+          phone: t.phone,
+        }));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    refresh();
+    return () => {
+      cancelled = true;
+    };
+  }, [location.state]);
+
+  const price = Number(doctor?.hourlyRate) || 250;
+  const duration = slotDurationMinutes(slot);
+  const dateLabel = formatSlotDate(slot?.startTime) || 'موعد قيد التأكيد';
+  const timeLabel = formatSlotTime(slot?.startTime) || '—';
+
+  const specialties = useMemo(() => {
+    if (Array.isArray(doctor?.specialties) && doctor.specialties.length) return doctor.specialties;
+    if (doctor?.specialty) return [doctor.specialty];
+    return ['متابعة نفسية'];
+  }, [doctor]);
 
   const handleBooking = () => {
-    navigate('/payments', { state: { doctorData, slot } });
+    navigate('/payments', {
+      state: {
+        doctorData: {
+          ...doctor,
+          hourlyRate: price,
+          date: dateLabel,
+          time: timeLabel,
+          duration: `${duration} دقيقة`,
+          avatar: doctor?.image,
+          title: doctor?.specialty,
+        },
+        slot,
+      },
+    });
   };
 
-  return (
-    <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] font-sans antialiased flex flex-col justify-between" dir="rtl">
-      
-      <div>
+  if (!doctor) {
+    return (
+      <div className="min-h-screen bg-[#F7FAFA] flex flex-col font-['Cairo',sans-serif]" dir="rtl">
         <Header activeTab={activeTab} setActiveTab={setActiveTab} />
-        
-        {/* Container المحتوى الرئيسي */}
-        <main className="w-full max-w-[1000px] p-6 space-y-6 mx-auto">
-          
-          <section className="relative overflow-hidden bg-white rounded-3xl p-6 border border-gray-100/80 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#E6F0F0] via-white to-white opacity-90 z-0" />
-            <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#48747B]/10 rounded-full blur-3xl z-0" />
-            
-            <div className="relative z-10 space-y-2.5 text-center sm:text-right">
-              <h1 className="text-2xl font-black text-[#181C1D] tracking-tight">{doctorData.name}</h1>
-              <p className="text-[#48747B] text-xs font-medium">{doctorData.specialty || doctorData.title}</p>
-              
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
-                <div className="flex items-center gap-1 text-[11px] text-[#48747B] bg-[#E6F0F0]/50 px-2.5 py-1 rounded-full">
-                  <Award className="w-3.5 h-3.5" />
-                  <span>+١٤ سنة خبرة</span>
-                </div>
-                <div className="flex items-center gap-1 text-[11px] text-amber-500 bg-amber-50 px-2.5 py-1 rounded-full">
-                  <Star className="w-3 h-3 fill-current" />
-                  <span className="font-bold">{doctorData.rating}</span>
-                  <span className="text-gray-400 text-[10px]">({doctorData.reviews})</span>
-                </div>
-                <div className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 px-2.5 py-1 rounded-full">
-                  <Users className="w-3.5 h-3.5" />
-                  <span>١.٢+ مستفيد</span>
-                </div>
-              </div>
-            </div>
+        <main className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-center">
+          <p className="text-sm text-[#707978]">لا توجد بيانات حجز. اختر طبيباً وموعداً أولاً.</p>
+          <button
+            onClick={() => navigate('/dashboard', { state: { targetTab: 'booking' } })}
+            className="bg-[#316764] text-white text-sm font-bold px-6 py-3 rounded-full"
+          >
+            العودة للحجز
+          </button>
+        </main>
+        <Footer activeTab={activeTab} setActiveTab={setActiveTab} />
+      </div>
+    );
+  }
 
-            <div className="relative z-10 flex-shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#093E39]/20 to-transparent rounded-2xl z-10" />
-              <img 
-                src={doctorData.image || doctorData.avatar}
-                alt={doctorData.name} 
-                className="w-28 h-28 rounded-2xl object-cover border-[3px] border-white shadow-md shadow-gray-200"
-              />
-              <span className="absolute bottom-2 left-2 z-20 bg-[#093E39] text-white text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1 h-1 bg-green-400 rounded-full animate-pulse"></span>
-                متاح الآن
+  return (
+    <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] font-['Cairo',sans-serif] antialiased flex flex-col" dir="rtl">
+      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      <main className="w-full max-w-[1000px] p-4 md:p-6 space-y-6 mx-auto flex-1 pb-10">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-xs font-bold text-[#707978] hover:text-[#316764] transition"
+        >
+          <ArrowRight className="w-4 h-4" />
+          العودة
+        </button>
+
+        {loading && (
+          <p className="text-xs text-[#707978]">جاري تحديث بيانات المعالج...</p>
+        )}
+
+        {/* بطاقة المعالج */}
+        <section className="bg-white rounded-3xl p-5 md:p-6 border border-[#E6E9E9] shadow-sm flex flex-col sm:flex-row items-center gap-5">
+          <img
+            src={
+              doctor.image ||
+              'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=256&q=80'
+            }
+            alt={doctor.name}
+            className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-2 border-white shadow-md shrink-0"
+          />
+          <div className="flex-1 text-center sm:text-right space-y-2 min-w-0">
+            <h1 className="text-xl md:text-2xl font-black text-[#181C1D]">{doctor.name}</h1>
+            <p className="text-[#316764] text-xs font-medium">{doctor.specialty}</p>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+              {doctor.experienceYears != null && (
+                <span className="flex items-center gap-1 text-[11px] text-[#316764] bg-[#E6F0EF] px-2.5 py-1 rounded-full">
+                  <Award className="w-3.5 h-3.5" />
+                  {doctor.experienceYears} سنة خبرة
+                </span>
+              )}
+              <span className="flex items-center gap-1 text-[11px] text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                <Star className="w-3 h-3 fill-current" />
+                <span className="font-bold">{doctor.rating}</span>
+              </span>
+              <span className="text-[11px] text-[#707978] bg-[#F7FAFA] px-2.5 py-1 rounded-full border border-[#E6E9E9]">
+                {price} ج.م / جلسة
               </span>
             </div>
-          </section>
+          </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch relative">
-            
-            {/* قسم عن المعالج */}
-            <section className="bg-white rounded-3xl p-6 border border-gray-100/80 shadow-sm space-y-4 flex flex-col justify-between h-full">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-[#0E4A48] font-bold text-sm">
-                  <ShieldCheck className="w-4 h-4" />
-                  <h2>عن المعالج</h2>
-                </div>
-                <p className="text-xs text-gray-500 leading-relaxed text-justify">
-                  د. فيصل العمر هو متخصص رائد في الصحة النفسية مع تركيز عميق على رحلات التحول الشخصي. يؤمن بأن الجلسة العلاجية هي "ملاذ آمن" حيث يمكن للمراجع استكشاف ذواتهم دون إطلاق أحكام. من خلال خبرته التي تمتد لأكثر من عقد، ساعد مئات الأفراد في تجاوز تحديات القلق، الاكتئاب، وإدارة ضغوط الحياة الحديثة.
-                </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* تفاصيل المعالج */}
+          <div className="lg:col-span-2 space-y-6">
+            <section className="bg-white rounded-3xl p-6 border border-[#E6E9E9] shadow-sm space-y-4">
+              <div className="flex items-center gap-2 text-[#316764] font-bold text-sm">
+                <ShieldCheck className="w-4 h-4" />
+                <h2>عن المعالج</h2>
               </div>
-              
-              <div className="grid grid-cols-2 gap-3 pt-3">
-                <div className="bg-[#F7FAFA] p-2.5 rounded-xl text-center">
-                  <span className="text-[10px] text-gray-400 block mb-0.5">اللغات</span>
-                  <span className="text-[11px] font-bold text-[#181C1D]">العربية، الإنجليزية</span>
-                </div>
-                <div className="bg-[#F7FAFA] p-2.5 rounded-xl text-center">
-                  <span className="text-[10px] text-gray-400 block mb-0.5">التعليم</span>
-                  <span className="text-[11px] font-bold text-[#181C1D]">دكتوراه في علم النفس</span>
-                </div>
+              <p className="text-sm text-[#707978] leading-relaxed text-right">
+                {doctor.bio || 'معالج معتمد على منصة نفس، جاهز لمساعدتك في رحلتك نحو التوازن النفسي.'}
+              </p>
+            </section>
+
+            <section className="bg-white rounded-3xl p-6 border border-[#E6E9E9] shadow-sm space-y-4">
+              <h2 className="text-sm font-bold text-[#316764]">مجالات الاختصاص</h2>
+              <div className="flex flex-wrap gap-2 justify-start">
+                {specialties.map((spec) => (
+                  <span
+                    key={spec}
+                    className="bg-[#E6F0EF] text-[#316764] text-xs font-bold px-3 py-1.5 rounded-xl border border-[#316764]/10"
+                  >
+                    {spec}
+                  </span>
+                ))}
               </div>
             </section>
 
-            <section className="bg-[#48747B]/15 rounded-3xl p-6 flex flex-col justify-between h-full relative overflow-visible">
-              
-              <div className="space-y-4 mr-auto w-[55%] md:w-[50%]">
-                <div className="flex items-center gap-2 text-[#093E39] font-bold text-sm">
-                  <BookOpen className="w-4 h-4" />
-                  <h2>التخصصات</h2>
+            <section className="bg-white rounded-3xl p-6 border border-[#E6E9E9] shadow-sm space-y-3">
+              <h2 className="text-sm font-bold text-[#181C1D]">تفاصيل الموعد المختار</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="bg-[#F7FAFA] rounded-2xl p-3 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-[#316764] shrink-0" />
+                  <div className="text-right min-w-0">
+                    <p className="text-[10px] text-[#707978]">التاريخ</p>
+                    <p className="text-xs font-bold text-[#181C1D] truncate">{dateLabel}</p>
+                  </div>
                 </div>
-                
-                <div className="space-y-2">
-                  {['التعامل مع الصدمة','علاج القلق والتوتر', 'العلاج السلوكي المعرفي', 'العلاج الأسري والعلاقات'].map((spec, index) => (
-                    <div key={index} className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-xl text-[11px] text-[#093E39] font-medium flex items-center justify-between shadow-sm whitespace-nowrap">
-                      <span>{spec}</span>
-                      <span className="w-1.5 h-1.5 bg-[#48747B] rounded-full mr-2"></span>
-                    </div>
-                  ))}
+                <div className="bg-[#F7FAFA] rounded-2xl p-3 flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#316764] shrink-0" />
+                  <div className="text-right min-w-0">
+                    <p className="text-[10px] text-[#707978]">الوقت</p>
+                    <p className="text-xs font-bold text-[#181C1D]">{timeLabel}</p>
+                  </div>
+                </div>
+                <div className="bg-[#F7FAFA] rounded-2xl p-3 flex items-center gap-2">
+                  <Video className="w-4 h-4 text-[#316764] shrink-0" />
+                  <div className="text-right min-w-0">
+                    <p className="text-[10px] text-[#707978]">المدة / النوع</p>
+                    <p className="text-xs font-bold text-[#181C1D]">{duration} د • أونلاين</p>
+                  </div>
                 </div>
               </div>
-
-              <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 z-30 w-[190px] sm:w-[210px] 
-                transition-all duration-500 ease-out 
-                hover:-translate-y-[60%] hover:scale-105 
-                shadow-[0_15px_40px_rgba(0,0,0,0.06)] 
-                hover:shadow-[0_35px_60px_rgba(49,103,100,0.28)] 
-                group border border-transparent hover:border-[#316764]/20 rounded-2xl">
-                
-                <div className="bg-white rounded-2xl p-4 space-y-4 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-[#316764] to-[#83B9B5] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <div className="space-y-0.5">
-                    <span className="text-[9px] text-gray-400 font-medium block">سعر الجلسة ({doctorData.duration})</span>
-                    <div className="flex items-baseline gap-0.5">
-                      <span className="text-xl font-black text-[#181C1D]">250</span>
-                      <span className="text-[10px] font-bold text-[#48747B]">ج.م</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2 text-[10px] text-gray-500 pt-1 border-t border-gray-50">
-                    <div className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#48747B]" />
-                      <span>متاح {appointmentDate}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Video className="w-3.5 h-3.5 text-[#48747B]" />
-                      <span>جلسة فيديو أونلاين</span>
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={handleBooking}
-                    className="w-full bg-gradient-to-r from-[#316764] to-[#83B9B5] hover:opacity-95 text-white font-medium py-2 px-3 rounded-xl transition-all duration-200 text-[11px] text-center block shadow-sm shadow-[#316764]/10 cursor-pointer"
-                  >
-                    احجز جلسة الآن
-                  </button>
-                </div>
-              </div>
-
             </section>
           </div>
 
-          <section className="space-y-3">
-            <div className="flex justify-between items-center px-1">
-              <h2 className="font-bold text-sm text-[#181C1D]">مراجعات المرضى</h2>
-              <button className="text-[11px] text-gray-400 hover:text-gray-600 transition-colors">عرض الكل</button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-                <div className="flex justify-between items-center">
-                  <div className="flex text-amber-400">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 fill-current" />)}
-                  </div>
-                  <span className="text-[11px] font-bold text-gray-700">محمد ع.</span>
+          {/* بطاقة الدفع الملخصة */}
+          <aside className="lg:col-span-1">
+            <div className="bg-white rounded-3xl border border-[#E6E9E9] shadow-sm p-6 space-y-5 sticky top-24">
+              <div className="space-y-1">
+                <span className="text-[11px] text-[#707978] font-medium block">سعر الجلسة</span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black text-[#181C1D]">{price}</span>
+                  <span className="text-sm font-bold text-[#316764]">ج.م</span>
                 </div>
-                <p className="text-[11px] text-gray-500 leading-relaxed text-right">
-                  "تجربة غيرت مجرى حياتي. د. فيصل مستمع بارع ويعطي أدوات عملية جداً للتعامل مع القلق اليومي."
-                </p>
+                <p className="text-[11px] text-[#707978]">لمدة {duration} دقيقة</p>
               </div>
 
-              <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-                <div className="flex justify-between items-center">
-                  <div className="flex text-amber-400">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-2.5 h-2.5 fill-current" />)}
-                  </div>
-                  <span className="text-[11px] font-bold text-gray-700">سارة أ.</span>
+              <div className="space-y-2.5 text-xs text-[#707978] pt-3 border-t border-[#E6E9E9]">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold text-[#181C1D]">{dateLabel}</span>
+                  <Calendar className="w-4 h-4 text-[#316764] shrink-0" />
                 </div>
-                <p className="text-[11px] text-gray-500 leading-relaxed text-right">
-                  "تجربة غيرت مجرى حياتي. د. فيصل مستمع بارع ويعطي أدوات عملية جداً للتكامل مع القلق اليومي."
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold text-[#181C1D]">{timeLabel}</span>
+                  <Clock className="w-4 h-4 text-[#316764] shrink-0" />
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-bold text-[#181C1D]">جلسة فيديو أونلاين</span>
+                  <Video className="w-4 h-4 text-[#316764] shrink-0" />
+                </div>
               </div>
-            </div>
-          </section>
 
-        </main>
-      </div>
+              <div className="bg-[#F7FAFA] rounded-2xl p-3 text-xs space-y-1 border border-[#E6E9E9]">
+                <div className="flex justify-between">
+                  <span className="text-[#707978]">قيمة الجلسة</span>
+                  <span className="font-bold">{price} ج.م</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t border-[#E6E9E9]">
+                  <span className="font-black text-[#181C1D]">الإجمالي</span>
+                  <span className="font-black text-[#316764]">{price} ج.م</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleBooking}
+                disabled={!slot}
+                className="w-full bg-gradient-to-r from-[#316764] to-[#83B9B5] hover:opacity-95 text-white font-bold py-3.5 rounded-2xl transition text-sm shadow-sm disabled:opacity-50"
+              >
+                المتابعة للدفع
+              </button>
+              {!slot && (
+                <p className="text-[11px] text-rose-500 text-center">لم يتم اختيار موعد بعد</p>
+              )}
+            </div>
+          </aside>
+        </div>
+      </main>
 
       <Footer activeTab={activeTab} setActiveTab={setActiveTab} />
-
     </div>
   );
 };

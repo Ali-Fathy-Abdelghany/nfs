@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import './QuizPage.css';
 import { createAssessment } from '../../api/assessments';
 import { useAuth } from '../../context/AuthContext';
+import { ensurePatientRecord } from '../../api/patientHelpers';
+import { useToast } from '../../context/ToastContext';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const questionsData = [
   {
@@ -81,6 +84,7 @@ const questionsData = [
 const QuizPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
   const [currentStep, setCurrentStep] = useState(0); 
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -98,23 +102,39 @@ const QuizPage = () => {
       setCurrentStep(currentStep + 1);
       return;
     }
-    const patientId = user?.patientId || user?.userId || user?.id;
-    if (!patientId) {
-      navigate('/login');
-      return;
-    }
+
     try {
       setSubmitting(true);
+      let patientId = user?.patientId;
+      const userId = user?.userId || user?.id;
+      if (!patientId && userId) {
+        patientId = await ensurePatientRecord(userId);
+      }
+      if (!patientId) {
+        navigate('/login');
+        return;
+      }
+
+      const labeledAnswers = questionsData.map((q) => ({
+        questionId: q.id,
+        question: q.title,
+        answer: answers[q.id] ?? null,
+      }));
+
       await createAssessment({
         patientId,
         title: 'تقييم أولي - الواحة الآمنة',
-        answersJson: JSON.stringify(answers),
+        answersJson: JSON.stringify({
+          completedAt: new Date().toISOString(),
+          answers,
+          labeledAnswers,
+        }),
         score: Object.keys(answers).length,
       });
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      alert('تعذر حفظ التقييم، حاول مرة أخرى');
+      toast.error(getApiErrorMessage(err, 'تعذر حفظ التقييم، حاول مرة أخرى'));
     } finally {
       setSubmitting(false);
     }

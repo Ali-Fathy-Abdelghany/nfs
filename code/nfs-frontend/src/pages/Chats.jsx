@@ -15,9 +15,12 @@ import {
 } from "lucide-react";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
+import { useToast } from "../context/ToastContext";
+import { getApiErrorMessage } from "../utils/apiError";
 
 function Chats() {
     const { user } = useAuth();
+    const toast = useToast();
     const [rooms, setRooms] = useState([]);
     const [roomsLoading, setRoomsLoading] = useState(true);
     const [activeRoomId, setActiveRoomId] = useState(null);
@@ -65,7 +68,7 @@ function Chats() {
             }
         } catch (err) {
             console.error(err);
-            alert("تعذر تحديث العضوية في المساحة");
+            toast.error(getApiErrorMessage(err, "تعذر تحديث العضوية في المساحة"));
         }
     };
 
@@ -80,9 +83,10 @@ function Chats() {
             setActiveRoomId(newRoom.id);
             setConversations((prev) => ({ ...prev, [newRoom.id]: [] }));
             if (connectionStatus === "connected") joinGroup(newRoom.id);
+            toast.success("تم إنشاء المساحة بنجاح");
         } catch (err) {
             console.error(err);
-            alert("تعذر إنشاء المساحة الجديدة. تأكد من تسجيل الدخول.");
+            toast.error(getApiErrorMessage(err, "تعذر إنشاء المساحة الجديدة. تأكد من تسجيل الدخول."));
         }
     };
 

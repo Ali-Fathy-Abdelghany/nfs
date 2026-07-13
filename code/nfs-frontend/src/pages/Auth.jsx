@@ -6,6 +6,9 @@ import { login } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
 import { resolveUserRole } from '../api/config';
 import { ensurePatientRecord } from '../api/patientHelpers';
+import { fetchTherapistByUserId } from '../api/therapists';
+import { useToast } from '../context/ToastContext';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const quotes = [
   "السلام الداخلي يبدأ في اللحظة التي تختار فيها ألا تسمح لحدث أو شخص آخر بالتحكم في عواطفك.",
@@ -21,6 +24,7 @@ const Auth = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login: setAuth } = useAuth();
+  const toast = useToast();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,7 +33,8 @@ const Auth = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogin = async (fallbackRole) => {
+  const handleLogin = async (e) => {
+    e?.preventDefault?.();
     setLoading(true);
     setError('');
     try {
@@ -37,24 +42,40 @@ const Auth = () => {
       if (!result || !result.accessToken) {
         throw new Error('Invalid login response');
       }
-      const userRole = resolveUserRole(result.roles) || fallbackRole;
+      const userRole = resolveUserRole(result.roles);
       let sessionData = result;
       if (userRole === 'user') {
         try {
-          const patientId = await ensurePatientRecord(result.userId);
+          const patientId = result.patientId || (await ensurePatientRecord(result.userId));
           sessionData = { ...result, patientId };
-        } catch (e) {
-          console.error('Failed to ensure patient record', e);
+        } catch (err) {
+          console.error('Failed to ensure patient record', err);
+        }
+      }
+      if (userRole === 'doctor') {
+        try {
+          let therapistId = result.therapistId;
+          if (!therapistId) {
+            const res = await fetchTherapistByUserId(result.userId);
+            therapistId = res.data?.therapistId;
+          }
+          sessionData = { ...sessionData, therapistId };
+        } catch (err) {
+          console.error('Failed to resolve therapist id', err);
         }
       }
       setAuth(sessionData);
-      if (userRole === 'doctor') {
+      if (userRole === 'admin') {
+        navigate('/admin');
+      } else if (userRole === 'doctor') {
         navigate('/doctor/dashboard');
       } else {
         navigate('/dashboard');
       }
-    } catch (e) {
-      setError(e.message || 'Login failed');
+    } catch (err) {
+      const msg = getApiErrorMessage(err, err.message || 'فشل تسجيل الدخول');
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -89,7 +110,7 @@ const Auth = () => {
           <h1 className="text-3xl font-bold text-[#2A5C58] mb-2">ابدأ رحلة الهدوء</h1>
           <p className="text-gray-500 mb-8 font-light">انضم إلى مجتمع \"نفس\" واكتشف التوازن الذي تستحقه.</p>
 
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4" onSubmit={handleLogin}>
             <Input
               type="email"
               placeholder="البريد الإلكتروني"
@@ -104,20 +125,11 @@ const Auth = () => {
             />
             {error && <p className="text-red-600 text-sm">{error}</p>}
             <button
-              type="button"
-              onClick={() => handleLogin('user')}
+              type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white rounded-full font-bold shadow-md hover:scale-[1.02] transition-all cursor-pointer"
+              className="w-full py-4 bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white rounded-full font-bold shadow-md hover:scale-[1.02] transition-all cursor-pointer disabled:opacity-60"
             >
               {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleLogin('doctor')}
-              disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white rounded-full font-bold shadow-md hover:scale-[1.02] transition-all cursor-pointer"
-            >
-              {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول كطبيب'}
             </button>
             <button
               type="button"

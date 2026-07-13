@@ -1,73 +1,111 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import doctorImg from "../../assets/sara.png";
 import "./DoctorProfile.css";
 import ProfileFooter from "./ProfileFooter";
-import { fetchTherapistById } from "../../api/therapists";
+import { fetchTherapistById, fetchTherapistByUserId, updateTherapist, mapTherapistToProfile } from "../../api/therapists";
 import { updateUserProfile } from "../../api/users";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
+import { getApiErrorMessage } from "../../utils/apiError";
 
 function DoctorProfile() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
-   
-  const currentUserRole = localStorage.getItem('userRole') || 'user';
+  const { user } = useAuth() || {};
+  const toast = useToast();
 
-  const defaultDoctor = {
-    name: "د. سارة الأحمد",
-    specialty: "معالجة نفسية مختصة في العلاج السلوكي المعرفي",
-    availability: "متاح اليوم",
-    sessions: "+1,200",
-    rating: "4.9",
-    experience: "12 سنة",
-    bio: "أؤمن بأن الرحلة نحو الشفاء تبدأ من خلق مساحة آمنة ومقبولة تماماً.",
-    specialties: ["القلق والتوتر المزمن", "العلاقات الزوجية", "الاكتئاب"],
-    image: doctorImg,
-  };
+  const currentUserRole = localStorage.getItem('userRole') || user?.userRole || 'user';
+  const isOwnProfile = currentUserRole === 'doctor';
 
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState(location.state?.doctor || defaultDoctor);
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState({
+    name: '',
+    specialty: '',
+    availability: 'متاح للحجز',
+    sessions: '—',
+    rating: '—',
+    experience: '—',
+    bio: '',
+    specialties: [],
+    qualifications: '',
+    image: doctorImg,
+    hourlyRate: 250,
+  });
 
   useEffect(() => {
-    const therapistId = location.state?.doctor?.therapistId || location.state?.doctor?.id;
-    if (!therapistId) return;
-    fetchTherapistById(therapistId)
-      .then((res) => {
-        const t = res.data;
-        setProfile({
-          therapistId: t.therapistId,
-          name: `د. ${t.firstName} ${t.lastName}`,
-          specialty: t.specialization,
-          availability: "متاح للحجز",
-          sessions: t.experienceYears ? `+${t.experienceYears * 50}` : '+100',
-          rating: t.rating?.toFixed(1) || '4.8',
-          experience: t.experienceYears ? `${t.experienceYears} سنة` : '5 سنوات',
-          hourlyRate: t.hourlyRate || 250,
-          bio: t.bio || '',
-          specialties: t.qualifications ? t.qualifications.split(',').map((s) => s.trim()) : [t.specialization],
-          image: t.profileImageUrl || doctorImg,
-        });
-      })
-      .catch(console.error);
-  }, [location.state]);
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+      try {
+        const stateId = location.state?.doctor?.therapistId || location.state?.doctor?.id;
+        let therapistId = stateId;
+
+        if (!therapistId && isOwnProfile) {
+          therapistId = user?.therapistId;
+          if (!therapistId && user?.userId) {
+            const byUser = await fetchTherapistByUserId(user.userId);
+            therapistId = byUser.data?.therapistId;
+          }
+        }
+
+        if (!therapistId) {
+          if (!cancelled) setLoading(false);
+          return;
+        }
+
+        const res = await fetchTherapistById(therapistId);
+        if (!cancelled) setProfile(mapTherapistToProfile(res.data, doctorImg));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, [location.state, user, isOwnProfile]);
+
+  const qualificationItems = useMemo(() => {
+    const raw = profile.qualifications || '';
+    return raw
+      .split(/[,،]/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .map((title, i) => ({
+        title,
+        subtitle: i === 0 ? 'مؤهل أساسي' : 'تأهيل إضافي',
+        icon: i === 0 ? 'fa-graduation-cap' : 'fa-certificate',
+      }));
+  }, [profile.qualifications]);
 
   const handleSave = async () => {
-    if (currentUserRole !== 'doctor') {
+    if (!isOwnProfile || !profile.therapistId) {
       setIsEditing(false);
       return;
     }
     try {
-      const [firstName = '', ...rest] = (profile.name || '').replace('د. ', '').split(' ');
+      const [firstName = '', ...rest] = (profile.name || '').replace(/^د\.\s*/, '').split(/\s+/);
       await updateUserProfile({
         firstName,
-        lastName: rest.join(' '),
+        lastName: rest.join(' ') || firstName,
+      });
+      await updateTherapist(profile.therapistId, {
+        specialization: profile.specialty,
+        bio: profile.bio,
+        experienceYears: profile.experienceYears || parseInt(String(profile.experience), 10) || 0,
+        hourlyRate: Number(profile.hourlyRate) || 0,
+        qualifications: (profile.specialties || []).join('، '),
       });
       setIsEditing(false);
+      toast.success('تم حفظ التغييرات');
     } catch (err) {
       console.error(err);
-      alert('تعذر حفظ التغييرات');
+      toast.error(getApiErrorMessage(err, 'تعذر حفظ التغييرات'));
     }
   };
 
@@ -75,14 +113,13 @@ function DoctorProfile() {
 
   return (
     <div className="doctor-profile-page" dir="rtl">
-      {/* الـ Header الموحد للموقع من الـ layout */}
       <Header />
 
       <main className="profile-main-content">
         <div className="profile-container">
+          {loading && <p className="text-sm text-gray-500 mb-4">جاري تحميل الملف الشخصي...</p>}
 
-          {/* التحكم في ظهور شريط التعديل: يظهر فقط إذا كان الحساب الحالي لطبيب */}
-          {currentUserRole === 'doctor' && (
+          {isOwnProfile && (
             <div className="profile-edit-toolbar">
               <button
                 className={`profile-edit-toggle ${isEditing ? "saving" : ""}`}
@@ -96,21 +133,22 @@ function DoctorProfile() {
 
           <section className="doctor-main-card">
             <div className="doctor-image-container-right">
-              {/* عرض صورة الطبيب الديناميكية أو الافتراضية */}
               <img src={profile.image || doctorImg} alt={profile.name} className="doctor-rect-avatar" />
 
-              <div className="compatibility-overlay-card">
-                <div className="compat-text-side">
-                  <span className="compat-label">توافقنا</span>
-                  <span className="compat-value">96%</span>
-                </div>
-                <div className="compat-icon-side">
-                  <div className="loading-stars-circle">
-                    <span className="inner-star-ai">✨</span>
-                    <i className="fa-solid fa-circle-notch loading-ring"></i>
+              {!isOwnProfile && (
+                <div className="compatibility-overlay-card">
+                  <div className="compat-text-side">
+                    <span className="compat-label">توافقنا</span>
+                    <span className="compat-value">—</span>
+                  </div>
+                  <div className="compat-icon-side">
+                    <div className="loading-stars-circle">
+                      <span className="inner-star-ai">✨</span>
+                      <i className="fa-solid fa-circle-notch loading-ring"></i>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="doctor-details-container-left">
@@ -122,7 +160,7 @@ function DoctorProfile() {
                     onChange={(e) => update("availability", e.target.value)}
                   />
                 ) : (
-                  <span className="availability-badge">{profile.availability}</span>
+                  <span className="availability-badge">{profile.availability || 'متاح للحجز'}</span>
                 )}
 
                 {isEditing ? (
@@ -132,7 +170,7 @@ function DoctorProfile() {
                     onChange={(e) => update("name", e.target.value)}
                   />
                 ) : (
-                  <h2 className="doctor-name">{profile.name}</h2>
+                  <h2 className="doctor-name">{profile.name || 'المعالج'}</h2>
                 )}
 
                 {isEditing ? (
@@ -150,29 +188,13 @@ function DoctorProfile() {
                 <div className="stat-box">
                   <i className="fa-solid fa-comment-dots stat-icon"></i>
                   <span className="stat-label">جلسات</span>
-                  {isEditing ? (
-                    <input
-                      className="profile-edit-input stat-input"
-                      value={profile.sessions}
-                      onChange={(e) => update("sessions", e.target.value)}
-                    />
-                  ) : (
-                    <span className="stat-value">{profile.sessions}</span>
-                  )}
+                  <span className="stat-value">{profile.sessions}</span>
                 </div>
 
                 <div className="stat-box">
                   <i className="fa-solid fa-star stat-icon"></i>
                   <span className="stat-label">تقييم</span>
-                  {isEditing ? (
-                    <input
-                      className="profile-edit-input stat-input"
-                      value={profile.rating}
-                      onChange={(e) => update("rating", e.target.value)}
-                    />
-                  ) : (
-                    <span className="stat-value">{profile.rating}</span>
-                  )}
+                  <span className="stat-value">{profile.rating}</span>
                 </div>
 
                 <div className="stat-box">
@@ -181,11 +203,29 @@ function DoctorProfile() {
                   {isEditing ? (
                     <input
                       className="profile-edit-input stat-input"
-                      value={profile.experience}
-                      onChange={(e) => update("experience", e.target.value)}
+                      value={profile.experienceYears ?? ''}
+                      onChange={(e) => update("experienceYears", Number(e.target.value) || 0)}
+                      type="number"
+                      min="0"
                     />
                   ) : (
                     <span className="stat-value">{profile.experience}</span>
+                  )}
+                </div>
+
+                <div className="stat-box">
+                  <i className="fa-solid fa-coins stat-icon"></i>
+                  <span className="stat-label">سعر الجلسة</span>
+                  {isEditing ? (
+                    <input
+                      className="profile-edit-input stat-input"
+                      value={profile.hourlyRate ?? ''}
+                      onChange={(e) => update("hourlyRate", Number(e.target.value) || 0)}
+                      type="number"
+                      min="0"
+                    />
+                  ) : (
+                    <span className="stat-value">{profile.hourlyRate} ج.م</span>
                   )}
                 </div>
               </div>
@@ -195,7 +235,7 @@ function DoctorProfile() {
           <section className="doctor-secondary-card">
             <div className="secondary-right-side">
               <div className="bio-section">
-                <h3 className="section-title">حول {profile.name}</h3>
+                <h3 className="section-title">حول {profile.name || 'المعالج'}</h3>
                 {isEditing ? (
                   <textarea
                     className="profile-edit-input bio-input"
@@ -203,7 +243,7 @@ function DoctorProfile() {
                     onChange={(e) => update("bio", e.target.value)}
                   />
                 ) : (
-                  <p className="bio-text">{profile.bio}</p>
+                  <p className="bio-text">{profile.bio || 'لا توجد نبذة بعد.'}</p>
                 )}
               </div>
 
@@ -212,17 +252,20 @@ function DoctorProfile() {
                 {isEditing ? (
                   <textarea
                     className="profile-edit-input specialties-input"
-                    value={profile.specialties.join("، ")}
+                    value={(profile.specialties || []).join("، ")}
                     onChange={(e) =>
                       update(
                         "specialties",
-                        e.target.value.split("،").map((s) => s.trim())
+                        e.target.value.split(/[,،]/).map((s) => s.trim()).filter(Boolean)
                       )
                     }
                   />
                 ) : (
                   <div className="specialties-tags">
-                    {profile.specialties.map((tag, i) => (
+                    {(profile.specialties || []).length === 0 && (
+                      <span className="spec-tag">{profile.specialty || 'عام'}</span>
+                    )}
+                    {(profile.specialties || []).map((tag, i) => (
                       <span key={i} className="spec-tag">{tag}</span>
                     ))}
                   </div>
@@ -231,25 +274,21 @@ function DoctorProfile() {
 
               <div className="qualifications-section">
                 <h3 className="section-title">المؤهلات والخبرة</h3>
-                <div className="timeline-item">
-                  <div className="timeline-icon-wrapper">
-                    <i className="fa-solid fa-graduation-cap timeline-icon-ai"></i>
-                  </div>
-                  <div className="timeline-content">
-                    <h4>دكتوراة في علم النفس العيادي</h4>
-                    <p>جامعة الملك سعود، الرياض 2012-2016</p>
-                  </div>
-                </div>
-
-                <div className="timeline-item">
-                  <div className="timeline-icon-wrapper">
-                    <i className="fa-solid fa-certificate timeline-icon-ai"></i>
-                  </div>
-                  <div className="timeline-content">
-                    <h4>شهادة معتمدة في العلاج المعرفي (CBT)</h4>
-                    <p>الأكاديمية البريطانية للمعالجين النفسيين</p>
-                  </div>
-                </div>
+                {qualificationItems.length === 0 ? (
+                  <p className="bio-text">لا توجد مؤهلات مسجّلة بعد.</p>
+                ) : (
+                  qualificationItems.map((item, i) => (
+                    <div className="timeline-item" key={i}>
+                      <div className="timeline-icon-wrapper">
+                        <i className={`fa-solid ${item.icon} timeline-icon-ai`}></i>
+                      </div>
+                      <div className="timeline-content">
+                        <h4>{item.title}</h4>
+                        <p>{item.subtitle}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -268,9 +307,9 @@ function DoctorProfile() {
                       ))}
                     </div>
                     <p className="review-text">
-                      "د. سارة غيرت نظرتي للأمور تماماً. أسلوبها هادئ ومريح جداً، شعرت بأنني مسموع لأول مرة."
+                      "تجربة احترافية ومريحة. أسلوب المعالج ساعدني أشعر أنني مفهوم لأول مرة."
                     </p>
-                    <span className="review-meta">مراجع مجهول • منذ أسبوعين</span>
+                    <span className="review-meta">مراجع مجهول • تقييم عام</span>
                   </div>
 
                   <div className="review-card">
@@ -286,9 +325,9 @@ function DoctorProfile() {
                       })}
                     </div>
                     <p className="review-text">
-                      "جلسات احترافية ومثمرة جداً. شكراً لك دكتورة على هذا الدعم."
+                      "جلسات منظمة ومثمرة. أنصح بها لمن يبحث عن دعم نفسي جاد."
                     </p>
-                    <span className="review-meta">مراجع مجهول • منذ شهر</span>
+                    <span className="review-meta">مراجع مجهول • تقييم عام</span>
                   </div>
                 </div>
               </div>
@@ -296,7 +335,7 @@ function DoctorProfile() {
           </section>
         </div>
       </main>
-       {currentUserRole !== 'doctor' && (
+       {!isOwnProfile && (
          <ProfileFooter
            doctor={profile}
            hourlyRate={profile.hourlyRate || 250}

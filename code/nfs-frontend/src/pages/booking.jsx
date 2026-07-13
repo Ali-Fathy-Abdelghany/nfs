@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Search, Calendar, Clock, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Calendar, Clock, MapPin, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchTherapists, searchTherapists } from '../api/therapists';
 import { fetchDoctorAvailability, createAppointment, fetchPatientAppointments } from '../api/appointments';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { getApiErrorMessage } from '../utils/apiError';
+
+const WEEKDAY_LABELS = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+const MONTH_LABELS = [
+  'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+  'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر',
+];
 
 function mapTherapistToDoctor(t) {
   return {
@@ -16,7 +24,7 @@ function mapTherapistToDoctor(t) {
     sessions: t.experienceYears ? `+${t.experienceYears * 50}` : '+100',
     rating: t.rating?.toFixed(1) || '4.8',
     experience: t.experienceYears ? `${t.experienceYears} سنة` : '5 سنوات',
-    price: t.hourlyRate ? `${t.hourlyRate} ر.س / ساعة` : '150 ر.س / ساعة',
+    price: t.hourlyRate ? `${t.hourlyRate} ج.م / جلسة` : '150 ج.م / جلسة',
     hourlyRate: t.hourlyRate || 250,
     image: t.profileImageUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300',
     categories: t.specialization ? [t.specialization] : ['قلق'],
@@ -26,10 +34,199 @@ function mapTherapistToDoctor(t) {
   };
 }
 
+function toDateKey(date) {
+  const d = date instanceof Date ? date : new Date(date);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function formatTime(slot) {
+  return new Date(slot.startTime).toLocaleTimeString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+function BookingCalendar({ slots, selectedDate, onSelectDate, selectedSlot, onSelectSlot }) {
+  const today = useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
+  const availableDates = useMemo(() => {
+    const set = new Set();
+    (slots || []).forEach((s) => set.add(toDateKey(s.startTime)));
+    return set;
+  }, [slots]);
+
+  const firstAvailable = useMemo(() => {
+    const sorted = [...availableDates].sort();
+    return sorted[0] || toDateKey(today);
+  }, [availableDates, today]);
+
+  const [viewMonth, setViewMonth] = useState(() => {
+    const base = selectedDate || firstAvailable;
+    const d = new Date(`${base}T00:00:00`);
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  });
+
+  useEffect(() => {
+    if (!selectedDate && firstAvailable) {
+      onSelectDate(firstAvailable);
+      const d = new Date(`${firstAvailable}T00:00:00`);
+      setViewMonth(new Date(d.getFullYear(), d.getMonth(), 1));
+    }
+  }, [firstAvailable, selectedDate, onSelectDate]);
+
+  const daysInMonth = useMemo(() => {
+    const year = viewMonth.getFullYear();
+    const month = viewMonth.getMonth();
+    const firstDow = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let day = 1; day <= totalDays; day++) {
+      cells.push(new Date(year, month, day));
+    }
+    return cells;
+  }, [viewMonth]);
+
+  const daySlots = useMemo(() => {
+    if (!selectedDate) return [];
+    return (slots || [])
+      .filter((s) => toDateKey(s.startTime) === selectedDate)
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+  }, [slots, selectedDate]);
+
+  const prevMonth = () =>
+    setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1));
+  const nextMonth = () =>
+    setViewMonth((m) => new Date(m.getFullYear(), m.getMonth() + 1, 1));
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-white rounded-2xl border border-[#E6E9E9] p-4">
+        <div className="flex items-center justify-between mb-4">
+          <button
+            type="button"
+            onClick={nextMonth}
+            className="w-8 h-8 rounded-full bg-[#F7FAFA] hover:bg-[#E6F0EF] flex items-center justify-center text-[#316764]"
+            aria-label="الشهر التالي"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <h5 className="text-sm font-black text-[#181C1D]">
+            {MONTH_LABELS[viewMonth.getMonth()]} {viewMonth.getFullYear()}
+          </h5>
+          <button
+            type="button"
+            onClick={prevMonth}
+            className="w-8 h-8 rounded-full bg-[#F7FAFA] hover:bg-[#E6F0EF] flex items-center justify-center text-[#316764]"
+            aria-label="الشهر السابق"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-7 gap-1 text-center mb-2">
+          {WEEKDAY_LABELS.map((d) => (
+            <div key={d} className="text-[10px] font-bold text-[#707978] py-1">
+              {d}
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-1">
+          {daysInMonth.map((dateObj, idx) => {
+            if (!dateObj) return <div key={`e-${idx}`} className="aspect-square" />;
+
+            const key = toDateKey(dateObj);
+            const isPast = dateObj < today;
+            const hasSlots = availableDates.has(key);
+            const isSelected = selectedDate === key;
+            const isToday = key === toDateKey(today);
+            const clickable = hasSlots && !isPast;
+
+            return (
+              <button
+                key={key}
+                type="button"
+                disabled={!clickable}
+                onClick={() => {
+                  onSelectDate(key);
+                  onSelectSlot(null);
+                }}
+                className={[
+                  'aspect-square rounded-xl text-xs font-bold transition relative flex flex-col items-center justify-center',
+                  isSelected
+                    ? 'bg-[#316764] text-white shadow-sm'
+                    : clickable
+                      ? 'bg-[#E6F0EF] text-[#316764] hover:bg-[#316764]/15'
+                      : 'text-[#C0C7C6] cursor-not-allowed',
+                  isToday && !isSelected ? 'ring-1 ring-[#316764]/40' : '',
+                ].join(' ')}
+              >
+                {dateObj.getDate()}
+                {hasSlots && !isPast && (
+                  <span
+                    className={`w-1 h-1 rounded-full mt-0.5 ${
+                      isSelected ? 'bg-white' : 'bg-[#316764]'
+                    }`}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="text-[10px] text-[#707978] mt-3 text-right">
+          الأيام المظللة تحتوي على مواعيد متاحة
+        </p>
+      </div>
+
+      <div>
+        <h5 className="text-xs font-black text-[#181C1D] mb-2 text-right">
+          {selectedDate
+            ? `المواعيد المتاحة — ${new Date(`${selectedDate}T00:00:00`).toLocaleDateString('ar-EG', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })}`
+            : 'اختر يوماً من التقويم'}
+        </h5>
+        {selectedDate && daySlots.length === 0 ? (
+          <p className="text-xs text-gray-400 text-right">لا مواعيد في هذا اليوم</p>
+        ) : (
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {daySlots.map((slot) => (
+              <button
+                key={slot.id}
+                type="button"
+                onClick={() => onSelectSlot(slot)}
+                className={`py-2.5 rounded-xl text-xs font-bold border transition ${
+                  selectedSlot?.id === slot.id
+                    ? 'bg-[#316764] text-white border-[#316764]'
+                    : 'bg-white text-[#316764] border-[#E6E9E9] hover:border-[#316764]'
+                }`}
+              >
+                {formatTime(slot)}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Booking({ preselectedDoctor }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const toast = useToast();
   const doctorToSelect = preselectedDoctor || location.state?.preselectedDoctor;
 
   const [doctors, setDoctors] = useState([]);
@@ -44,6 +241,7 @@ export default function Booking({ preselectedDoctor }) {
 
   const [openDoctorSchedule, setOpenDoctorSchedule] = useState(null);
   const [availabilitySlots, setAvailabilitySlots] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isJoinEnabled, setIsJoinEnabled] = useState(false);
 
@@ -54,7 +252,7 @@ export default function Booking({ preselectedDoctor }) {
         const res = searchQuery.trim()
           ? await searchTherapists(searchQuery.trim())
           : await fetchTherapists();
-        setDoctors((res.data || []).map(mapTherapistToDoctor));
+        setDoctors((res.data || []).filter((t) => t.isVerified).map(mapTherapistToDoctor));
       } catch (err) {
         console.error(err);
         setError('تعذر تحميل قائمة الأطباء');
@@ -73,7 +271,11 @@ export default function Booking({ preselectedDoctor }) {
       .then((res) => {
         const upcoming = (res.data || [])
           .filter((a) => a.status !== 'Cancelled' && a.status !== 'CANCELLED')
-          .sort((a, b) => new Date(a.scheduledStartTime || a.createdAt) - new Date(b.scheduledStartTime || b.createdAt))[0];
+          .sort(
+            (a, b) =>
+              new Date(a.scheduledStartTime || a.createdAt) -
+              new Date(b.scheduledStartTime || b.createdAt)
+          )[0];
         setNextAppointment(upcoming || null);
       })
       .catch(console.error);
@@ -94,8 +296,10 @@ export default function Booking({ preselectedDoctor }) {
   }, [nextAppointment]);
 
   const filteredDoctors = doctors.filter((doc) => {
-    const matchesCategory = selectedCategory === 'الكل' || doc.categories.some((c) => c.includes(selectedCategory));
-    const matchesType = selectedSessionType === 'الكل' || doc.sessionTypes.includes(selectedSessionType);
+    const matchesCategory =
+      selectedCategory === 'الكل' || doc.categories.some((c) => c.includes(selectedCategory));
+    const matchesType =
+      selectedSessionType === 'الكل' || doc.sessionTypes.includes(selectedSessionType);
     return matchesCategory && matchesType;
   });
 
@@ -104,13 +308,19 @@ export default function Booking({ preselectedDoctor }) {
       setOpenDoctorSchedule(null);
       setAvailabilitySlots([]);
       setSelectedSlot(null);
+      setSelectedDate(null);
       return;
     }
     setOpenDoctorSchedule(docId);
     setSelectedSlot(null);
+    setSelectedDate(null);
     try {
       const res = await fetchDoctorAvailability(docId);
-      setAvailabilitySlots((res.data || []).filter((s) => !s.isBooked));
+      const now = Date.now();
+      const free = (res.data || [])
+        .filter((s) => !s.isBooked && new Date(s.startTime).getTime() > now)
+        .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+      setAvailabilitySlots(free);
     } catch (err) {
       console.error(err);
       setAvailabilitySlots([]);
@@ -129,12 +339,12 @@ export default function Booking({ preselectedDoctor }) {
   const handleConfirmBooking = async (doctor) => {
     const patientId = user?.patientId || user?.userId || user?.id;
     if (!patientId) {
-      alert('يرجى تسجيل الدخول أولاً');
+      toast.warning('يرجى تسجيل الدخول أولاً');
       navigate('/login');
       return;
     }
     if (!selectedSlot) {
-      alert('يرجى اختيار موعد متاح');
+      toast.warning('يرجى اختيار يوم وموعد من التقويم');
       return;
     }
     try {
@@ -144,12 +354,12 @@ export default function Booking({ preselectedDoctor }) {
         doctorId: doctor.therapistId || doctor.id,
         slotId: selectedSlot.id,
       });
-      alert('تم تأكيد الموعد بنجاح');
+      toast.success('تم تأكيد الموعد بنجاح');
       setOpenDoctorSchedule(null);
       navigate('/doctor-checkout', { state: { doctor, slot: selectedSlot } });
     } catch (err) {
       console.error(err);
-      alert('فشل حجز الموعد، حاول مرة أخرى');
+      toast.error(getApiErrorMessage(err, 'فشل حجز الموعد، حاول مرة أخرى'));
     } finally {
       setBookingLoading(false);
     }
@@ -159,17 +369,12 @@ export default function Booking({ preselectedDoctor }) {
     if (isJoinEnabled) {
       navigate('/doctor/meetings');
     } else {
-      alert('عذراً، يمكنك الانضمام للجلسة قبل موعدها بـ 15 دقيقة فقط.');
+      toast.info('عذراً، يمكنك الانضمام للجلسة قبل موعدها بـ 15 دقيقة فقط.');
     }
   };
 
-  const formatSlotTime = (slot) => {
-    const start = new Date(slot.startTime);
-    return start.toLocaleString('ar-EG', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
-    <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] font-sans antialiased pb-24 pt-4" dir="rtl">
+    <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] font-['Cairo',sans-serif] antialiased pb-24 pt-4" dir="rtl">
       <section className="max-w-7xl mx-auto px-4 text-center my-6">
         <h1 className="text-2xl md:text-3xl font-bold text-[#316764] mb-2">
           ابحث عن مساحتك الآمنة مع أفضل المختصين.
@@ -200,7 +405,9 @@ export default function Booking({ preselectedDoctor }) {
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
                   className={`px-3 py-1 text-xs rounded-full cursor-pointer transition ${
-                    selectedCategory === cat ? 'bg-[#316764] text-white' : 'bg-[#F1F4F4] text-gray-600 hover:bg-gray-200'
+                    selectedCategory === cat
+                      ? 'bg-[#316764] text-white'
+                      : 'bg-[#F1F4F4] text-gray-600 hover:bg-gray-200'
                   }`}
                 >
                   {cat}
@@ -212,16 +419,34 @@ export default function Booking({ preselectedDoctor }) {
                 <span className="text-gray-500">نوع الجلسة:</span>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setSelectedSessionType(selectedSessionType === 'فيديو' ? 'الكل' : 'فيديو')}
-                    className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${selectedSessionType === 'فيديو' ? 'bg-[#316764] text-white' : 'bg-[#F1F4F4]'}`}
+                    onClick={() =>
+                      setSelectedSessionType(selectedSessionType === 'فيديو' ? 'الكل' : 'فيديو')
+                    }
+                    className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${
+                      selectedSessionType === 'فيديو' ? 'bg-[#316764] text-white' : 'bg-[#F1F4F4]'
+                    }`}
                   >
-                    <span className={`w-2 h-2 rounded-full ${selectedSessionType === 'فيديو' ? 'bg-white' : 'bg-[#0F766E]'}`}></span> فيديو
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        selectedSessionType === 'فيديو' ? 'bg-white' : 'bg-[#0F766E]'
+                      }`}
+                    ></span>{' '}
+                    فيديو
                   </button>
                   <button
-                    onClick={() => setSelectedSessionType(selectedSessionType === 'محادثة' ? 'الكل' : 'محادثة')}
-                    className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${selectedSessionType === 'محادثة' ? 'bg-[#316764] text-white' : 'bg-[#F1F4F4]'}`}
+                    onClick={() =>
+                      setSelectedSessionType(selectedSessionType === 'محادثة' ? 'الكل' : 'محادثة')
+                    }
+                    className={`px-3 py-1 rounded-lg flex items-center gap-1 transition ${
+                      selectedSessionType === 'محادثة' ? 'bg-[#316764] text-white' : 'bg-[#F1F4F4]'
+                    }`}
                   >
-                    <span className={`w-2 h-2 rounded-full ${selectedSessionType === 'محادثة' ? 'bg-white' : 'bg-gray-400'}`}></span> محادثة
+                    <span
+                      className={`w-2 h-2 rounded-full ${
+                        selectedSessionType === 'محادثة' ? 'bg-white' : 'bg-gray-400'
+                      }`}
+                    ></span>{' '}
+                    محادثة
                   </button>
                 </div>
               </div>
@@ -229,7 +454,9 @@ export default function Booking({ preselectedDoctor }) {
           </div>
 
           <div className="bg-[#DFEDE9] p-4 rounded-2xl text-center text-[#316764]">
-            <p className="text-xs font-medium leading-relaxed">"الصحة النفسية ليست وجهة، بل هي عملية مستمرة."</p>
+            <p className="text-xs font-medium leading-relaxed">
+              "الصحة النفسية ليست وجهة، بل هي عملية مستمرة."
+            </p>
           </div>
 
           <div className="bg-white p-5 rounded-2xl border border-[#EBEEEE] shadow-sm text-center">
@@ -241,7 +468,9 @@ export default function Booking({ preselectedDoctor }) {
             <button
               onClick={handleJoinSession}
               className={`w-full text-white text-xs py-3 rounded-xl font-medium transition duration-300 ${
-                isJoinEnabled ? 'bg-[#316764] hover:bg-[#254f4d] shadow-md cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                isJoinEnabled
+                  ? 'bg-[#316764] hover:bg-[#254f4d] shadow-md cursor-pointer'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
             >
               {isJoinEnabled ? 'انضم للجلسة الآن' : 'انضم للجلسة (يفتح قبل الموعد بـ 15 د)'}
@@ -252,7 +481,9 @@ export default function Booking({ preselectedDoctor }) {
         <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
           {error && <p className="text-red-600 text-sm text-center">{error}</p>}
           {loading ? (
-            <div className="bg-white p-12 rounded-2xl border border-[#EBEEEE] text-center text-gray-400 text-xs">جاري تحميل الأطباء...</div>
+            <div className="bg-white p-12 rounded-2xl border border-[#EBEEEE] text-center text-gray-400 text-xs">
+              جاري تحميل الأطباء...
+            </div>
           ) : filteredDoctors.length === 0 ? (
             <div className="bg-white p-12 rounded-2xl border border-[#EBEEEE] text-center text-gray-400 text-xs">
               لا يوجد أطباء يطابقون خيارات البحث الحالية.
@@ -261,18 +492,28 @@ export default function Booking({ preselectedDoctor }) {
             filteredDoctors.map((doc) => (
               <div key={doc.id} className="bg-white p-5 rounded-2xl border border-[#EBEEEE] shadow-sm space-y-4">
                 <div className="flex gap-4">
-                  <img src={doc.image} alt={doc.name} className="w-20 h-20 rounded-xl object-cover object-top bg-gray-100" />
+                  <img
+                    src={doc.image}
+                    alt={doc.name}
+                    className="w-20 h-20 rounded-xl object-cover object-top bg-gray-100"
+                  />
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
                       <div>
                         <h2 className="text-sm font-bold text-gray-800">{doc.name}</h2>
                         <p className="text-[11px] text-[#316764] font-medium mt-0.5">{doc.specialty}</p>
                       </div>
-                      <div className="bg-[#F1F4F4] px-2 py-0.5 rounded text-[10px] font-bold text-[#316764]">★ {doc.rating}</div>
+                      <div className="bg-[#F1F4F4] px-2 py-0.5 rounded text-[10px] font-bold text-[#316764]">
+                        ★ {doc.rating}
+                      </div>
                     </div>
                     <div className="flex gap-4 mt-4 text-[10px] text-gray-400">
-                      <span className="flex items-center gap-1"><Clock size={12}/> {doc.availability}</span>
-                      <span className="flex items-center gap-1"><MapPin size={12}/> {doc.price}</span>
+                      <span className="flex items-center gap-1">
+                        <Clock size={12} /> {doc.availability}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <MapPin size={12} /> {doc.price}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -295,25 +536,20 @@ export default function Booking({ preselectedDoctor }) {
 
                 {openDoctorSchedule === doc.id && (
                   <div className="border-t border-[#EBEEEE] pt-4 mt-2 bg-[#F7FAFA] p-4 rounded-xl transition-all">
-                    <h4 className="text-xs font-bold text-[#316764] mb-3">اختر الوقت المناسب مع {doc.name}</h4>
+                    <h4 className="text-xs font-bold text-[#316764] mb-3 flex items-center gap-2">
+                      <Calendar size={14} />
+                      اختر اليوم ثم الوقت مع {doc.name}
+                    </h4>
                     {availabilitySlots.length === 0 ? (
                       <p className="text-xs text-gray-400">لا توجد مواعيد متاحة حالياً</p>
                     ) : (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {availabilitySlots.map((slot) => (
-                          <button
-                            key={slot.id}
-                            onClick={() => setSelectedSlot(slot)}
-                            className={`py-2 rounded-xl text-xs font-medium border transition text-center ${
-                              selectedSlot?.id === slot.id
-                                ? 'bg-[#316764] text-white border-[#316764]'
-                                : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-                            }`}
-                          >
-                            {formatSlotTime(slot)}
-                          </button>
-                        ))}
-                      </div>
+                      <BookingCalendar
+                        slots={availabilitySlots}
+                        selectedDate={selectedDate}
+                        onSelectDate={setSelectedDate}
+                        selectedSlot={selectedSlot}
+                        onSelectSlot={setSelectedSlot}
+                      />
                     )}
                     <div className="flex justify-end mt-4">
                       <button

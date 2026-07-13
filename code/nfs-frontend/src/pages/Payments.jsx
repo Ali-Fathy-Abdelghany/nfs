@@ -13,12 +13,19 @@ import {
   PartyPopper,
   ArrowUpRight
 } from 'lucide-react';
+import { createPayment, confirmPayment } from '../api/payments';
+import { useAuth } from '../context/AuthContext';
+import { ensurePatientRecord } from '../api/patientHelpers';
+import { useToast } from '../context/ToastContext';
 
 export default function Payments() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth() || {};
+  const toast = useToast();
   
   const incomingDoctorData = location.state?.doctorData;
+  const incomingSlot = location.state?.slot;
 
   const [selectedPlan, setSelectedPlan] = useState('single');
   
@@ -28,6 +35,11 @@ export default function Payments() {
   const [expiryDate, setExpiryDate] = useState('');
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [paymentError, setPaymentError] = useState('');
+
+  const sessionPrice = Number(incomingDoctorData?.hourlyRate) || 250;
+  const durationLabel = incomingDoctorData?.duration || '50 دقيقة';
 
   const doctorInfo = incomingDoctorData || {
     name: "د. ريم العتيبي",
@@ -36,13 +48,22 @@ export default function Payments() {
     reviews: 120,
     date: "الثلاثاء، 24 أكتوبر",
     time: "08:00 م",
-    duration: "50 دقيقة",
-    avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&q=80"
+    duration: durationLabel,
+    avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&q=80",
+    hourlyRate: sessionPrice,
   };
 
   const planDetails = {
-    single: { price: 250, label: "جلسة استشارية", desc: "جلسة فردية لمدة 50 دقيقة مع اخصائي معتمد." },
-    monthly: { price: 800, label: "4 جلسات شهرياً", desc: "متابعة مستمرة مع أولوية الحجز وجلسات طوارئ." }
+    single: {
+      price: sessionPrice,
+      label: "جلسة استشارية",
+      desc: `جلسة فردية لمدة ${durationLabel} مع اخصائي معتمد.`,
+    },
+    monthly: {
+      price: Math.round(sessionPrice * 3.2),
+      label: "4 جلسات شهرياً",
+      desc: "متابعة مستمرة مع أولوية الحجز وجلسات طوارئ.",
+    },
   };
 
   const currentPrice = planDetails[selectedPlan].price;
@@ -68,30 +89,65 @@ export default function Payments() {
     }
   };
 
-  const handleSubmitPayment = (e) => {
+  const handleSubmitPayment = async (e) => {
     e.preventDefault();
-    
-    // التحقق النهائي من البيانات قبل الدفع
+    setPaymentError('');
+
     if (cardNumber.replace(/\s/g, '').length < 16) {
-      alert("رجاءً أدخلي رقم بطاقة صحيح مكون من 16 رقماً");
+      toast.error("رجاءً أدخلي رقم بطاقة صحيح مكون من 16 رقماً");
       return;
     }
     if (cvv.length < 3) {
-      alert("رجاءً أدخلي رمز CVV صحيح مكون من 3 أرقام");
+      toast.error("رجاءً أدخلي رمز CVV صحيح مكون من 3 أرقام");
       return;
     }
 
-    setPaymentSuccess(true);
+    try {
+      setPaying(true);
+      let patientId = user?.patientId;
+      const userId = user?.userId || user?.id;
+      if (!patientId && userId) {
+        patientId = await ensurePatientRecord(userId);
+      }
+      if (!patientId) {
+        setPaymentError('يرجى تسجيل الدخول أولاً');
+        return;
+      }
+
+      const doctorId = doctorInfo.therapistId || doctorInfo.id || null;
+      const createRes = await createPayment({
+        patientId,
+        doctorId,
+        appointmentId: location.state?.appointmentId || null,
+        amount: total,
+        currency: 'EGP',
+        planType: selectedPlan,
+      });
+
+      const paymentId = createRes.data?.id;
+      if (!paymentId) throw new Error('لم يتم إنشاء عملية الدفع');
+
+      await confirmPayment(paymentId, {
+        cardToken: cardNumber.replace(/\s/g, '').slice(-4),
+      });
+
+      setPaymentSuccess(true);
+    } catch (err) {
+      console.error(err);
+      setPaymentError(err.response?.data?.message || err.message || 'فشل الدفع، حاول مرة أخرى');
+    } finally {
+      setPaying(false);
+    }
   };
 
   // التوجيه لصفحة جلساتي عند تأكيد النجاح
   const handleGoToMySessions = () => {
-    navigate('/dashboard', {
+    navigate('/sessions', {
       state: {
-        targetTab: 'sessions',
         bookedDoctor: doctorInfo,
-        plan: planDetails[selectedPlan]
-      }
+        plan: planDetails[selectedPlan],
+        slot: incomingSlot,
+      },
     });
   };
 
@@ -233,7 +289,7 @@ export default function Payments() {
                         </div>
                         <h4 className="font-bold text-base text-[#181C1D]">{planDetails.single.label}</h4>
                         <p className="text-[11px] text-[#707978] font-medium leading-relaxed">{planDetails.single.desc}</p>
-                        <div className="pt-2 text-base font-bold text-[#316764] font-mono">250 ج.م</div>
+                        <div className="pt-2 text-base font-bold text-[#316764] font-mono">{planDetails.single.price} ج.م</div>
                       </div>
 
                       {/* كارت: باقة شهرية */}
@@ -251,7 +307,7 @@ export default function Payments() {
                         </div>
                         <h4 className="font-bold text-base text-[#181C1D]">{planDetails.monthly.label}</h4>
                         <p className="text-[11px] text-[#707978] font-medium leading-relaxed">{planDetails.monthly.desc}</p>
-                        <div className="pt-2 text-base font-bold text-[#316764] font-mono">800 ج.م</div>
+                        <div className="pt-2 text-base font-bold text-[#316764] font-mono">{planDetails.monthly.price} ج.م</div>
                       </div>
                     </div>
                   </div>
@@ -316,15 +372,20 @@ export default function Payments() {
                       </div>
                     </div>
 
+                    {paymentError && (
+                      <p className="text-xs text-rose-600 font-bold text-center">{paymentError}</p>
+                    )}
+
                     {/* زر الدفع والاشتراك */}
                     <div className="pt-4">
                       <motion.button
-                        whileHover={{ scale: 1.01, filter: "brightness(1.04)" }}
-                        whileTap={{ scale: 0.99 }}
+                        whileHover={{ scale: paying ? 1 : 1.01, filter: "brightness(1.04)" }}
+                        whileTap={{ scale: paying ? 1 : 0.99 }}
                         type="submit"
-                        className="w-full bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white font-bold py-4 rounded-full shadow-lg shadow-[#316764]/20 transition-all text-sm tracking-wide cursor-pointer"
+                        disabled={paying}
+                        className="w-full bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white font-bold py-4 rounded-full shadow-lg shadow-[#316764]/20 transition-all text-sm tracking-wide cursor-pointer disabled:opacity-60"
                       >
-                        تأكيد الدفع والاستمرار
+                        {paying ? 'جاري تأكيد الدفع...' : 'تأكيد الدفع والاستمرار'}
                       </motion.button>
                     </div>
 
