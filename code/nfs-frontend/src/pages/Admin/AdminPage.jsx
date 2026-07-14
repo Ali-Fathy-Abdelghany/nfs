@@ -10,6 +10,7 @@ import {
   approveTherapist,
   rejectTherapist,
 } from '../../api/therapists';
+import { getArticles, resetArticles, saveArticles } from '../../api/articles';
 import { getApiErrorMessage } from '../../utils/apiError';
 
 function genderLabel(g) {
@@ -200,6 +201,179 @@ function DoctorRequestModal({
   );
 }
 
+const emptyArticleForm = {
+  title: '',
+  desc: '',
+  badge: '',
+  tag: '',
+  img: '',
+  link: '',
+  isPublished: true,
+};
+
+function ArticleManager() {
+  const toast = useToast();
+  const [articles, setArticles] = useState(() => getArticles());
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState(emptyArticleForm);
+
+  const persist = (nextArticles, message) => {
+    const saved = saveArticles(nextArticles);
+    setArticles(saved);
+    if (message) toast.success(message);
+  };
+
+  const handleChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.desc.trim() || !form.link.trim()) {
+      toast.warning('العنوان والوصف والرابط مطلوبين');
+      return;
+    }
+
+    if (editingId) {
+      persist(
+        articles.map((article) =>
+          article.id === editingId ? { ...article, ...form, id: editingId } : article
+        ),
+        'تم تعديل المقال'
+      );
+    } else {
+      persist(
+        [
+          {
+            ...form,
+            id: `article_${Date.now()}`,
+            badge: form.badge || 'مقالة',
+            tag: form.tag || 'الصحة_النفسية',
+            img: form.img || 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=500',
+          },
+          ...articles,
+        ],
+        'تمت إضافة المقال'
+      );
+    }
+
+    setEditingId(null);
+    setForm(emptyArticleForm);
+  };
+
+  const startEdit = (article) => {
+    setEditingId(article.id);
+    setForm({
+      title: article.title,
+      desc: article.desc,
+      badge: article.badge,
+      tag: article.tag,
+      img: article.img,
+      link: article.link,
+      isPublished: article.isPublished,
+    });
+  };
+
+  const handleDelete = (articleId) => {
+    persist(articles.filter((article) => article.id !== articleId), 'تم حذف المقال');
+    if (editingId === articleId) {
+      setEditingId(null);
+      setForm(emptyArticleForm);
+    }
+  };
+
+  const handleTogglePublish = (articleId) => {
+    persist(
+      articles.map((article) =>
+        article.id === articleId ? { ...article, isPublished: !article.isPublished } : article
+      ),
+      'تم تحديث حالة النشر'
+    );
+  };
+
+  const handleReset = () => {
+    const defaults = resetArticles();
+    setArticles(defaults);
+    setEditingId(null);
+    setForm(emptyArticleForm);
+    toast.success('تمت إعادة المقالات الافتراضية');
+  };
+
+  return (
+    <section className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-sm p-6 space-y-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <h2 className="text-base font-black text-[#181C1D]">إدارة المقالات</h2>
+          <p className="text-xs text-[#707978] mt-1">
+            أضف، عدّل، أخفِ أو احذف المقالات التي تظهر في مكتبة المصادر وصفحة كل المقالات.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] bg-[#F7FAFA] text-[#707978] hover:border-[#316764]/30"
+        >
+          إعادة الافتراضي
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-3 bg-[#F7FAFA] border border-[#E6E9E9] rounded-2xl p-4">
+        <input value={form.title} onChange={(e) => handleChange('title', e.target.value)} placeholder="عنوان المقال" className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764]" />
+        <input value={form.badge} onChange={(e) => handleChange('badge', e.target.value)} placeholder="التصنيف / الشارة" className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764]" />
+        <input value={form.tag} onChange={(e) => handleChange('tag', e.target.value)} placeholder="الوسم بدون # مثال: تنظيم_القلق" className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764]" />
+        <input value={form.link} onChange={(e) => handleChange('link', e.target.value)} placeholder="رابط المقال" className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764]" />
+        <input value={form.img} onChange={(e) => handleChange('img', e.target.value)} placeholder="رابط الصورة" className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764] md:col-span-2" />
+        <textarea value={form.desc} onChange={(e) => handleChange('desc', e.target.value)} placeholder="وصف مختصر" rows={3} className="text-xs rounded-xl border border-[#E6E9E9] bg-white px-3 py-3 outline-none focus:border-[#316764] md:col-span-2" />
+        <label className="flex items-center gap-2 text-xs font-bold text-[#316764]">
+          <input type="checkbox" checked={form.isPublished} onChange={(e) => handleChange('isPublished', e.target.checked)} />
+          منشور للمستخدمين
+        </label>
+        <div className="flex gap-2 justify-end">
+          {editingId && (
+            <button type="button" onClick={() => { setEditingId(null); setForm(emptyArticleForm); }} className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] text-[#707978]">
+              إلغاء
+            </button>
+          )}
+          <button type="submit" className="text-xs font-bold px-5 py-2.5 rounded-xl bg-[#316764] text-white hover:bg-[#254f4d]">
+            {editingId ? 'حفظ التعديل' : 'إضافة مقال'}
+          </button>
+        </div>
+      </form>
+
+      <div className="space-y-3">
+        {articles.map((article) => (
+          <div key={article.id} className="flex flex-col md:flex-row gap-4 md:items-center justify-between p-4 rounded-2xl border border-[#E6E9E9] bg-[#F7FAFA]">
+            <div className="flex gap-3">
+              <img src={article.img} alt="" className="w-16 h-16 rounded-2xl object-cover border border-[#E6E9E9]" />
+              <div className="text-right">
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <h3 className="text-sm font-black text-[#181C1D]">{article.title}</h3>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-lg ${article.isPublished ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                    {article.isPublished ? 'منشور' : 'مخفي'}
+                  </span>
+                </div>
+                <p className="text-xs text-[#707978] line-clamp-2">{article.desc}</p>
+                <p className="text-[10px] text-[#316764] font-bold mt-1">#{article.tag} · {article.badge}</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 shrink-0">
+              <button onClick={() => startEdit(article)} className="text-xs font-bold px-4 py-2 rounded-xl bg-white border border-[#E6E9E9] text-[#316764]">
+                تعديل
+              </button>
+              <button onClick={() => handleTogglePublish(article.id)} className="text-xs font-bold px-4 py-2 rounded-xl bg-white border border-[#E6E9E9] text-[#707978]">
+                {article.isPublished ? 'إخفاء' : 'نشر'}
+              </button>
+              <button onClick={() => handleDelete(article.id)} className="text-xs font-bold px-4 py-2 rounded-xl bg-white border border-red-200 text-red-700">
+                حذف
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function AdminPage() {
   const navigate = useNavigate();
   const { user } = useAuth() || {};
@@ -209,6 +383,7 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [actingId, setActingId] = useState(null);
   const [actingKind, setActingKind] = useState(null);
+  const [section, setSection] = useState('doctors');
   const [tab, setTab] = useState('pending');
   const [detailDoc, setDetailDoc] = useState(null);
   const [rejectReason, setRejectReason] = useState('');
@@ -342,6 +517,28 @@ function AdminPage() {
           </div>
         </section>
 
+        <section className="bg-white rounded-[20px] border border-[#E6E9E9] p-2 flex flex-wrap gap-2">
+          <button
+            onClick={() => setSection('doctors')}
+            className={`px-4 py-2.5 text-xs font-bold rounded-2xl transition ${
+              section === 'doctors' ? 'bg-[#316764] text-white' : 'bg-[#F7FAFA] text-[#707978]'
+            }`}
+          >
+            إدارة الأطباء
+          </button>
+          <button
+            onClick={() => setSection('articles')}
+            className={`px-4 py-2.5 text-xs font-bold rounded-2xl transition ${
+              section === 'articles' ? 'bg-[#316764] text-white' : 'bg-[#F7FAFA] text-[#707978]'
+            }`}
+          >
+            إدارة المقالات
+          </button>
+        </section>
+
+        {section === 'articles' && <ArticleManager />}
+
+        {section === 'doctors' && (
         <section className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-sm p-6 space-y-5">
           <div className="flex flex-col sm:flex-row justify-between gap-3 items-start sm:items-center">
             <h2 className="text-base font-black text-[#181C1D]">إدارة الأطباء</h2>
@@ -504,6 +701,7 @@ function AdminPage() {
             </div>
           )}
         </section>
+        )}
       </main>
 
       <DoctorRequestModal

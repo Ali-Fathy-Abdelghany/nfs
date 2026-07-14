@@ -9,12 +9,6 @@ namespace NFS.Infrastructure.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context)
         {
-            // Apply critical schema patches first so the API can start even if
-            // MigrateAsync blocks on PendingModelChangesWarning (handwritten migrations
-            // without an updated ModelSnapshot).
-            await EnsureTherapistAndReminderColumnsAsync(context);
-            await EnsureExternalLoginsTableAsync(context);
-
             try
             {
                 await context.Database.MigrateAsync();
@@ -22,9 +16,12 @@ namespace NFS.Infrastructure.Data
             catch (InvalidOperationException ex) when (
                 ex.Message.Contains("PendingModelChangesWarning", StringComparison.Ordinal))
             {
-                // Schema already ensured above; continue seeding.
+                // Handwritten migrations sometimes lag the ModelSnapshot; schema is
+                // still ensured below so local/dev startup can continue.
             }
 
+            // Apply critical schema patches after migration so a fresh LocalDB
+            // database can be created before raw SQL opens the connection.
             await EnsurePaymentsTableAsync(context);
             await EnsureTherapistAndReminderColumnsAsync(context);
             await EnsureExternalLoginsTableAsync(context);

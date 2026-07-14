@@ -1,6 +1,7 @@
 {
-  "OpenAI": {
-    "ApiKey": "AQ.Ab8RN6KWhS9J1tx6rK4eESbvfgArguxdCFOQuBJALfamnUEZVA"
+  "Gemini": {
+    "ApiKey": "",
+    "Model": "gemini-2.5-flash"
   },
   "Logging": {
     "LogLevel": {

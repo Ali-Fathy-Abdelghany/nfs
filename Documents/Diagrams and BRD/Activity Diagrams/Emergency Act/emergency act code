@@ -1,0 +1,31 @@
+flowchart TD
+    Start((Start Assessment)) --> Intro[Show Instructions & Privacy Notice]
+    
+    Intro --> DisplayQ[Display Question]
+    DisplayQ --> Answer[User Provides Answer]
+    
+    Answer --> CriticalCheck{Is Answer \n Weight = 50?}
+    
+    CriticalCheck -- Yes --> Emergency[Stop Assessment Immediately]
+    Emergency --> AlertAdmin[SQL: Insert High-Risk Log]
+    AlertAdmin --> ShowHotlines[Display Emergency Support & Crisis Contacts]
+    ShowHotlines --> End((End - Emergency Path))
+
+    CriticalCheck -- No --> LastQ{Is it the \n Last Question?}
+    LastQ -- No --> DisplayQ
+    
+    LastQ -- Yes --> Calc[AI Engine: Calculate Category Scores]
+    Calc --> SaveResults[SQL: Save Assessment Result]
+    
+    SaveResults --> ScoreAnalysis{Top Score \n Category?}
+    
+    ScoreAnalysis -- "Score > 15" --> Specialized[Recommend Specialized Specialist \n e.g., CBT, Child Psych]
+    ScoreAnalysis -- "Score 10-15" --> Mixed[Recommend General Counselor / \n Support Group]
+    ScoreAnalysis -- "Score < 10" --> General[Recommend Wellness Content / \n General Lounge]
+
+    Specialized --> Action[User Action: Book or Join]
+    Mixed --> Action
+    General --> Action
+    
+    Action --> Dashboard[Return to Dashboard]
+    Dashboard --> End2((End - Normal Path))

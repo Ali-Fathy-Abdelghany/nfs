@@ -1,0 +1,32 @@
+sequenceDiagram
+    autonumber
+    actor User as Patient
+    participant UI as Assessment Interface
+    participant AI as AI Engine (Risk Analyzer)
+    participant DB as SQL Server Database
+    participant Support as Specialist / Crisis Hotline
+
+    User->>UI: Selects "Red Flag" Answer (Weight 50)
+    
+    UI->>AI: Instant Transmission of Critical Score
+    
+    activate AI
+    Note over AI: Logic Check: Score >= 50
+    AI->>AI: Terminate Assessment Flow
+    
+    par Mitigation Actions
+        AI->>DB: Insert Emergency Log (Encrypted)
+        Note right of DB: High Privacy via SQL Encryption
+        AI->>Support: Trigger Urgent Alert to Specialist
+    end
+
+    AI-->>UI: Return Emergency Protocol Template
+    deactivate AI
+
+    UI-->>User: Display Mandatory Emergency Disclaimer
+    UI->>User: Show "Contact Specialist" & "Local Hotline" Links
+    
+    opt User seeks immediate help
+        User->>UI: Click "Call Hotline"
+        UI->>Support: Direct Secure Link Established
+    end

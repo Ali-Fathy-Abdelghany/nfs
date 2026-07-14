@@ -438,7 +438,15 @@ export default function Dashboard() {
                   <h3 className="text-2xl font-black">ممارساتك اليومية</h3>
                   <button onClick={() => setActiveTab('explore')} className="text-[#0F766E] font-bold hover:underline text-xs">عرض جميع الجلسات</button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div onClick={() => window.dispatchEvent(new Event('open-nfs-assistant'))} className="bg-gradient-to-br from-[#0F766E] to-[#83B9B5] text-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-[#0F766E]/10">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                      <MessageCircle className="text-white w-6 h-6" />
+                    </div>
+                    <h4 className="text-lg font-bold mb-2">مساعد نفس الذكي</h4>
+                    <p className="text-xs text-white/85 leading-relaxed">تحدث مع NFS في أي وقت لترتيب أفكارك والحصول على خطوات تهدئة بسيطة.</p>
+                  </div>
+
                   <div onClick={() => setShowBreathing(true)} className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100">
                     <div className="w-12 h-12 bg-[#E6F0EF] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <Activity className="text-[#0F766E] w-6 h-6" />

@@ -18,6 +18,8 @@ import Analysis from "./pages/Analysis";
 import Chats from "./pages/Chats";
 import Library from "./pages/Library";
 import PatientProfile from "./pages/PatientProfile";
+import NfsAssistant from "./pages/NfsAssistant";
+import NfsAssistantWidget from "./Components/NfsAssistantWidget";
 
 import Sessions from "./pages/Sessions";
 import ProfileProgress from "./pages/ProfileProgress";
@@ -53,6 +55,7 @@ function App() {
                 <Route path="/user-signup" element={<UserSignup />} />
                 <Route path="/verification" element={<Verification />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/nfs-assistant" element={<NfsAssistant />} />
                 <Route path="/admin" element={<AdminPage />} />
 
                 <Route
@@ -91,6 +94,7 @@ function App() {
                     element={<Navigate to="/dashboard" replace />}
                 />
             </Routes>
+            <NfsAssistantWidget />
         </Router>
     );
 }

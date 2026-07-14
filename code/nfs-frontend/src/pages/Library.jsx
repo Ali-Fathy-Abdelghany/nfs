@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../components/layout/Header";
 import Sidebar from '../components/Sidebar/Sidebar'; 
 import Footer from '../components/layout/Footer';
 import GratitudeJournal from '../components/ui/GratitudeJournal'; // استيراد بوب اب الامتنان
+import { getPublishedArticles } from '../api/articles';
 import myImage from "../assets/sara.png";
 const filters = ["الكل", "تأملات موجهة", "دروس مرئية", "مقالات علمية"];
 
@@ -17,28 +18,29 @@ const LINKS = {
   resilience: "https://www.verywellmind.com/what-is-resilience-2795059",
 };
 
-// مصفوفة مساعدة لربط الوسوم السفلية بالمقالات عند الضغط عليها لعمل فلترة حية
-const ARTICLE_TAGS = {
-  impostor: "الاحتراق_الوظيفي",
-  boundaries: "تنظيم_القلق",
-  resilience: "المرونة_النفسية"
-};
-
 function Library() {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("الكل");
   const [selectedHashtag, setSelectedHashtag] = useState(null); // الهاشتاج النشط
   const [showJournalPopup, setShowJournalOpen] = useState(false); // التحكم في بوب اب الامتنان
+  const [articles, setArticles] = useState(() => getPublishedArticles());
 
   const userRole = localStorage.getItem('userRole') || 'patient'; 
   
   // دالة التحكم في عرض العناصر بناءً على الفلتر أو الهاشتاج المفعل
-  const show = (cat, articleId = null) => {
-    if (selectedHashtag && articleId) {
-      return activeFilter === "مقالات علمية" && ARTICLE_TAGS[articleId] === selectedHashtag;
-    }
+  const show = (cat) => {
     return activeFilter === "الكل" || activeFilter === cat;
   };
+
+  useEffect(() => {
+    const reload = () => setArticles(getPublishedArticles());
+    window.addEventListener('nfs-articles-updated', reload);
+    return () => window.removeEventListener('nfs-articles-updated', reload);
+  }, []);
+
+  const visibleArticles = articles.filter(
+    (article) => !selectedHashtag || article.tag === selectedHashtag
+  );
 
   const handleHashtagClick = (tagSlug) => {
     if (selectedHashtag === tagSlug) {
@@ -246,50 +248,20 @@ function Library() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {show("مقالات علمية", "impostor") && (
-                  <a className="bg-white rounded-3xl border border-[#EBEEEE] shadow-2xs overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group" href={LINKS.impostor} target="_blank" rel="noreferrer">
+                {visibleArticles.slice(0, 6).map((article) => (
+                  <a key={article.id} className="bg-white rounded-3xl border border-[#EBEEEE] shadow-2xs overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group" href={article.link} target="_blank" rel="noreferrer">
                     <div className="w-full aspect-video bg-slate-100 overflow-hidden relative">
-                      <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=500" alt="متلازمة المحتال" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
-                      <span className="absolute bottom-3 right-3 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100/60 shadow-2xs">الوعي الذاتي</span>
+                      <img src={article.img} alt={article.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
+                      <span className="absolute bottom-3 right-3 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-100/60 shadow-2xs">{article.badge}</span>
                     </div>
                     <div className="p-4 text-right space-y-2 flex-1 flex flex-col justify-between">
                       <div>
-                        <h3 className="font-bold text-sm text-slate-800 transition-colors duration-300 group-hover:text-[#316764] leading-snug">كيف تتعامل مع "متلازمة المحتال" في العمل؟</h3>
-                        <p className="text-xs text-slate-400 leading-relaxed mt-1 line-clamp-2">نصائح عملية لاستعادة الثقة بالنفس والاعتراف بإنجازاتك الحقيقية والمهنية.</p>
+                        <h3 className="font-bold text-sm text-slate-800 transition-colors duration-300 group-hover:text-[#316764] leading-snug">{article.title}</h3>
+                        <p className="text-xs text-slate-400 leading-relaxed mt-1 line-clamp-2">{article.desc}</p>
                       </div>
                     </div>
                   </a>
-                )}
-
-                {show("مقالات علمية", "boundaries") && (
-                  <a className="bg-white rounded-3xl border border-[#EBEEEE] shadow-2xs overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group" href={LINKS.boundaries} target="_blank" rel="noreferrer">
-                    <div className="w-full aspect-video bg-slate-100 overflow-hidden relative">
-                      <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500" alt="التوازن النفسي" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
-                      <span className="absolute bottom-3 right-3 text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-100/60 shadow-2xs">التوازن النفسي</span>
-                    </div>
-                    <div className="p-4 text-right space-y-2 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-bold text-sm text-slate-800 transition-colors duration-300 group-hover:text-[#316764] leading-snug">ترتيب الأولويات وقول "لا" دون شعور بالذنب</h3>
-                        <p className="text-xs text-slate-400 leading-relaxed mt-1 line-clamp-2">خطوات بسيطة ومدروسة لحماية مساحتك النفسية وطاقتك اليومية من الاستنزاف.</p>
-                      </div>
-                    </div>
-                  </a>
-                )}
-
-                {show("مقالات علمية", "resilience") && (
-                  <a className="bg-white rounded-3xl border border-[#EBEEEE] shadow-2xs overflow-hidden hover:shadow-md transition-all duration-300 flex flex-col group" href={LINKS.resilience} target="_blank" rel="noreferrer">
-                    <div className="w-full aspect-video bg-slate-100 overflow-hidden relative">
-                      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500" alt="المرونة النفسية" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103" />
-                      <span className="absolute bottom-3 right-3 text-[10px] font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg border border-purple-100/60 shadow-2xs">المرونة النفسية</span>
-                    </div>
-                    <div className="p-4 text-right space-y-2 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-bold text-sm text-slate-800 transition-colors duration-300 group-hover:text-[#316764] leading-snug">بناء المرونة النفسية في مواجهة التغيرات</h3>
-                        <p className="text-xs text-slate-400 leading-relaxed mt-1 line-clamp-2">كيف تدرب عقلك بذكاء على التكيف مع ظروف الحياة المتغيرة بمرونة كاملة وهدوء.</p>
-                      </div>
-                    </div>
-                  </a>
-                )}
+                ))}
               </div>
             </div>
           )}
@@ -303,12 +275,8 @@ function Library() {
                 <i className="fa-solid fa-arrow-trend-up text-[#316764]"></i> الوسوم والمواضيع الأكثر انتشاراً هذا الأسبوع
               </h3>
               <div className="flex flex-wrap gap-2 pt-1">
-                {[
-                  { label: "#تنظيم_القلق", slug: "تنظيم_القلق" },
-                  { label: "#تمارين_التنفس", slug: "تمارين_التنفس" },
-                  { label: "#الاحتراق_الوظيفي", slug: "الاحتراق_الوظيفي" },
-                  { label: "#المرونة_النفسية", slug: "المرونة_النفسية" }
-                ].map((tag, i) => {
+                {[...new Set(articles.map((article) => article.tag).filter(Boolean))].slice(0, 8).map((slug, i) => {
+                  const tag = { label: `#${slug}`, slug };
                   const isCurrent = selectedHashtag === tag.slug;
                   return (
                     <span 
