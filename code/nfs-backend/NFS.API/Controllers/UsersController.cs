@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +51,17 @@ namespace NFS.API.Controllers
             if (!result) return BadRequest(new { Message = "Unable to update profile." });
 
             return Ok(new { Message = "Profile updated successfully." });
+        }
+
+        /// <summary>Public display avatars for chat / lists (profile image + name only).</summary>
+        [HttpPost("avatars")]
+        public async Task<IActionResult> GetAvatars([FromBody] int[]? userIds)
+        {
+            if (userIds == null || userIds.Length == 0)
+                return Ok(Array.Empty<object>());
+
+            var avatars = await _userService.GetAvatarsByIdsAsync(userIds.Take(100));
+            return Ok(avatars);
         }
     }
 }

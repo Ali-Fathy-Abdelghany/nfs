@@ -6,6 +6,8 @@ import { fetchDoctorAvailability, createAppointment, fetchPatientAppointments } 
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getApiErrorMessage } from '../utils/apiError';
+import { ensurePatientRecord } from '../api/patientHelpers';
+import { doctorAvatarUrl } from '../utils/doctorAvatar';
 
 const WEEKDAY_LABELS = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
 const MONTH_LABELS = [
@@ -22,15 +24,19 @@ function mapTherapistToDoctor(t) {
     specialty: t.specialization || t.bio || 'معالج نفسي',
     availability: 'متاح للحجز',
     sessions: t.experienceYears ? `+${t.experienceYears * 50}` : '+100',
-    rating: t.rating?.toFixed(1) || '4.8',
-    experience: t.experienceYears ? `${t.experienceYears} سنة` : '5 سنوات',
-    price: t.hourlyRate ? `${t.hourlyRate} ج.م / جلسة` : '150 ج.م / جلسة',
-    hourlyRate: t.hourlyRate || 250,
-    image: t.profileImageUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=300',
-    categories: t.specialization ? [t.specialization] : ['قلق'],
+    rating: t.rating != null && Number(t.rating) > 0 ? Number(t.rating).toFixed(1) : '—',
+    reviewCount: t.reviewCount ?? 0,
+    experience: t.experienceYears ? `${t.experienceYears} سنة` : '—',
+    price: t.hourlyRate ? `${t.hourlyRate} ج.م / جلسة` : '—',
+    hourlyRate: t.hourlyRate || 0,
+    image: doctorAvatarUrl(t.therapistId, t.profileImageUrl),
+    categories: t.specialization ? [t.specialization] : [],
     sessionTypes: ['فيديو'],
     bio: t.bio || '',
-    specialties: t.qualifications ? t.qualifications.split(',').map((s) => s.trim()) : [t.specialization].filter(Boolean),
+    specialties: t.qualifications
+      ? t.qualifications.split(/[,،]/).map((s) => s.trim()).filter(Boolean)
+      : [t.specialization].filter(Boolean),
+    isVerified: !!t.isVerified,
   };
 }
 
@@ -252,7 +258,9 @@ export default function Booking({ preselectedDoctor }) {
         const res = searchQuery.trim()
           ? await searchTherapists(searchQuery.trim())
           : await fetchTherapists();
-        setDoctors((res.data || []).filter((t) => t.isVerified).map(mapTherapistToDoctor));
+        setDoctors((res.data || [])
+          .filter((t) => t.isVerified || t.status === 'Approved')
+          .map(mapTherapistToDoctor));
       } catch (err) {
         console.error(err);
         setError('تعذر تحميل قائمة الأطباء');
@@ -337,7 +345,15 @@ export default function Booking({ preselectedDoctor }) {
   }, [doctorToSelect, doctors, loading]);
 
   const handleConfirmBooking = async (doctor) => {
-    const patientId = user?.patientId || user?.userId || user?.id;
+    const userId = user?.userId || user?.id;
+    let patientId = user?.patientId;
+    if (!patientId && userId) {
+      try {
+        patientId = await ensurePatientRecord(userId);
+      } catch (err) {
+        console.error(err);
+      }
+    }
     if (!patientId) {
       toast.warning('يرجى تسجيل الدخول أولاً');
       navigate('/login');
@@ -349,14 +365,17 @@ export default function Booking({ preselectedDoctor }) {
     }
     try {
       setBookingLoading(true);
-      await createAppointment({
+      const createRes = await createAppointment({
         patientId,
         doctorId: doctor.therapistId || doctor.id,
         slotId: selectedSlot.id,
       });
-      toast.success('تم تأكيد الموعد بنجاح');
+      const appointmentId = createRes.data?.id || null;
+      toast.success('تم حجز الموعد — أكمل الدفع للتأكيد');
       setOpenDoctorSchedule(null);
-      navigate('/doctor-checkout', { state: { doctor, slot: selectedSlot } });
+      navigate('/doctor-checkout', {
+        state: { doctor, slot: selectedSlot, appointmentId },
+      });
     } catch (err) {
       console.error(err);
       toast.error(getApiErrorMessage(err, 'فشل حجز الموعد، حاول مرة أخرى'));
@@ -367,7 +386,7 @@ export default function Booking({ preselectedDoctor }) {
 
   const handleJoinSession = () => {
     if (isJoinEnabled) {
-      navigate('/doctor/meetings');
+      navigate('/digital-clinic');
     } else {
       toast.info('عذراً، يمكنك الانضمام للجلسة قبل موعدها بـ 15 دقيقة فقط.');
     }
@@ -505,6 +524,7 @@ export default function Booking({ preselectedDoctor }) {
                       </div>
                       <div className="bg-[#F1F4F4] px-2 py-0.5 rounded text-[10px] font-bold text-[#316764]">
                         ★ {doc.rating}
+                        {doc.reviewCount > 0 ? ` (${doc.reviewCount})` : ''}
                       </div>
                     </div>
                     <div className="flex gap-4 mt-4 text-[10px] text-gray-400">

@@ -1,26 +1,221 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { X } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import { useAuth } from '../../context/AuthContext';
+import { useToast } from '../../context/ToastContext';
 import {
   fetchTherapists,
   fetchPendingTherapists,
   approveTherapist,
+  rejectTherapist,
 } from '../../api/therapists';
+import { getApiErrorMessage } from '../../utils/apiError';
+
+function genderLabel(g) {
+  if (!g) return '—';
+  const s = String(g).toLowerCase();
+  if (s === '0' || s === 'male') return 'ذكر';
+  if (s === '1' || s === 'female') return 'أنثى';
+  return g;
+}
+
+function DoctorRequestModal({
+  doc,
+  onClose,
+  onApprove,
+  onReject,
+  approving,
+  rejecting,
+  rejectReason,
+  setRejectReason,
+  showRejectForm,
+  setShowRejectForm,
+}) {
+  if (!doc) return null;
+  const quals = (doc.qualifications || '')
+    .split(/[,،]/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div
+        className="bg-white w-full max-w-lg rounded-[28px] border border-[#E6E9E9] shadow-xl max-h-[90vh] overflow-y-auto text-right"
+        dir="rtl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="sticky top-0 bg-white border-b border-[#E6E9E9] px-5 py-4 flex items-center justify-between rounded-t-[28px]">
+          <h3 className="text-base font-black text-[#181C1D]">تفاصيل طلب الانضمام</h3>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-[#F7FAFA] text-[#707978]">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-5 space-y-4">
+          <div className="flex items-start gap-3">
+            <img
+              src={doc.profileImageUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=120'}
+              alt=""
+              className="w-16 h-16 rounded-2xl object-cover border border-[#E6E9E9]"
+            />
+            <div>
+              <h4 className="text-lg font-black text-[#181C1D]">
+                د. {doc.firstName} {doc.lastName}
+              </h4>
+              <p className="text-sm font-bold text-[#316764]">{doc.specialization || '—'}</p>
+              <p className="text-[11px] text-[#707978] mt-1">
+                تاريخ الطلب:{' '}
+                {doc.createdAt ? new Date(doc.createdAt).toLocaleDateString('ar-EG') : '—'}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 text-[11px]">
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">البريد</p>
+              <p className="font-bold text-[#181C1D] break-all">{doc.email || '—'}</p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">الهاتف</p>
+              <p className="font-bold text-[#181C1D]">{doc.phone || '—'}</p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">الجنس</p>
+              <p className="font-bold text-[#181C1D]">{genderLabel(doc.gender)}</p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">تاريخ الميلاد</p>
+              <p className="font-bold text-[#181C1D]">
+                {doc.dateOfBirth ? new Date(doc.dateOfBirth).toLocaleDateString('ar-EG') : '—'}
+              </p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">الدولة / المحافظة</p>
+              <p className="font-bold text-[#181C1D]">
+                {[doc.country, doc.governorate].filter(Boolean).join(' — ') || '—'}
+              </p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              <p className="text-[#707978] font-bold mb-0.5">سنوات الخبرة</p>
+              <p className="font-bold text-[#181C1D]">{doc.experienceYears ?? '—'} سنة</p>
+            </div>
+            <div className="bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3 col-span-2">
+              <p className="text-[#707978] font-bold mb-0.5">سعر الجلسة</p>
+              <p className="font-bold text-[#181C1D]">{doc.hourlyRate ?? '—'} ج.م</p>
+            </div>
+          </div>
+
+          <div>
+            <h5 className="text-sm font-black text-[#181C1D] mb-1">النبذة المهنية</h5>
+            <p className="text-xs text-[#707978] leading-relaxed bg-[#F7FAFA] border border-[#E6E9E9] rounded-xl p-3">
+              {doc.bio || 'لا توجد نبذة مقدَّمة.'}
+            </p>
+          </div>
+
+          <div>
+            <h5 className="text-sm font-black text-[#181C1D] mb-2">المؤهلات / الشهادات / الإنجازات</h5>
+            {quals.length === 0 ? (
+              <p className="text-xs text-[#707978] bg-[#F7FAFA] border border-dashed border-[#E6E9E9] rounded-xl p-3">
+                لم يُرفق مقدم الطلب مؤهلات أو شهادات بعد.
+              </p>
+            ) : (
+              <ul className="space-y-2">
+                {quals.map((q) => (
+                  <li
+                    key={q}
+                    className="text-xs font-bold text-[#316764] bg-[#E6F0EF] border border-[#316764]/10 rounded-xl px-3 py-2 flex items-start gap-2"
+                  >
+                    <i className="fa-solid fa-certificate mt-0.5" />
+                    <span>{q}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {showRejectForm && (
+            <div className="space-y-2 bg-red-50 border border-red-100 rounded-xl p-3">
+              <label className="text-xs font-bold text-red-800 block">سبب الرفض (اختياري)</label>
+              <textarea
+                value={rejectReason}
+                onChange={(e) => setRejectReason(e.target.value)}
+                rows={3}
+                maxLength={1000}
+                placeholder="مثال: مستندات غير مكتملة / تخصص غير مطابق..."
+                className="w-full text-xs border border-red-200 rounded-xl p-3 outline-none focus:border-red-400 bg-white"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => onReject(doc.therapistId, rejectReason)}
+                  disabled={rejecting}
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-3 rounded-xl disabled:opacity-60"
+                >
+                  {rejecting ? 'جاري الرفض...' : 'تأكيد الرفض'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowRejectForm(false);
+                    setRejectReason('');
+                  }}
+                  className="flex-1 border border-[#E6E9E9] text-[#707978] text-xs font-bold px-4 py-3 rounded-xl"
+                >
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col sm:flex-row gap-2 pt-2">
+            {!doc.isVerified && doc.status !== 'Rejected' && !showRejectForm && (
+              <>
+                <button
+                  onClick={() => onApprove(doc.therapistId)}
+                  disabled={approving || rejecting}
+                  className="flex-1 bg-[#316764] hover:bg-[#254f4d] text-white text-xs font-bold px-4 py-3 rounded-xl transition disabled:opacity-60"
+                >
+                  {approving ? 'جاري الاعتماد...' : 'اعتماد الطبيب'}
+                </button>
+                <button
+                  onClick={() => setShowRejectForm(true)}
+                  disabled={approving || rejecting}
+                  className="flex-1 bg-white border border-red-200 text-red-700 hover:bg-red-50 text-xs font-bold px-4 py-3 rounded-xl transition disabled:opacity-60"
+                >
+                  رفض الطلب
+                </button>
+              </>
+            )}
+            <button
+              onClick={onClose}
+              className="flex-1 border border-[#E6E9E9] bg-[#F7FAFA] text-[#707978] text-xs font-bold px-4 py-3 rounded-xl hover:border-[#316764]/30"
+            >
+              إغلاق
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function AdminPage() {
   const navigate = useNavigate();
-  const { user, logout } = useAuth() || {};
+  const { user } = useAuth() || {};
+  const toast = useToast();
   const [pending, setPending] = useState([]);
   const [allDoctors, setAllDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actingId, setActingId] = useState(null);
+  const [actingKind, setActingKind] = useState(null);
   const [tab, setTab] = useState('pending');
-  const [message, setMessage] = useState('');
+  const [detailDoc, setDetailDoc] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
+  const [showRejectForm, setShowRejectForm] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    setMessage('');
     try {
       const [pendingRes, allRes] = await Promise.all([
         fetchPendingTherapists(),
@@ -30,7 +225,7 @@ function AdminPage() {
       setAllDoctors(allRes.data || []);
     } catch (err) {
       console.error(err);
-      setMessage('تعذر تحميل بيانات الأطباء');
+      toast.error(getApiErrorMessage(err, 'تعذر تحميل بيانات الأطباء'));
     } finally {
       setLoading(false);
     }
@@ -50,34 +245,71 @@ function AdminPage() {
     [allDoctors]
   );
 
+  const rejected = useMemo(
+    () => (allDoctors || []).filter((d) => String(d.status).toLowerCase() === 'rejected'),
+    [allDoctors]
+  );
+
   const handleApprove = async (therapistId) => {
     setActingId(therapistId);
-    setMessage('');
+    setActingKind('approve');
     try {
       await approveTherapist(therapistId);
-      setMessage('تم اعتماد الطبيب بنجاح');
+      toast.success('تم اعتماد الطبيب بنجاح — سيتم إرسال بريد القبول إن توفّر SMTP');
+      setDetailDoc(null);
+      setShowRejectForm(false);
+      setRejectReason('');
       await load();
     } catch (err) {
       console.error(err);
-      setMessage('تعذر اعتماد الطبيب');
+      toast.error(getApiErrorMessage(err, 'تعذر اعتماد الطبيب'));
     } finally {
       setActingId(null);
+      setActingKind(null);
     }
   };
 
-  const handleLogout = async () => {
-    await logout?.();
-    navigate('/login');
+  const handleReject = async (therapistId, reason) => {
+    setActingId(therapistId);
+    setActingKind('reject');
+    try {
+      await rejectTherapist(therapistId, reason);
+      toast.success('تم رفض الطلب — سيتم إرسال بريد الرفض إن توفّر SMTP');
+      setDetailDoc(null);
+      setShowRejectForm(false);
+      setRejectReason('');
+      await load();
+    } catch (err) {
+      console.error(err);
+      toast.error(getApiErrorMessage(err, 'تعذر رفض الطلب'));
+    } finally {
+      setActingId(null);
+      setActingKind(null);
+    }
   };
 
-  const list = tab === 'pending' ? pending : verified;
+  const openProfile = (doc, { edit = false } = {}) => {
+    navigate('/doctor/profile', {
+      state: {
+        doctor: {
+          therapistId: doc.therapistId,
+          id: doc.therapistId,
+          ...doc,
+        },
+        adminView: true,
+        startEditing: edit,
+      },
+    });
+  };
+
+  const list = tab === 'pending' ? pending : tab === 'rejected' ? rejected : verified;
 
   return (
     <div className="min-h-screen bg-[#F7FAFA] text-[#181C1D] font-['Cairo',sans-serif]" dir="rtl">
       <Header />
 
-      <main className="max-w-[1100px] mx-auto px-4 py-8 space-y-6">
-        <section className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-sm p-6 flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+      <main className="max-w-[1100px] mx-auto px-4 py-8 space-y-6 pb-24">
+        <section className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-sm p-6">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h1 className="text-2xl font-black text-[#2A5C58]">لوحة الإدارة</h1>
@@ -86,18 +318,12 @@ function AdminPage() {
               </span>
             </div>
             <p className="text-sm text-[#707978]">
-              مرحباً {user?.firstName || 'بالمسؤول'} — راجع طلبات انضمام الأطباء واعتمد الحسابات المؤهلة.
+              مرحباً {user?.firstName || 'بالمسؤول'} — راجع طلبات الأطباء، اعتمد أو ارفض الطلبات، وعدّل بياناتهم عند الحاجة.
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] bg-[#F7FAFA] text-[#707978] hover:text-rose-600 hover:border-rose-200 transition"
-          >
-            تسجيل الخروج
-          </button>
         </section>
 
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div className="bg-white rounded-[20px] border border-[#E6E9E9] p-5">
             <p className="text-xs text-[#707978] font-bold mb-1">طلبات معلّقة</p>
             <p className="text-2xl font-black text-[#316764]">{pending.length}</p>
@@ -105,6 +331,10 @@ function AdminPage() {
           <div className="bg-white rounded-[20px] border border-[#E6E9E9] p-5">
             <p className="text-xs text-[#707978] font-bold mb-1">أطباء معتمدون</p>
             <p className="text-2xl font-black text-[#316764]">{verified.length}</p>
+          </div>
+          <div className="bg-white rounded-[20px] border border-[#E6E9E9] p-5">
+            <p className="text-xs text-[#707978] font-bold mb-1">مرفوضون</p>
+            <p className="text-2xl font-black text-red-700">{rejected.length}</p>
           </div>
           <div className="bg-white rounded-[20px] border border-[#E6E9E9] p-5">
             <p className="text-xs text-[#707978] font-bold mb-1">إجمالي الأطباء</p>
@@ -115,7 +345,7 @@ function AdminPage() {
         <section className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-sm p-6 space-y-5">
           <div className="flex flex-col sm:flex-row justify-between gap-3 items-start sm:items-center">
             <h2 className="text-base font-black text-[#181C1D]">إدارة الأطباء</h2>
-            <div className="flex bg-[#F7FAFA] p-0.5 rounded-xl border border-[#E6E9E9]">
+            <div className="flex flex-wrap bg-[#F7FAFA] p-0.5 rounded-xl border border-[#E6E9E9]">
               <button
                 className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition ${
                   tab === 'pending' ? 'bg-white text-[#316764] shadow-sm' : 'text-[#707978]'
@@ -132,20 +362,26 @@ function AdminPage() {
               >
                 المعتمدون ({verified.length})
               </button>
+              <button
+                className={`px-3 py-1.5 text-[11px] font-bold rounded-lg transition ${
+                  tab === 'rejected' ? 'bg-white text-red-700 shadow-sm' : 'text-[#707978]'
+                }`}
+                onClick={() => setTab('rejected')}
+              >
+                المرفوضون ({rejected.length})
+              </button>
             </div>
           </div>
-
-          {message && (
-            <p className="text-xs font-bold text-[#316764] bg-[#E6F0EF] border border-[#316764]/10 rounded-xl px-3 py-2">
-              {message}
-            </p>
-          )}
 
           {loading ? (
             <p className="text-sm text-[#707978]">جاري التحميل...</p>
           ) : list.length === 0 ? (
             <div className="text-center py-10 text-sm text-[#707978] bg-[#F7FAFA] rounded-2xl border border-dashed border-[#E6E9E9]">
-              {tab === 'pending' ? 'لا توجد طلبات جديدة حالياً' : 'لا يوجد أطباء معتمدون بعد'}
+              {tab === 'pending'
+                ? 'لا توجد طلبات جديدة حالياً'
+                : tab === 'rejected'
+                  ? 'لا يوجد طلبات مرفوضة'
+                  : 'لا يوجد أطباء معتمدون بعد'}
             </div>
           ) : (
             <div className="space-y-3">
@@ -154,7 +390,11 @@ function AdminPage() {
                   key={doc.therapistId}
                   className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl border border-[#E6E9E9] bg-[#F7FAFA] hover:border-[#316764]/30 transition"
                 >
-                  <div className="flex items-start gap-3 text-right">
+                  <button
+                    type="button"
+                    className="flex items-start gap-3 text-right flex-1"
+                    onClick={() => (tab === 'pending' ? setDetailDoc(doc) : openProfile(doc))}
+                  >
                     <img
                       src={
                         doc.profileImageUrl ||
@@ -168,47 +408,95 @@ function AdminPage() {
                         د. {doc.firstName} {doc.lastName}
                       </h3>
                       <p className="text-xs text-[#316764] font-bold">{doc.specialization}</p>
-                      <p className="text-[11px] text-[#707978] leading-relaxed max-w-xl">
+                      <p className="text-[11px] text-[#707978] leading-relaxed max-w-xl line-clamp-2">
                         {doc.bio || 'لا توجد نبذة'}
                       </p>
+                      {tab === 'rejected' && doc.rejectionReason && (
+                        <p className="text-[11px] text-red-700 bg-red-50 border border-red-100 rounded-lg px-2 py-1 inline-block">
+                          السبب: {doc.rejectionReason}
+                        </p>
+                      )}
                       <div className="flex flex-wrap gap-2 pt-1 text-[10px] text-[#707978]">
                         <span className="bg-white border border-[#E6E9E9] px-2 py-0.5 rounded-lg">
                           {doc.email}
                         </span>
-                        {doc.phone && (
-                          <span className="bg-white border border-[#E6E9E9] px-2 py-0.5 rounded-lg">
-                            {doc.phone}
-                          </span>
-                        )}
                         <span className="bg-white border border-[#E6E9E9] px-2 py-0.5 rounded-lg">
                           خبرة {doc.experienceYears} سنة
                         </span>
-                        <span className="bg-white border border-[#E6E9E9] px-2 py-0.5 rounded-lg">
-                          {doc.hourlyRate} ج.م / جلسة
-                        </span>
+                        {doc.rating > 0 && (
+                          <span className="bg-white border border-[#E6E9E9] px-2 py-0.5 rounded-lg">
+                            ★ {Number(doc.rating).toFixed(1)} ({doc.reviewCount || 0})
+                          </span>
+                        )}
                       </div>
-                      {doc.qualifications && (
-                        <p className="text-[11px] text-[#707978] pt-1">
-                          <span className="font-bold text-[#181C1D]">المؤهلات: </span>
-                          {doc.qualifications}
-                        </p>
-                      )}
                     </div>
-                  </div>
+                  </button>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {tab === 'pending' && (
+                      <button
+                        onClick={() => {
+                          setShowRejectForm(false);
+                          setRejectReason('');
+                          setDetailDoc(doc);
+                        }}
+                        className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#316764]/20 bg-white text-[#316764] hover:bg-[#E6F0EF] transition"
+                      >
+                        عرض التفاصيل
+                      </button>
+                    )}
+                    <button
+                      onClick={() => openProfile(doc)}
+                      className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] bg-white text-[#707978] hover:border-[#316764]/30 transition"
+                    >
+                      الملف الشخصي
+                    </button>
+                    <button
+                      onClick={() =>
+                        navigate('/sessions', {
+                          state: { adminDoctorId: doc.therapistId, adminView: true },
+                        })
+                      }
+                      className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] bg-white text-[#707978] hover:border-[#316764]/30 transition"
+                    >
+                      الجلسات
+                    </button>
+                    <button
+                      onClick={() => openProfile(doc, { edit: true })}
+                      className="text-xs font-bold px-4 py-2.5 rounded-xl border border-[#E6E9E9] bg-white text-[#316764] hover:bg-[#E6F0EF] transition"
+                    >
+                      تعديل
+                    </button>
                     {doc.isVerified ? (
                       <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-2 rounded-xl">
                         معتمد
                       </span>
+                    ) : tab === 'rejected' ? (
+                      <span className="text-[11px] font-bold text-red-700 bg-red-50 border border-red-100 px-3 py-2 rounded-xl">
+                        مرفوض
+                      </span>
                     ) : (
-                      <button
-                        onClick={() => handleApprove(doc.therapistId)}
-                        disabled={actingId === doc.therapistId}
-                        className="bg-[#316764] hover:bg-[#254f4d] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition disabled:opacity-60"
-                      >
-                        {actingId === doc.therapistId ? 'جاري الاعتماد...' : 'اعتماد الطبيب'}
-                      </button>
+                      <>
+                        <button
+                          onClick={() => handleApprove(doc.therapistId)}
+                          disabled={actingId === doc.therapistId}
+                          className="bg-[#316764] hover:bg-[#254f4d] text-white text-xs font-bold px-5 py-2.5 rounded-xl transition disabled:opacity-60"
+                        >
+                          {actingId === doc.therapistId && actingKind === 'approve'
+                            ? 'جاري الاعتماد...'
+                            : 'اعتماد'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setDetailDoc(doc);
+                            setShowRejectForm(true);
+                          }}
+                          disabled={actingId === doc.therapistId}
+                          className="bg-white border border-red-200 text-red-700 hover:bg-red-50 text-xs font-bold px-5 py-2.5 rounded-xl transition disabled:opacity-60"
+                        >
+                          رفض
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -217,6 +505,23 @@ function AdminPage() {
           )}
         </section>
       </main>
+
+      <DoctorRequestModal
+        doc={detailDoc}
+        onClose={() => {
+          setDetailDoc(null);
+          setShowRejectForm(false);
+          setRejectReason('');
+        }}
+        onApprove={handleApprove}
+        onReject={handleReject}
+        approving={actingId === detailDoc?.therapistId && actingKind === 'approve'}
+        rejecting={actingId === detailDoc?.therapistId && actingKind === 'reject'}
+        rejectReason={rejectReason}
+        setRejectReason={setRejectReason}
+        showRejectForm={showRejectForm}
+        setShowRejectForm={setShowRejectForm}
+      />
     </div>
   );
 }

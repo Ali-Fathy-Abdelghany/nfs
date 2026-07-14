@@ -17,6 +17,15 @@ export async function login({ email, password }) {
   return handleResponse(response);
 }
 
+export async function loginWithGoogle(idToken) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/external/google`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken }),
+  });
+  return handleResponse(response);
+}
+
 export async function register(user) {
   const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
     method: 'POST',
@@ -39,8 +48,37 @@ export async function logout() {
   }
 }
 
+export async function forgotPassword({ email }) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  return handleResponse(response);
+}
+
+export async function resetPassword({ token, newPassword }) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, newPassword }),
+  });
+  return handleResponse(response);
+}
+
 export function persistAuthSession(loginResponse, extra = {}) {
-  const { accessToken, refreshToken, userId, email, firstName, lastName, roles, patientId, therapistId } = loginResponse;
+  const {
+    accessToken,
+    refreshToken,
+    userId,
+    email,
+    firstName,
+    lastName,
+    roles,
+    patientId,
+    therapistId,
+    profileImageUrl,
+  } = loginResponse;
   const userRole = resolveUserRole(roles);
   const user = {
     id: userId,
@@ -52,6 +90,7 @@ export function persistAuthSession(loginResponse, extra = {}) {
     userRole,
     patientId: patientId ?? loginResponse.patientId,
     therapistId: therapistId ?? loginResponse.therapistId,
+    profileImageUrl: profileImageUrl ?? loginResponse.profileImageUrl ?? extra.profileImageUrl ?? null,
     ...extra,
   };
 

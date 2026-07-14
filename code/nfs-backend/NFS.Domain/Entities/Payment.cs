@@ -40,14 +40,18 @@ public class Payment
     [MaxLength(50)]
     public string Provider { get; set; } = "FakeGateway";
 
-    [MaxLength(100)]
+    [MaxLength(200)]
     public string? ProviderReference { get; set; }
 
-    [MaxLength(500)]
+    [MaxLength(2000)]
     public string? CheckoutUrl { get; set; }
 
     [MaxLength(50)]
     public string? PlanType { get; set; }
+
+    /// <summary>Comma-separated appointment ids for bundle plans (e.g. monthly 4 sessions).</summary>
+    [MaxLength(200)]
+    public string? ExtraAppointmentIds { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? PaidAt { get; set; }

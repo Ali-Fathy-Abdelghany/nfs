@@ -8,6 +8,20 @@ export function resolveUserRole(roles) {
   return 'user';
 }
 
+/** Role-aware home path for logo / "go home" navigation. */
+export function getRoleHomePath(role, { isAuthenticated } = {}) {
+  const hasSession =
+    isAuthenticated ??
+    !!(localStorage.getItem('token') || localStorage.getItem('accessToken'));
+
+  if (!hasSession) return '/login';
+
+  const normalized = String(role || localStorage.getItem('userRole') || '').toLowerCase();
+  if (normalized === 'admin') return '/admin';
+  if (normalized === 'doctor' || normalized === 'therapist') return '/doctor/dashboard';
+  return '/dashboard';
+}
+
 export function getStoredUser() {
   try {
     return JSON.parse(localStorage.getItem('user') || 'null');

@@ -60,5 +60,31 @@ namespace NFS.Application.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IReadOnlyList<UserAvatarDto>> GetAvatarsByIdsAsync(IEnumerable<int> userIds)
+        {
+            var ids = userIds
+                .Where(id => id > 0)
+                .Distinct()
+                .ToList();
+
+            if (ids.Count == 0)
+                return Array.Empty<UserAvatarDto>();
+
+            var users = await _context.Users
+                .AsNoTracking()
+                .Where(u => ids.Contains(u.UserId))
+                .Select(u => new UserAvatarDto
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    DisplayName = ((u.FirstName ?? "") + " " + (u.LastName ?? "")).Trim(),
+                    ProfileImageUrl = u.ProfileImageUrl
+                })
+                .ToListAsync();
+
+            return users;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using NFS.Application.Interfaces.Services;
 using NFS.Chat.Models;
 using NFS.Chat.Repositories;
 using System.Security.Claims;
@@ -11,10 +12,12 @@ namespace NFS.Chat;
 public class ChatHub : Hub
 {
     private readonly IChatRepository _chatRepository;
+    private readonly IUserService _userService;
 
-    public ChatHub(IChatRepository chatRepository)
+    public ChatHub(IChatRepository chatRepository, IUserService userService)
     {
         _chatRepository = chatRepository;
+        _userService = userService;
     }
 
     public async Task JoinGroup(string groupId)
@@ -38,7 +41,8 @@ public class ChatHub : Hub
             Timestamp = DateTime.UtcNow
         };
         await _chatRepository.SaveMessageAsync(chatMessage);
-        await Clients.Group(groupId).SendAsync("ReceiveGroupMessage", chatMessage);
+        var payload = await ToResponseAsync(chatMessage);
+        await Clients.Group(groupId).SendAsync("ReceiveGroupMessage", payload);
     }
 
     public async Task SendPrivateMessage(string receiverUserId, string message)
@@ -54,14 +58,42 @@ public class ChatHub : Hub
             Timestamp = DateTime.UtcNow
         };
         await _chatRepository.SaveMessageAsync(chatMessage);
-        // Send to both participants if they are connected
-        await Clients.User(receiverUserId).SendAsync("ReceivePrivateMessage", chatMessage);
-        await Clients.Caller.SendAsync("ReceivePrivateMessage", chatMessage);
+        var payload = await ToResponseAsync(chatMessage);
+        await Clients.User(receiverUserId).SendAsync("ReceivePrivateMessage", payload);
+        await Clients.Caller.SendAsync("ReceivePrivateMessage", payload);
+    }
+
+    private async Task<ChatMessageResponse> ToResponseAsync(ChatMessage message)
+    {
+        string? senderName = null;
+        string? senderAvatarUrl = null;
+
+        if (int.TryParse(message.SenderId, out var userId))
+        {
+            var avatars = await _userService.GetAvatarsByIdsAsync(new[] { userId });
+            var avatar = avatars.FirstOrDefault();
+            if (avatar != null)
+            {
+                senderName = string.IsNullOrWhiteSpace(avatar.DisplayName) ? null : avatar.DisplayName;
+                senderAvatarUrl = avatar.ProfileImageUrl;
+            }
+        }
+
+        return new ChatMessageResponse
+        {
+            Id = message.Id,
+            RoomId = message.RoomId,
+            SenderId = message.SenderId,
+            RecipientId = message.RecipientId,
+            Content = message.Content,
+            Timestamp = message.Timestamp,
+            SenderName = senderName,
+            SenderAvatarUrl = senderAvatarUrl
+        };
     }
 
     private string GetPrivateRoomId(string userA, string userB)
     {
-        // Deterministic ordering to have same room ID for both participants
         return string.CompareOrdinal(userA, userB) < 0 ? $"private_{userA}_{userB}" : $"private_{userB}_{userA}";
     }
 }

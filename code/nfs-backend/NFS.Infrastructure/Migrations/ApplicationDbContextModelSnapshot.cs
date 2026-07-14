@@ -39,6 +39,9 @@ namespace NFS.Infrastructure.Migrations
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("ReminderSentAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("SlotId")
                         .HasColumnType("int");
 
@@ -56,6 +59,40 @@ namespace NFS.Infrastructure.Migrations
                     b.HasIndex("SlotId");
 
                     b.ToTable("Appointments", (string)null);
+                });
+
+            modelBuilder.Entity("NFS.Domain.Entities.ExternalLogin", b =>
+                {
+                    b.Property<int>("ExternalLoginId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExternalLoginId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("ProviderKey")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExternalLoginId");
+
+                    b.HasIndex("Provider", "ProviderKey")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ExternalLogins", (string)null);
                 });
 
             modelBuilder.Entity("NFS.Domain.Entities.Assessment", b =>
@@ -167,6 +204,44 @@ namespace NFS.Infrastructure.Migrations
                     b.ToTable("AvailabilitySlots", (string)null);
                 });
 
+            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Mood")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("DiaryEntries", (string)null);
+                });
+
             modelBuilder.Entity("NFS.Domain.Entities.Patient", b =>
                 {
                     b.Property<int>("PatientId")
@@ -229,44 +304,6 @@ namespace NFS.Infrastructure.Migrations
                     b.ToTable("PatientMedicalHistories", (string)null);
                 });
 
-            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Mood")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("DiaryEntries", (string)null);
-                });
-
             modelBuilder.Entity("NFS.Domain.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -282,8 +319,8 @@ namespace NFS.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CheckoutUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -306,14 +343,18 @@ namespace NFS.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("ExtraAppointmentIds")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("Provider")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProviderReference")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -469,15 +510,27 @@ namespace NFS.Infrastructure.Migrations
                     b.Property<decimal>("Rating")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
                     b.Property<string>("Specialization")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("VerifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("TherapistId");
 
@@ -641,6 +694,17 @@ namespace NFS.Infrastructure.Migrations
                     b.Navigation("Therapist");
                 });
 
+            modelBuilder.Entity("NFS.Domain.Entities.ExternalLogin", b =>
+                {
+                    b.HasOne("NFS.Domain.Entities.User", "User")
+                        .WithMany("ExternalLogins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("NFS.Domain.Entities.Assessment", b =>
                 {
                     b.HasOne("NFS.Domain.Entities.Patient", "Patient")
@@ -697,6 +761,17 @@ namespace NFS.Infrastructure.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
+                {
+                    b.HasOne("NFS.Domain.Entities.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("NFS.Domain.Entities.Patient", b =>
                 {
                     b.HasOne("NFS.Domain.Entities.User", "User")
@@ -709,17 +784,6 @@ namespace NFS.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("NFS.Domain.Entities.PatientMedicalHistory", b =>
-                {
-                    b.HasOne("NFS.Domain.Entities.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("NFS.Domain.Entities.DiaryEntry", b =>
                 {
                     b.HasOne("NFS.Domain.Entities.Patient", "Patient")
                         .WithMany()
@@ -865,6 +929,8 @@ namespace NFS.Infrastructure.Migrations
 
             modelBuilder.Entity("NFS.Domain.Entities.User", b =>
                 {
+                    b.Navigation("ExternalLogins");
+
                     b.Navigation("Patient");
 
                     b.Navigation("Therapist");

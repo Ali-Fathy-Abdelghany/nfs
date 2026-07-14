@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 
-const Input = ({ type = "text", placeholder, value = "", onChange }) => {
+const Input = ({ type = "text", placeholder, value, onChange }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const isControlled = typeof onChange === 'function';
+  const currentValue = isControlled ? (value ?? '') : undefined;
   
   const isPasswordField = type === "password";
   const inputType = isPasswordField ? (showPassword ? "text" : "password") : type;
   
   // الحالة: الحقل عليه تركيز أو يوجد به نص مكتوب
-  const isActive = isFocused || value.length > 0;
+  const isActive = isFocused || (isControlled && String(currentValue).length > 0);
 
   return (
     <div className="relative w-full">
@@ -24,8 +26,9 @@ const Input = ({ type = "text", placeholder, value = "", onChange }) => {
 
       <input
         type={inputType}
-        value={value}
-        onChange={onChange}
+        {...(isControlled
+          ? { value: currentValue, onChange }
+          : {})}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className="w-full p-4 rounded-full border border-gray-200 bg-white focus:ring-2 focus:ring-[#316764] outline-none transition-all pl-4 pr-14 text-right z-0"

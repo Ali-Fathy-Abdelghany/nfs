@@ -15,6 +15,7 @@ namespace NFS.Infrastructure.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<UserRoleMapping> UserRoles => Set<UserRoleMapping>();
+        public DbSet<ExternalLogin> ExternalLogins => Set<ExternalLogin>();
         public DbSet<Patient> Patients => Set<Patient>();
         public DbSet<Therapist> Therapists => Set<Therapist>();
         public DbSet<Assessment> Assessments => Set<Assessment>();
@@ -68,6 +69,19 @@ namespace NFS.Infrastructure.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
+            modelBuilder.Entity<ExternalLogin>(entity =>
+            {
+                entity.ToTable("ExternalLogins");
+                entity.HasKey(e => e.ExternalLoginId);
+                entity.Property(e => e.Provider).HasMaxLength(64).IsRequired();
+                entity.Property(e => e.ProviderKey).HasMaxLength(256).IsRequired();
+                entity.HasIndex(e => new { e.Provider, e.ProviderKey }).IsUnique();
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.ExternalLogins)
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
             modelBuilder.Entity<Patient>(entity =>
             {
                 entity.ToTable("Patients");
@@ -84,6 +98,10 @@ namespace NFS.Infrastructure.Data
                 entity.ToTable("Therapists");
                 entity.HasKey(t => t.TherapistId);
                 entity.HasIndex(t => t.UserId).IsUnique();
+                entity.Property(t => t.Status)
+                    .HasConversion<string>()
+                    .HasMaxLength(20);
+                entity.Property(t => t.RejectionReason).HasMaxLength(1000);
                 entity.HasOne(t => t.User)
                     .WithOne(u => u.Therapist)
                     .HasForeignKey<Therapist>(t => t.UserId)

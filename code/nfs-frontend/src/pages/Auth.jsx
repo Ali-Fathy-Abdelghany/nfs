@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Input from '../components/ui/Input';
-import { login } from '../api/auth';
+import { login, loginWithGoogle } from '../api/auth';
+import { completeAuthSession } from '../api/completeAuthSession';
 import { useAuth } from '../context/AuthContext';
-import { resolveUserRole } from '../api/config';
-import { ensurePatientRecord } from '../api/patientHelpers';
-import { fetchTherapistByUserId } from '../api/therapists';
 import { useToast } from '../context/ToastContext';
 import { getApiErrorMessage } from '../utils/apiError';
+import GoogleSignInButton, { isGoogleSignInConfigured } from '../components/auth/GoogleSignInButton';
 
 const quotes = [
   "السلام الداخلي يبدأ في اللحظة التي تختار فيها ألا تسمح لحدث أو شخص آخر بالتحكم في عواطفك.",
@@ -33,47 +32,36 @@ const Auth = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const finishLogin = async (result) => {
+    const { sessionData, path } = await completeAuthSession(result);
+    setAuth(sessionData);
+    navigate(path);
+  };
+
   const handleLogin = async (e) => {
     e?.preventDefault?.();
     setLoading(true);
     setError('');
     try {
       const result = await login({ email, password });
-      if (!result || !result.accessToken) {
-        throw new Error('Invalid login response');
-      }
-      const userRole = resolveUserRole(result.roles);
-      let sessionData = result;
-      if (userRole === 'user') {
-        try {
-          const patientId = result.patientId || (await ensurePatientRecord(result.userId));
-          sessionData = { ...result, patientId };
-        } catch (err) {
-          console.error('Failed to ensure patient record', err);
-        }
-      }
-      if (userRole === 'doctor') {
-        try {
-          let therapistId = result.therapistId;
-          if (!therapistId) {
-            const res = await fetchTherapistByUserId(result.userId);
-            therapistId = res.data?.therapistId;
-          }
-          sessionData = { ...sessionData, therapistId };
-        } catch (err) {
-          console.error('Failed to resolve therapist id', err);
-        }
-      }
-      setAuth(sessionData);
-      if (userRole === 'admin') {
-        navigate('/admin');
-      } else if (userRole === 'doctor') {
-        navigate('/doctor/dashboard');
-      } else {
-        navigate('/dashboard');
-      }
+      await finishLogin(result);
     } catch (err) {
       const msg = getApiErrorMessage(err, err.message || 'فشل تسجيل الدخول');
+      setError(msg);
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (idToken) => {
+    setLoading(true);
+    setError('');
+    try {
+      const result = await loginWithGoogle(idToken);
+      await finishLogin(result);
+    } catch (err) {
+      const msg = getApiErrorMessage(err, err.message || 'فشل تسجيل الدخول عبر Google');
       setError(msg);
       toast.error(msg);
     } finally {
@@ -123,6 +111,15 @@ const Auth = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <div className="flex justify-start">
+              <button
+                type="button"
+                onClick={() => navigate('/forgot-password')}
+                className="text-sm text-[#316764] font-bold hover:underline"
+              >
+                نسيت كلمة المرور؟
+              </button>
+            </div>
             {error && <p className="text-red-600 text-sm">{error}</p>}
             <button
               type="submit"
@@ -131,6 +128,26 @@ const Auth = () => {
             >
               {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
             </button>
+
+            {isGoogleSignInConfigured() && (
+              <>
+                <div className="flex items-center gap-3 py-1">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <span className="text-xs text-gray-400">أو</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
+                <GoogleSignInButton
+                  disabled={loading}
+                  onSuccess={handleGoogleSuccess}
+                  onError={(err) => {
+                    const msg = err?.message || 'فشل تسجيل الدخول عبر Google';
+                    setError(msg);
+                    toast.error(msg);
+                  }}
+                />
+              </>
+            )}
+
             <button
               type="button"
               onClick={() => navigate('/select-role')}

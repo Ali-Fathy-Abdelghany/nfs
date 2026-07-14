@@ -3,24 +3,39 @@ using NFS.Application.DTOs;
 using NFS.Application.Interfaces.Data;
 using NFS.Application.Interfaces.Services;
 using NFS.Domain.Entities;
+using NFS.Domain.Enums;
 
 namespace NFS.Application.Services
 {
     public class TherapistService : ITherapistService
     {
         private readonly IApplicationDbContext _context;
+        private readonly IEmailNotificationService _notifications;
 
-        public TherapistService(IApplicationDbContext context)
+        public TherapistService(IApplicationDbContext context, IEmailNotificationService notifications)
         {
             _context = context;
+            _notifications = notifications;
         }
 
         public async Task<IEnumerable<TherapistDto>> GetAllTherapistsAsync()
         {
-            return await _context.Therapists
+            // Materialize first — MapToDto cannot be translated by EF to SQL.
+            var therapists = await _context.Therapists
                 .Include(t => t.User)
-                .Select(t => MapToDto(t))
+                .AsNoTracking()
                 .ToListAsync();
+            return therapists.Select(MapToDto).ToList();
+        }
+
+        public async Task<IEnumerable<TherapistDto>> GetPendingTherapistsAsync()
+        {
+            var therapists = await _context.Therapists
+                .Include(t => t.User)
+                .AsNoTracking()
+                .Where(t => t.Status == TherapistStatus.Pending && !t.IsVerified)
+                .ToListAsync();
+            return therapists.Select(MapToDto).ToList();
         }
 
         public async Task<TherapistDto?> GetTherapistByIdAsync(int id)
@@ -55,6 +70,8 @@ namespace NFS.Application.Services
                 ExperienceYears = dto.ExperienceYears,
                 HourlyRate = dto.HourlyRate,
                 Qualifications = dto.Qualifications,
+                IsVerified = false,
+                Status = TherapistStatus.Pending,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -66,7 +83,9 @@ namespace NFS.Application.Services
 
         public async Task<bool> UpdateTherapistAsync(int id, UpdateTherapistDto dto)
         {
-            var therapist = await _context.Therapists.FindAsync(id);
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TherapistId == id);
             if (therapist == null) return false;
 
             therapist.Specialization = dto.Specialization;
@@ -75,6 +94,27 @@ namespace NFS.Application.Services
             therapist.HourlyRate = dto.HourlyRate;
             therapist.Qualifications = dto.Qualifications;
             therapist.UpdatedAt = DateTime.UtcNow;
+
+            // Resubmission after reject → back to pending review
+            if (therapist.Status == TherapistStatus.Rejected)
+            {
+                therapist.Status = TherapistStatus.Pending;
+                therapist.RejectionReason = null;
+                therapist.IsVerified = false;
+                therapist.VerifiedAt = null;
+            }
+
+            if (therapist.User != null)
+            {
+                if (!string.IsNullOrWhiteSpace(dto.FirstName))
+                    therapist.User.FirstName = dto.FirstName.Trim();
+                if (!string.IsNullOrWhiteSpace(dto.LastName))
+                    therapist.User.LastName = dto.LastName.Trim();
+                if (dto.Phone != null)
+                    therapist.User.Phone = string.IsNullOrWhiteSpace(dto.Phone) ? null : dto.Phone.Trim();
+                therapist.User.UpdatedAt = DateTime.UtcNow;
+            }
+
             await _context.SaveChangesAsync();
             return true;
         }
@@ -91,12 +131,50 @@ namespace NFS.Application.Services
 
         public async Task<bool> ApproveTherapistAsync(int id)
         {
-            var therapist = await _context.Therapists.FindAsync(id);
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TherapistId == id);
             if (therapist == null) return false;
 
             therapist.IsVerified = true;
+            therapist.Status = TherapistStatus.Approved;
+            therapist.RejectionReason = null;
+            therapist.VerifiedAt = DateTime.UtcNow;
             therapist.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+
+            if (!string.IsNullOrWhiteSpace(therapist.User?.Email))
+            {
+                await _notifications.SendTherapistAcceptedAsync(
+                    therapist.User.Email,
+                    therapist.User.FirstName);
+            }
+
+            return true;
+        }
+
+        public async Task<bool> RejectTherapistAsync(int id, string? reason)
+        {
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TherapistId == id);
+            if (therapist == null) return false;
+
+            therapist.IsVerified = false;
+            therapist.Status = TherapistStatus.Rejected;
+            therapist.RejectionReason = string.IsNullOrWhiteSpace(reason) ? null : reason.Trim();
+            therapist.VerifiedAt = null;
+            therapist.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            if (!string.IsNullOrWhiteSpace(therapist.User?.Email))
+            {
+                await _notifications.SendTherapistRejectedAsync(
+                    therapist.User.Email,
+                    therapist.User.FirstName,
+                    therapist.RejectionReason);
+            }
+
             return true;
         }
 
@@ -116,6 +194,13 @@ namespace NFS.Application.Services
             Rating = t.Rating,
             Qualifications = t.Qualifications,
             IsVerified = t.IsVerified,
+            Status = t.Status.ToString(),
+            RejectionReason = t.RejectionReason,
+            VerifiedAt = t.VerifiedAt,
+            Country = t.User?.Country,
+            Governorate = t.User?.Governorate,
+            Gender = t.User?.Gender?.ToString(),
+            DateOfBirth = t.User?.DateOfBirth,
             CreatedAt = t.CreatedAt
         };
     }

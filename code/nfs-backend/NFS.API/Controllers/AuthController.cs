@@ -40,6 +40,17 @@ namespace NFS.API.Controllers
             return Ok(result);
         }
 
+        [HttpPost("external/google")]
+        public async Task<IActionResult> ExternalLoginGoogle([FromBody] GoogleExternalLoginDto dto)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var result = await _authService.ExternalLoginGoogleAsync(dto);
+            if (result == null) return Unauthorized(new { Message = "Google sign-in failed." });
+
+            return Ok(result);
+        }
+
         [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
@@ -72,10 +83,14 @@ namespace NFS.API.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var resetToken = await _authService.ForgotPasswordAsync(dto);
-            if (resetToken == null) return NotFound(new { Message = "User with this email not found." });
+            // Always return a generic success message (do not leak whether the email exists).
+            // Token is emailed when SMTP is configured; never returned in the response.
+            await _authService.ForgotPasswordAsync(dto);
 
-            return Ok(new { Message = "Password reset token generated.", ResetToken = resetToken });
+            return Ok(new
+            {
+                Message = "إذا كان البريد مسجلاً لدينا، ستصلك رسالة لإعادة تعيين كلمة المرور خلال دقائق."
+            });
         }
 
         [HttpPost("reset-password")]

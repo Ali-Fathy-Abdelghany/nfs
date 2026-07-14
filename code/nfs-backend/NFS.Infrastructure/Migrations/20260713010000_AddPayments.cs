@@ -23,7 +23,7 @@ namespace NFS.Infrastructure.Migrations
                         Status NVARCHAR(30) NOT NULL,
                         Provider NVARCHAR(50) NOT NULL,
                         ProviderReference NVARCHAR(100) NULL,
-                        CheckoutUrl NVARCHAR(500) NULL,
+                        CheckoutUrl NVARCHAR(2000) NULL,
                         PlanType NVARCHAR(50) NULL,
                         CreatedAt DATETIME2 NOT NULL,
                         PaidAt DATETIME2 NULL,

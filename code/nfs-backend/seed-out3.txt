@@ -1,0 +1,426 @@
+info: Startup[0]
+      Payment gateway: Paymob (Intention API + unified checkout).
+info: Startup[0]
+      Email: SMTP enabled (smtp.gmail.com:587). Appointment reminders every 15 min.
+info: Startup[0]
+      Google OAuth: ClientId configured.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'AssessmentResult.AssessmentId1' was created in shadow state because a conflicting property with the simple name 'AssessmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'AssessmentResult.PatientId1' was created in shadow state because a conflicting property with the simple name 'PatientId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'HourlyRate' on entity type 'Therapist'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'Rating' on entity type 'Therapist'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (186ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'Status') IS NULL
+          ALTER TABLE Therapists ADD Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Therapists_Status DEFAULT N'Pending';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'RejectionReason') IS NULL
+          ALTER TABLE Therapists ADD RejectionReason NVARCHAR(1000) NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'VerifiedAt') IS NULL
+          ALTER TABLE Therapists ADD VerifiedAt DATETIME2 NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Appointments', N'ReminderSentAt') IS NULL
+          ALTER TABLE Appointments ADD ReminderSentAt DATETIME2 NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (30ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE Therapists SET Status = N'Approved', VerifiedAt = ISNULL(UpdatedAt, CreatedAt)
+      WHERE IsVerified = 1 AND (Status IS NULL OR Status = N'Pending' OR Status = N'0');
+      
+      UPDATE Therapists SET Status = N'Pending'
+      WHERE IsVerified = 0 AND (Status IS NULL OR Status = N'0' OR Status = N'');
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF OBJECT_ID(N'ExternalLogins', N'U') IS NULL
+      BEGIN
+          CREATE TABLE ExternalLogins (
+              ExternalLoginId INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_ExternalLogins PRIMARY KEY,
+              Provider NVARCHAR(64) NOT NULL,
+              ProviderKey NVARCHAR(256) NOT NULL,
+              UserId INT NOT NULL,
+              CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_ExternalLogins_CreatedAt DEFAULT (SYSUTCDATETIME()),
+              CONSTRAINT FK_ExternalLogins_Users_UserId
+                  FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+          );
+      
+          CREATE UNIQUE INDEX IX_ExternalLogins_Provider_ProviderKey
+              ON ExternalLogins (Provider, ProviderKey);
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (35ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Migrations[20411]
+      Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (134ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @result int;
+      EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
+      SELECT @result
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+      BEGIN
+          CREATE TABLE [__EFMigrationsHistory] (
+              [MigrationId] nvarchar(150) NOT NULL,
+              [ProductVersion] nvarchar(32) NOT NULL,
+              CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+          );
+      END;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [MigrationId], [ProductVersion]
+      FROM [__EFMigrationsHistory]
+      ORDER BY [MigrationId];
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      DECLARE @result int;
+      EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
+      SELECT @result
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (105ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF OBJECT_ID(N'Payments', N'U') IS NULL
+      BEGIN
+          CREATE TABLE Payments (
+              Id INT IDENTITY(1,1) NOT NULL,
+              AppointmentId INT NULL,
+              PatientId INT NOT NULL,
+              DoctorId INT NULL,
+              Amount DECIMAL(18,2) NOT NULL,
+              Currency NVARCHAR(10) NOT NULL,
+              Status NVARCHAR(30) NOT NULL,
+              Provider NVARCHAR(50) NOT NULL,
+              ProviderReference NVARCHAR(200) NULL,
+              CheckoutUrl NVARCHAR(2000) NULL,
+              PlanType NVARCHAR(50) NULL,
+              ExtraAppointmentIds NVARCHAR(200) NULL,
+              CreatedAt DATETIME2 NOT NULL,
+              PaidAt DATETIME2 NULL,
+              CONSTRAINT PK_Payments PRIMARY KEY (Id),
+              CONSTRAINT FK_Payments_Patients_PatientId FOREIGN KEY (PatientId) REFERENCES Patients(PatientId) ON DELETE NO ACTION,
+              CONSTRAINT FK_Payments_Therapists_DoctorId FOREIGN KEY (DoctorId) REFERENCES Therapists(TherapistId) ON DELETE NO ACTION,
+              CONSTRAINT FK_Payments_Appointments_AppointmentId FOREIGN KEY (AppointmentId) REFERENCES Appointments(Id) ON DELETE SET NULL
+          );
+          CREATE INDEX IX_Payments_PatientId ON Payments(PatientId);
+          CREATE INDEX IX_Payments_DoctorId ON Payments(DoctorId);
+          CREATE INDEX IX_Payments_AppointmentId ON Payments(AppointmentId);
+      END
+      ELSE
+      BEGIN
+          -- Paymob unified checkout URLs exceed 500 chars
+          IF EXISTS (
+              SELECT 1 FROM sys.columns
+              WHERE object_id = OBJECT_ID(N'Payments') AND name = N'CheckoutUrl' AND max_length < 4000
+          )
+              ALTER TABLE Payments ALTER COLUMN CheckoutUrl NVARCHAR(2000) NULL;
+      
+          IF COL_LENGTH(N'Payments', N'ExtraAppointmentIds') IS NULL
+              ALTER TABLE Payments ADD ExtraAppointmentIds NVARCHAR(200) NULL;
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'Status') IS NULL
+          ALTER TABLE Therapists ADD Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Therapists_Status DEFAULT N'Pending';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'RejectionReason') IS NULL
+          ALTER TABLE Therapists ADD RejectionReason NVARCHAR(1000) NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'VerifiedAt') IS NULL
+          ALTER TABLE Therapists ADD VerifiedAt DATETIME2 NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Appointments', N'ReminderSentAt') IS NULL
+          ALTER TABLE Appointments ADD ReminderSentAt DATETIME2 NULL;
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      UPDATE Therapists SET Status = N'Approved', VerifiedAt = ISNULL(UpdatedAt, CreatedAt)
+      WHERE IsVerified = 1 AND (Status IS NULL OR Status = N'Pending' OR Status = N'0');
+      
+      UPDATE Therapists SET Status = N'Pending'
+      WHERE IsVerified = 0 AND (Status IS NULL OR Status = N'0' OR Status = N'');
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF OBJECT_ID(N'ExternalLogins', N'U') IS NULL
+      BEGIN
+          CREATE TABLE ExternalLogins (
+              ExternalLoginId INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_ExternalLogins PRIMARY KEY,
+              Provider NVARCHAR(64) NOT NULL,
+              ProviderKey NVARCHAR(256) NOT NULL,
+              UserId INT NOT NULL,
+              CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_ExternalLogins_CreatedAt DEFAULT (SYSUTCDATETIME()),
+              CONSTRAINT FK_ExternalLogins_Users_UserId
+                  FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+          );
+      
+          CREATE UNIQUE INDEX IX_ExternalLogins_Provider_ProviderKey
+              ON ExternalLogins (Provider, ProviderKey);
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [Roles] AS [r]) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [r].[RoleId], [r].[CreatedAt], [r].[Description], [r].[RoleName]
+      FROM [Roles] AS [r]
+      WHERE [r].[RoleName] = N'CLIENT'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [r].[RoleId], [r].[CreatedAt], [r].[Description], [r].[RoleName]
+      FROM [Roles] AS [r]
+      WHERE [r].[RoleName] = N'THERAPIST'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (15ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = N'patient@test.com'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (58ms) [Parameters=[@__patientUser_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [p].[PatientId], [p].[CreatedAt], [p].[EmergencyContactName], [p].[EmergencyContactPhone], [p].[MedicalHistory], [p].[Notes], [p].[UpdatedAt], [p].[UserId]
+      FROM [Patients] AS [p]
+      WHERE [p].[UserId] = @__patientUser_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[@__email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [Patients] AS [p]
+              WHERE [p].[UserId] = @__user_UserId_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [Patients] AS [p]
+              WHERE [p].[UserId] = @__user_UserId_0) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (30ms) [Parameters=[@__spec_Email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__spec_Email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt]
+      FROM [Therapists] AS [t]
+      WHERE [t].[UserId] = @__user_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__spec_Email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__spec_Email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt]
+      FROM [Therapists] AS [t]
+      WHERE [t].[UserId] = @__user_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__spec_Email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__spec_Email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt]
+      FROM [Therapists] AS [t]
+      WHERE [t].[UserId] = @__user_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@__spec_Email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__spec_Email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt]
+      FROM [Therapists] AS [t]
+      WHERE [t].[UserId] = @__user_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__spec_Email_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__spec_Email_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@__user_UserId_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt]
+      FROM [Therapists] AS [t]
+      WHERE [t].[UserId] = @__user_UserId_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (9ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [r].[RoleId], [r].[CreatedAt], [r].[Description], [r].[RoleName]
+      FROM [Roles] AS [r]
+      WHERE [r].[RoleName] = N'ADMIN'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (39ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = N'admin@test.com'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (11ms) [Parameters=[@__adminUser_UserId_0='?' (DbType = Int32), @__adminRole_RoleId_1='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [UserRoles] AS [u]
+              WHERE [u].[UserId] = @__adminUser_UserId_0 AND [u].[RoleId] = @__adminRole_RoleId_1) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (10ms) [Parameters=[@__pendingEmail_0='?' (Size = 450)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Users] AS [u]
+      WHERE [u].[Email] = @__pendingEmail_0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (66ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [t].[TherapistId], [t].[Bio], [t].[CreatedAt], [t].[ExperienceYears], [t].[HourlyRate], [t].[IsVerified], [t].[Qualifications], [t].[Rating], [t].[RejectionReason], [t].[Specialization], [t].[Status], [t].[UpdatedAt], [t].[UserId], [t].[VerifiedAt], [u].[UserId], [u].[Country], [u].[CreatedAt], [u].[DateOfBirth], [u].[Email], [u].[EmailVerificationToken], [u].[FirstName], [u].[Gender], [u].[Governorate], [u].[IsActive], [u].[IsEmailVerified], [u].[LastName], [u].[PasswordHash], [u].[PasswordResetToken], [u].[PasswordResetTokenExpiry], [u].[Phone], [u].[ProfileImageUrl], [u].[RefreshToken], [u].[RefreshTokenExpiryTime], [u].[UpdatedAt]
+      FROM [Therapists] AS [t]
+      INNER JOIN [Users] AS [u] ON [t].[UserId] = [u].[UserId]
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (55ms) [Parameters=[@__therapist_TherapistId_0='?' (DbType = Int32), @__8__locals1_now_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*)
+      FROM [AvailabilitySlots] AS [a]
+      WHERE [a].[DoctorId] = @__therapist_TherapistId_0 AND [a].[IsBooked] = CAST(0 AS bit) AND [a].[StartTime] > @__8__locals1_now_1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (25ms) [Parameters=[@__therapist_TherapistId_0='?' (DbType = Int32), @__8__locals1_now_1='?' (DbType = DateTime2), @__p_2='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[DoctorId], [a].[EndTime], [a].[IsBooked], [a].[StartTime]
+      FROM [AvailabilitySlots] AS [a]
+      WHERE [a].[DoctorId] = @__therapist_TherapistId_0 AND [a].[IsBooked] = CAST(0 AS bit) AND [a].[StartTime] > @__8__locals1_now_1
+      ORDER BY [a].[StartTime] DESC
+      OFFSET @__p_2 ROWS
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (33ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (DbType = Int32), @p2='?' (DbType = Int32), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      DELETE FROM [AvailabilitySlots]
+      OUTPUT 1
+      WHERE [Id] = @p0;
+      DELETE FROM [AvailabilitySlots]
+      OUTPUT 1
+      WHERE [Id] = @p1;
+      DELETE FROM [AvailabilitySlots]
+      OUTPUT 1
+      WHERE [Id] = @p2;
+      DELETE FROM [AvailabilitySlots]
+      OUTPUT 1
+      WHERE [Id] = @p3;
+fail: Microsoft.EntityFrameworkCore.Update[10000]
+      An exception occurred in the database while saving changes for context type 'NFS.Infrastructure.Data.ApplicationDbContext'.
+      Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+       ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Appointments_AvailabilitySlots_SlotId". The conflict occurred in database "NfsDb", table "dbo.Appointments", column 'SlotId'.
+         at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+         at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+         at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+         at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+      --- End of stack trace from previous location ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+      ClientConnectionId:4ac06243-a349-4e40-88db-c0f03931659e
+      Error Number:547,State:0,Class:16
+         --- End of inner exception stack trace ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+      Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+       ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Appointments_AvailabilitySlots_SlotId". The conflict occurred in database "NfsDb", table "dbo.Appointments", column 'SlotId'.
+         at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+         at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+         at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+         at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+      --- End of stack trace from previous location ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+      ClientConnectionId:4ac06243-a349-4e40-88db-c0f03931659e
+      Error Number:547,State:0,Class:16
+         --- End of inner exception stack trace ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+fail: Program[0]
+      An error occurred during database seeding.
+      Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+       ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The DELETE statement conflicted with the REFERENCE constraint "FK_Appointments_AvailabilitySlots_SlotId". The conflict occurred in database "NfsDb", table "dbo.Appointments", column 'SlotId'.
+         at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+         at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+         at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+         at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+         at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+      --- End of stack trace from previous location ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetWithRowsAffectedOnlyAsync(Int32 commandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+      ClientConnectionId:4ac06243-a349-4e40-88db-c0f03931659e
+      Error Number:547,State:0,Class:16
+         --- End of inner exception stack trace ---
+         at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+         at NFS.Infrastructure.Data.DbSeeder.EnsureTestAvailabilitySlotsAsync(ApplicationDbContext context) in F:\Tasks\nfs\code\nfs-backend\NFS.Infrastructure\Data\DbSeeder.cs:line 504
+         at NFS.Infrastructure.Data.DbSeeder.SeedAsync(ApplicationDbContext context) in F:\Tasks\nfs\code\nfs-backend\NFS.Infrastructure\Data\DbSeeder.cs:line 43
+         at Program.<Main>$(String[] args) in F:\Tasks\nfs\code\nfs-backend\NFS.API\Program.cs:line 237

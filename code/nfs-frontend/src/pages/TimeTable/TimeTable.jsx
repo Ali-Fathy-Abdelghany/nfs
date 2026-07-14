@@ -5,7 +5,6 @@ import {
   fetchDoctorAvailability,
   fetchDoctorAppointments,
   createAvailabilitySlot,
-  updateAppointmentStatus,
   cancelAppointment,
 } from '../../api/appointments';
 import { fetchTherapistByUserId } from '../../api/therapists';
@@ -14,10 +13,14 @@ import { useToast } from '../../context/ToastContext';
 import { getApiErrorMessage } from '../../utils/apiError';
 import './TimeTable.css';
 
+function pad2(n) {
+  return String(n).padStart(2, '0');
+}
+
 function toDateKey(date) {
   const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
+  const m = pad2(date.getMonth() + 1);
+  const d = pad2(date.getDate());
   return `${y}-${m}-${d}`;
 }
 
@@ -25,7 +28,30 @@ function formatSlotLabel(date) {
   const h = date.getHours();
   const ampm = h >= 12 ? 'م' : 'ص';
   const display = h % 12 || 12;
-  return `${String(display).padStart(2, '0')}:00 ${ampm}`;
+  return `${pad2(display)}:00 ${ampm}`;
+}
+
+/** Local wall-clock string without Z — matches seeded Unspecified DateTimes. */
+function toWallClockDateTime(date) {
+  return `${toDateKey(date)}T${pad2(date.getHours())}:${pad2(date.getMinutes())}:00`;
+}
+
+/** Map grid label ("02:00 م") or "HH:mm" → HTML time value. */
+function slotLabelToTimeValue(label) {
+  if (!label) return '09:00';
+  const raw = String(label).trim();
+  if (/^\d{1,2}:\d{2}$/.test(raw)) {
+    const [h, m] = raw.split(':');
+    return `${pad2(Number(h))}:${m}`;
+  }
+  const match = raw.match(/(\d{1,2}):(\d{2})\s*(ص|م)/);
+  if (!match) return '09:00';
+  let h = Number(match[1]);
+  const m = match[2];
+  const period = match[3];
+  if (period === 'م' && h !== 12) h += 12;
+  if (period === 'ص' && h === 12) h = 0;
+  return `${pad2(h)}:${m}`;
 }
 
 function formatDateLabel(dateObj) {
@@ -123,7 +149,11 @@ function TimeTable() {
 
       const appointments = apptRes.data || [];
       const pending = appointments
-        .filter((a) => String(a.status).toUpperCase() === 'PENDING')
+        .filter((a) => {
+          const s = String(a.status).toUpperCase();
+          // Unpaid holds only — paid bookings are auto-confirmed and must not sit here.
+          return s === 'PENDING' && a.isPaid !== true;
+        })
         .map((a) => {
           const start = a.scheduledStartTime ? new Date(a.scheduledStartTime) : null;
           return {
@@ -142,7 +172,13 @@ function TimeTable() {
       const confirmed = appointments
         .filter((a) => {
           const s = String(a.status).toUpperCase();
-          return s === 'CONFIRMED' || s === 'SCHEDULED' || s === 'RESCHEDULED' || s === 'ACTIVE';
+          return a.isPaid === true
+            || s === 'CONFIRMED'
+            || s === 'SCHEDULED'
+            || s === 'RESCHEDULED'
+            || s === 'ACTIVE'
+            || s === 'IN PROGRESS'
+            || s === 'INPROGRESS';
         })
         .map((a) => {
           const start = a.scheduledStartTime || a.actualStartTime;
@@ -209,42 +245,44 @@ function TimeTable() {
 
   const todaySessionsCount = dynamicSessions.filter((s) => s.date === todayKey).length;
 
-  const handleAcceptRequest = async (req) => {
-    try {
-      await updateAppointmentStatus(req.appointmentId, 'Confirmed');
-      toast.success('تم قبول الطلب بنجاح');
-      await loadSchedule(therapistId);
-    } catch (err) {
-      console.error(err);
-      toast.error(getApiErrorMessage(err, 'تعذر قبول الطلب'));
-    }
-  };
-
   const handleRejectRequest = async (req) => {
     try {
       await cancelAppointment(req.appointmentId);
-      toast.info('تم رفض الطلب');
+      toast.info('تم إلغاء الحجز');
       await loadSchedule(therapistId);
     } catch (err) {
       console.error(err);
-      toast.error(getApiErrorMessage(err, 'تعذر رفض الطلب'));
+      toast.error(getApiErrorMessage(err, 'تعذر إلغاء الحجز'));
     }
   };
 
   const handleAddAvailability = async (e) => {
     e.preventDefault();
-    if (!form.from || !therapistId) return;
+    if (!form.from) {
+      toast.error('اختر وقت البداية');
+      return;
+    }
+    if (!therapistId) {
+      toast.error('تعذر تحديد حساب الطبيب. أعد تسجيل الدخول ثم حاول مرة أخرى');
+      return;
+    }
 
     const [hh, mm] = form.from.split(':').map(Number);
-    const start = new Date(`${form.date}T${String(hh).padStart(2, '0')}:${String(mm || 0).padStart(2, '0')}:00`);
+    if (Number.isNaN(hh)) {
+      toast.error('وقت غير صالح');
+      return;
+    }
+
+    const [y, mo, d] = form.date.split('-').map(Number);
+    const start = new Date(y, mo - 1, d, hh, mm || 0, 0, 0);
     const end = new Date(start.getTime() + 50 * 60 * 1000);
 
     try {
       setSavingSlot(true);
       await createAvailabilitySlot({
         doctorId: therapistId,
-        startTime: start.toISOString(),
-        endTime: end.toISOString(),
+        startTime: toWallClockDateTime(start),
+        endTime: toWallClockDateTime(end),
       });
       setShowAddModal(false);
       toast.success('تمت إضافة التوفر بنجاح');
@@ -262,8 +300,12 @@ function TimeTable() {
     return toDateKey(dateObj) === dateStr;
   };
 
-  const openAddModal = (dateStr = startDate) => {
-    setForm((prev) => ({ ...prev, date: dateStr || toDateKey(today) }));
+  const openAddModal = (dateStr = startDate, timeLabel) => {
+    setForm({
+      date: dateStr || toDateKey(today),
+      from: timeLabel ? slotLabelToTimeValue(timeLabel) : (form.from || '09:00'),
+      to: '',
+    });
     setShowAddModal(true);
   };
 
@@ -271,12 +313,12 @@ function TimeTable() {
     <div className="timetable-page min-h-screen bg-[#F7FAFA] text-[#181C1D] flex flex-col font-['Cairo',sans-serif]" dir="rtl">
       <Header />
 
-      <main className="w-full flex-1 flex flex-col lg:flex-row gap-6 max-w-[1240px] mx-auto px-4 py-8">
+      <main className="w-full flex-1 flex flex-col lg:flex-row gap-6 max-w-[1240px] mx-auto px-4 py-6 sm:py-8 pb-24 sm:pb-28">
         <div className="w-full lg:w-64 shrink-0">
           <Sidebar activeTab="timetable" />
         </div>
 
-        <div className="flex-1 w-full space-y-5 text-right">
+        <div className="flex-1 w-full min-w-0 space-y-5 text-right pb-4">
           <div className="tt-hero flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white border border-[#E6E9E9] rounded-[24px] px-5 py-4 shadow-[0_4px_16px_rgba(24,28,29,0.04)]">
             <div>
               <h2 className="text-xl font-black text-[#181C1D]">مرحباً {doctorName}</h2>
@@ -288,7 +330,7 @@ function TimeTable() {
             </div>
             <button
               type="button"
-              onClick={() => openAddModal(startDate)}
+              onClick={() => openAddModal(todayKey)}
               className="bg-[#316764] hover:bg-[#254f4d] text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-sm transition-all"
             >
               <i className="fa-solid fa-plus text-[10px]" />
@@ -297,7 +339,7 @@ function TimeTable() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-            <div className="lg:col-span-2 bg-white rounded-[24px] border border-[#E6E9E9] shadow-[0_4px_16px_rgba(24,28,29,0.04)] p-5 sm:p-6 space-y-5">
+            <div className="lg:col-span-2 min-w-0 bg-white rounded-[24px] border border-[#E6E9E9] shadow-[0_4px_16px_rgba(24,28,29,0.04)] p-5 sm:p-6 space-y-5">
               <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-[#316764]">
@@ -412,46 +454,49 @@ function TimeTable() {
                   </div>
                 </div>
               ) : (
-                <div className="tt-grid border border-[#E6E9E9] rounded-2xl overflow-hidden bg-white">
+                <div className="tt-grid border border-[#E6E9E9] rounded-2xl bg-white">
                   <div
-                    className="tt-grid-header grid border-b border-[#E6E9E9] bg-[#F7FAFA] sticky top-0 z-10"
-                    style={{
-                      gridTemplateColumns: `72px repeat(${Math.max(currentDaysRange.length, 1)}, minmax(88px, 1fr))`,
-                    }}
+                    className="tt-grid-scroll"
+                    style={{ '--tt-cols': String(Math.max(currentDaysRange.length, 1)) }}
                   >
-                    <div className="text-[10px] font-bold text-[#707978] flex items-center justify-center py-3 border-l border-[#E6E9E9]/60">
-                      الوقت
-                    </div>
-                    {currentDaysRange.map((dateObj, i) => {
-                      const isToday = toDateKey(dateObj) === todayKey;
-                      return (
-                        <div
-                          key={i}
-                          className={`flex flex-col items-center py-2.5 border-l border-[#E6E9E9]/40 last:border-l-0 ${isToday ? 'bg-[#316764]/6' : ''}`}
-                        >
-                          <span className="text-[10px] text-[#707978] font-medium">{WEEK_DAYS_NAMES[dateObj.getDay()]}</span>
-                          <span
-                            className={`text-xs font-black mt-0.5 w-7 h-7 flex items-center justify-center rounded-full ${
-                              isToday ? 'bg-[#316764] text-white' : 'bg-[#316764]/8 text-[#181C1D]'
-                            }`}
+                    <div
+                      className="tt-grid-header grid border-b border-[#E6E9E9] bg-[#F7FAFA]"
+                      style={{
+                        gridTemplateColumns: `72px repeat(${Math.max(currentDaysRange.length, 1)}, minmax(100px, 1fr))`,
+                      }}
+                    >
+                      <div className="tt-time-col text-[10px] font-bold text-[#707978] flex items-center justify-center py-3 border-l border-[#E6E9E9]/60">
+                        الوقت
+                      </div>
+                      {currentDaysRange.map((dateObj, i) => {
+                        const isToday = toDateKey(dateObj) === todayKey;
+                        return (
+                          <div
+                            key={i}
+                            className={`flex flex-col items-center py-2.5 border-l border-[#E6E9E9]/40 last:border-l-0 ${isToday ? 'bg-[#316764]/6' : ''}`}
                           >
-                            {dateObj.getDate()}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
+                            <span className="text-[10px] text-[#707978] font-medium">{WEEK_DAYS_NAMES[dateObj.getDay()]}</span>
+                            <span
+                              className={`text-xs font-black mt-0.5 w-7 h-7 flex items-center justify-center rounded-full ${
+                                isToday ? 'bg-[#316764] text-white' : 'bg-[#316764]/8 text-[#181C1D]'
+                              }`}
+                            >
+                              {dateObj.getDate()}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
 
-                  <div className="max-h-[420px] overflow-auto">
                     {TIME_SLOTS.map((time, tIdx) => (
                       <div
                         key={tIdx}
-                        className="grid min-h-[58px] border-b border-[#E6E9E9]/50 last:border-b-0"
+                        className="tt-grid-row grid min-h-[56px] border-b border-[#E6E9E9]/50 last:border-b-0"
                         style={{
-                          gridTemplateColumns: `72px repeat(${Math.max(currentDaysRange.length, 1)}, minmax(88px, 1fr))`,
+                          gridTemplateColumns: `72px repeat(${Math.max(currentDaysRange.length, 1)}, minmax(100px, 1fr))`,
                         }}
                       >
-                        <div className="bg-[#F7FAFA]/70 text-[#707978] text-[10px] font-bold flex items-center justify-center border-l border-[#E6E9E9]/60 sticky right-0">
+                        <div className="tt-time-col text-[#707978] text-[10px] font-bold flex items-center justify-center border-l border-[#E6E9E9]/60">
                           {time}
                         </div>
                         {currentDaysRange.map((dateObj, dIdx) => {
@@ -462,23 +507,23 @@ function TimeTable() {
                           return (
                             <div
                               key={dIdx}
-                              className={`p-1 border-l border-[#E6E9E9]/35 flex items-stretch justify-center relative group ${isToday ? 'bg-[#316764]/[0.03]' : 'bg-white'}`}
+                              className={`p-1.5 border-l border-[#E6E9E9]/35 flex items-stretch justify-center relative group ${isToday ? 'bg-[#316764]/[0.03]' : 'bg-white'}`}
                             >
                               {activeSession ? (
-                                <div className="w-full min-h-[46px] p-2 rounded-xl text-right flex flex-col justify-between bg-[#E6F0EF] border border-[#316764]/25 text-[#254f4d]">
+                                <div className="w-full min-h-[44px] p-2 rounded-xl text-right flex flex-col justify-between bg-[#E6F0EF] border border-[#316764]/25 text-[#254f4d]">
                                   <span className="text-[10px] font-black truncate">{activeSession.patient}</span>
                                   <span className="text-[8px] font-bold opacity-80">{activeSession.type}</span>
                                 </div>
                               ) : activeAvail ? (
-                                <div className="w-full min-h-[46px] p-2 rounded-xl bg-amber-50 border border-dashed border-amber-300 text-right flex flex-col justify-center">
+                                <div className="w-full min-h-[44px] p-2 rounded-xl bg-amber-50 border border-dashed border-amber-300 text-right flex flex-col justify-center">
                                   <span className="text-[10px] font-black text-amber-700">توفر متاح</span>
                                 </div>
                               ) : (
                                 <button
                                   type="button"
                                   title="إضافة توفر"
-                                  onClick={() => openAddModal(toDateKey(dateObj))}
-                                  className="w-full min-h-[46px] rounded-xl border border-transparent opacity-0 group-hover:opacity-100 hover:border-[#83B9B5] hover:bg-[#F7FAFA] text-[#83B9B5] text-xs transition-all cursor-pointer"
+                                  onClick={() => openAddModal(toDateKey(dateObj), time)}
+                                  className="w-full min-h-[44px] rounded-xl border border-transparent opacity-0 group-hover:opacity-100 hover:border-[#83B9B5] hover:bg-[#F7FAFA] text-[#83B9B5] text-xs transition-all cursor-pointer"
                                 >
                                   <i className="fa-solid fa-plus" />
                                 </button>
@@ -504,7 +549,7 @@ function TimeTable() {
                     {dynamicSessions.length}
                   </span>
                 </div>
-                <div className="space-y-2 max-h-[220px] overflow-y-auto">
+                <div className="tt-panel-scroll space-y-2 pr-0.5">
                   {dynamicSessions.length === 0 && (
                     <p className="text-xs text-[#707978] py-4 text-center">لا توجد جلسات مؤكدة</p>
                   )}
@@ -529,7 +574,7 @@ function TimeTable() {
                 <div className="flex items-center justify-between border-b border-[#F7FAFA] pb-2">
                   <h3 className="text-sm font-black text-[#181C1D] flex items-center gap-2">
                     <i className="fa-solid fa-inbox text-[#316764] text-xs" />
-                    طلبات جديدة
+                    حجوزات بانتظار الدفع
                   </h3>
                   {requests.length > 0 && (
                     <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full">
@@ -537,10 +582,13 @@ function TimeTable() {
                     </span>
                   )}
                 </div>
+                <p className="text-[10px] text-[#707978] leading-relaxed">
+                  الحجوزات المدفوعة تُؤكَّد تلقائياً وتظهر في الجدول. يمكنك إلغاء الحجوزات غير المكتملة هنا.
+                </p>
                 {requests.length === 0 && (
-                  <p className="text-xs text-[#707978] py-4 text-center">لا توجد طلبات معلّقة</p>
+                  <p className="text-xs text-[#707978] py-4 text-center">لا توجد حجوزات معلّقة</p>
                 )}
-                <div className="space-y-3 max-h-[320px] overflow-y-auto">
+                <div className="tt-panel-scroll space-y-3 pr-0.5">
                   {requests.map((req) => (
                     <div className="p-4 bg-[#F7FAFA] rounded-[20px] border border-[#E6E9E9] space-y-3" key={req.id}>
                       <div className="flex items-center gap-3">
@@ -556,17 +604,10 @@ function TimeTable() {
                       <div className="flex items-center gap-2 pt-1">
                         <button
                           type="button"
-                          onClick={() => handleAcceptRequest(req)}
-                          className="flex-1 bg-[#316764] hover:bg-[#254f4d] text-white text-[11px] font-bold py-2 rounded-xl cursor-pointer transition-colors"
-                        >
-                          قبول
-                        </button>
-                        <button
-                          type="button"
                           onClick={() => handleRejectRequest(req)}
                           className="flex-1 bg-white border border-[#E6E9E9] text-rose-600 hover:bg-rose-50 text-[11px] font-bold py-2 rounded-xl cursor-pointer transition-colors"
                         >
-                          رفض
+                          إلغاء الحجز
                         </button>
                       </div>
                     </div>
@@ -623,9 +664,14 @@ function TimeTable() {
               <p className="text-[10px] text-[#707978] leading-relaxed">
                 مدة الجلسة 50 دقيقة. لا يمكن إضافة توفر يتداخل مع موعد أو توفر آخر.
               </p>
+              {!therapistId && (
+                <p className="text-[10px] text-rose-600 font-bold">
+                  لم يتم تحميل معرف الطبيب بعد. انتظر قليلاً أو أعد تسجيل الدخول.
+                </p>
+              )}
               <button
                 type="submit"
-                disabled={savingSlot}
+                disabled={savingSlot || !therapistId}
                 className="w-full bg-[#316764] hover:bg-[#254f4d] disabled:opacity-60 text-white font-bold py-3 rounded-xl cursor-pointer text-center transition-colors"
               >
                 {savingSlot ? 'جاري الإضافة...' : 'تأكيد وإضافة ميعاد'}

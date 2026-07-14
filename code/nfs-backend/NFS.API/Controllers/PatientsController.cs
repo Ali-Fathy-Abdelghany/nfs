@@ -23,8 +23,17 @@ namespace NFS.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
-            => Ok(await _patientService.GetAllPatientsAsync());
+        public async Task<IActionResult> GetAll([FromQuery] int? doctorId = null)
+        {
+            if (doctorId.HasValue)
+                return Ok(await _patientService.GetPatientsByDoctorIdAsync(doctorId.Value));
+
+            return Ok(await _patientService.GetAllPatientsAsync());
+        }
+
+        [HttpGet("by-doctor/{doctorId:int}")]
+        public async Task<IActionResult> GetByDoctor(int doctorId)
+            => Ok(await _patientService.GetPatientsByDoctorIdAsync(doctorId));
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

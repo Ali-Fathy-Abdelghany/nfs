@@ -62,19 +62,10 @@ export function useChatHub(userId) {
     }
   };
 
-  const sendMessage = async (groupId, sender, message) => {
+  const sendMessage = async (groupId, message) => {
     if (connectionRef.current && connectionStatus === 'connected') {
       try {
         await connectionRef.current.invoke('SendMessageToGroup', groupId, message);
-        const localMsg = {
-          id: Date.now(),
-          sender: 'me',
-          senderName: sender,
-          avatar: '🦁',
-          text: message,
-          time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMessages((prev) => [...prev, localMsg]);
       } catch (e) {
         console.error('Send message error', e);
       }
@@ -98,5 +89,6 @@ export function useChatHub(userId) {
     joinGroup,
     leaveGroup,
     sendMessage,
+    setMessages,
   };
 }

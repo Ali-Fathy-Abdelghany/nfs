@@ -8,6 +8,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NFS.Application\nfs.Application.csproj" />
     <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
   </ItemGroup>
 </Project>

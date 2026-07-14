@@ -27,9 +27,12 @@ import DoctorProfile from "./pages/DoctorProfile/DoctorProfile";
 import DoctorWork from "./pages/DoctorWork/DoctorWork";
 import Patients from "./pages/Patients/Patients";
 import Meetings from "./pages/Meetings/Meetings";
+import DigitalClinic from "./pages/DigitalClinic/DigitalClinic";
 
 import TimeTable from "./pages/TimeTable/TimeTable";
 import AdminPage from "./pages/Admin/AdminPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 // مكونات أخرى
 import QuizPage from "./Components/QuizPage/QuizPage";
@@ -43,6 +46,8 @@ function App() {
                 <Route path="/" element={<Navigate to="/login" replace />} />
                 <Route path="/login" element={<Auth />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/select-role" element={<SelectionPage />} />
                 <Route path="/doctor-signup" element={<DoctorSignup />} />
                 <Route path="/user-signup" element={<UserSignup />} />
@@ -69,7 +74,10 @@ function App() {
                     element={<PatientProfile />}
                 />
                 <Route path="/doctor/patients" element={<Patients />} />
+                {/* Call UIs: fullscreen video shells (no doctor Sidebar) */}
                 <Route path="/doctor/meetings" element={<Meetings />} />
+                <Route path="/digital-clinic" element={<DigitalClinic />} />
+                <Route path="/session/call" element={<DigitalClinic />} />
                 <Route path="/doctor/sessions" element={<Sessions />} />
                 <Route path="/sessions" element={<Sessions />} />
                 <Route path="/doctor/timetable" element={<TimeTable />} />

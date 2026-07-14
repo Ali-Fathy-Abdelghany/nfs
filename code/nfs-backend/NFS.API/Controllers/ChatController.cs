@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NFS.Application.Interfaces.Services;
 using NFS.Chat.Models;
 using NFS.Chat.Repositories;
 using System.Security.Claims;
@@ -12,10 +13,12 @@ namespace NFS.API.Controllers;
 public class ChatController : ControllerBase
 {
     private readonly IChatRepository _chatRepository;
+    private readonly IUserService _userService;
 
-    public ChatController(IChatRepository chatRepository)
+    public ChatController(IChatRepository chatRepository, IUserService userService)
     {
         _chatRepository = chatRepository;
+        _userService = userService;
     }
 
     [HttpGet("rooms")]
@@ -95,7 +98,7 @@ public class ChatController : ControllerBase
             return BadRequest("roomId is required.");
 
         var messages = await _chatRepository.GetMessagesByRoomAsync(roomId);
-        return Ok(messages);
+        return Ok(await EnrichMessagesAsync(messages));
     }
 
     [HttpGet("private/{otherUserId}")]
@@ -109,7 +112,37 @@ public class ChatController : ControllerBase
             return Unauthorized();
 
         var messages = await _chatRepository.GetPrivateMessagesAsync(currentUserId, otherUserId);
-        return Ok(messages);
+        return Ok(await EnrichMessagesAsync(messages));
+    }
+
+    private async Task<List<ChatMessageResponse>> EnrichMessagesAsync(IEnumerable<ChatMessage> messages)
+    {
+        var list = messages.ToList();
+        var senderIds = list
+            .Select(m => m.SenderId)
+            .Where(id => int.TryParse(id, out _))
+            .Select(int.Parse)
+            .Distinct()
+            .ToList();
+
+        var avatars = await _userService.GetAvatarsByIdsAsync(senderIds);
+        var byId = avatars.ToDictionary(a => a.UserId);
+
+        return list.Select(m =>
+        {
+            byId.TryGetValue(int.TryParse(m.SenderId, out var sid) ? sid : 0, out var avatar);
+            return new ChatMessageResponse
+            {
+                Id = m.Id,
+                RoomId = m.RoomId,
+                SenderId = m.SenderId,
+                RecipientId = m.RecipientId,
+                Content = m.Content,
+                Timestamp = m.Timestamp,
+                SenderName = string.IsNullOrWhiteSpace(avatar?.DisplayName) ? null : avatar.DisplayName,
+                SenderAvatarUrl = avatar?.ProfileImageUrl
+            };
+        }).ToList();
     }
 
     private static ChatRoomResponse ToRoomResponse(ChatRoom room, string currentUserId)

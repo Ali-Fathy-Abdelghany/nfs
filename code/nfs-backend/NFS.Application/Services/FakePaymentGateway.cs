@@ -4,8 +4,8 @@ using NFS.Application.Interfaces.Services;
 namespace NFS.Application.Services;
 
 /// <summary>
-/// Simulated payment gateway for local/dev testing — no real Stripe keys required.
-/// Swap this registration for a StripePaymentGateway later.
+/// Simulated payment gateway for local/dev testing when Paymob keys are missing.
+/// DI registers <c>PaymobPaymentGateway</c> when PAYMOB_* keys are configured; otherwise this fake is used.
 /// </summary>
 public class FakePaymentGateway : IPaymentGateway
 {
@@ -24,4 +24,7 @@ public class FakePaymentGateway : IPaymentGateway
         // Always succeeds in fake mode
         return Task.FromResult(!string.IsNullOrWhiteSpace(providerReference));
     }
+
+    public Task<bool?> VerifyWithProviderAsync(string? providerReference, string? merchantOrderId, string? transactionId)
+        => Task.FromResult<bool?>(null);
 }

@@ -147,27 +147,36 @@ const ProfileStats = ({ onClearStorage }) => (
   </div>
 );
 
-const BREATH_PHASE_MS = 4000; // 4s inhale + 4s exhale = 8s cycle
+const BREATH_PHASES = [
+  { key: 'inhale', label: 'شهيق...', hint: 'خذ شهيقاً عميقاً ببطء من الأنف (٤ ثوانٍ)', ms: 4000 },
+  { key: 'hold', label: 'حبس...', hint: 'احبس النفس بهدوء (٧ ثوانٍ)', ms: 7000 },
+  { key: 'exhale', label: 'زفير...', hint: 'أخرج الزفير ببطء من الفم (٨ ثوانٍ)', ms: 8000 },
+];
 
 const BreathingExercise = ({ onClose }) => {
-  const [isInhale, setIsInhale] = useState(true);
+  const [phaseIndex, setPhaseIndex] = useState(0);
+  const phase = BREATH_PHASES[phaseIndex];
 
   useEffect(() => {
-    const id = setInterval(() => setIsInhale((prev) => !prev), BREATH_PHASE_MS);
-    return () => clearInterval(id);
-  }, []);
+    const id = setTimeout(
+      () => setPhaseIndex((i) => (i + 1) % BREATH_PHASES.length),
+      phase.ms
+    );
+    return () => clearTimeout(id);
+  }, [phaseIndex, phase.ms]);
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-3xl p-6 text-center space-y-6 relative">
+      <div className="bg-white w-full max-w-md rounded-3xl p-6 text-center space-y-5 relative">
         <button onClick={onClose} className="absolute top-4 left-4 p-1.5 hover:bg-neutral-100 rounded-full"><X className="w-5 h-5" /></button>
         <h3 className="text-xl font-black pt-4">تمرين التنفس ٤-٧-٨</h3>
-        <div className="breathing-circle w-32 h-32 bg-[#E6F0EF] rounded-full mx-auto flex items-center justify-center">
-          <span className="text-[#0F766E] font-bold">{isInhale ? 'شهيق...' : 'زفير...'}</span>
-        </div>
-        <p className="text-sm text-neutral-500">
-          {isInhale ? 'خذ شهيقاً عميقاً ببطء من الأنف' : 'أخرج الزفير ببطء من الفم'}
+        <p className="text-xs text-neutral-500 leading-relaxed px-2">
+          أسلوب استرخاء فعّال: شهيق (٤ ث)، حبس النفس (٧ ث)، زفير (٨ ث). يساعد على تقليل القلق، علاج الأرق، وتهدئة الأعصاب.
         </p>
+        <div className="breathing-circle w-32 h-32 bg-[#E6F0EF] rounded-full mx-auto flex items-center justify-center">
+          <span className="text-[#0F766E] font-bold">{phase.label}</span>
+        </div>
+        <p className="text-sm text-neutral-600 font-medium">{phase.hint}</p>
       </div>
     </div>
   );

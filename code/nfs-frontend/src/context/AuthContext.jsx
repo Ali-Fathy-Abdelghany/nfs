@@ -1,21 +1,17 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { getStoredUser } from '../api/config';
 import { clearAuthSession, logout as apiLogout, persistAuthSession } from '../api/auth';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+function readStoredToken() {
+  return localStorage.getItem('token') || localStorage.getItem('accessToken') || null;
+}
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token') || localStorage.getItem('accessToken');
-    const storedUser = getStoredUser();
-    if (storedToken) {
-      setToken(storedToken);
-      setUser(storedUser);
-    }
-  }, []);
+export const AuthProvider = ({ children }) => {
+  // Hydrate synchronously so first paint after refresh is already authenticated
+  const [user, setUser] = useState(() => getStoredUser());
+  const [token, setToken] = useState(() => readStoredToken());
 
   const login = (loginResponse) => {
     const { user: authUser, accessToken } = persistAuthSession(loginResponse);

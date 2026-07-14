@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
-import { Sparkles, Clock, CalendarCheck, Play, BookOpen, Award, TrendingUp, X } from 'lucide-react';
+import { Sparkles, Clock, CalendarCheck, Play, BookOpen, Award, TrendingUp, X, ChevronDown } from 'lucide-react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { fetchUserProfile, updateUserProfile } from '../api/users';
@@ -10,16 +10,13 @@ import { fetchPatientAppointments } from '../api/appointments';
 import { fetchDiariesByPatient } from '../api/diaries';
 import { ensurePatientRecord } from '../api/patientHelpers';
 import { useAuth } from '../context/AuthContext';
+import {
+  AVATAR_OPTIONS_PRIMARY,
+  AVATAR_OPTIONS_MORE,
+  userAvatarUrl,
+} from '../utils/userAvatar';
 
 const daysOfWeek = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-
-const AVATAR_OPTIONS = [
-  'https://api.dicebear.com/7.x/lorelei/svg?seed=Amina&backgroundColor=dbeafe',
-  'https://api.dicebear.com/7.x/lorelei/svg?seed=Youssef&backgroundColor=ede9fe',
-  'https://api.dicebear.com/7.x/lorelei/svg?seed=Laila&backgroundColor=e0f2fe',
-  'https://api.dicebear.com/7.x/lorelei/svg?seed=Karim&backgroundColor=fef3c7',
-  'https://api.dicebear.com/7.x/lorelei/svg?seed=Nour&backgroundColor=fce7f3',
-];
 
 const MOOD_SCORE = {
   سعيد: 9,
@@ -90,7 +87,8 @@ function ProfileProgress() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
-  const [currentAvatar, setCurrentAvatar] = useState(AVATAR_OPTIONS[0]);
+  const [showMoreAvatars, setShowMoreAvatars] = useState(false);
+  const [currentAvatar, setCurrentAvatar] = useState(AVATAR_OPTIONS_PRIMARY[0]);
 
   useEffect(() => {
     let cancelled = false;
@@ -115,13 +113,10 @@ function ProfileProgress() {
 
         const profileData = profileRes.data;
         setProfile(profileData);
-        if (profileData?.profileImageUrl) {
-          setCurrentAvatar(profileData.profileImageUrl);
-        } else if (profileData?.firstName) {
-          setCurrentAvatar(
-            `https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(profileData.firstName)}&backgroundColor=dbeafe`
-          );
-        }
+        const name = `${profileData?.firstName || ''} ${profileData?.lastName || ''}`.trim();
+        setCurrentAvatar(
+          userAvatarUrl(userId || profileData?.userId, profileData?.profileImageUrl, name || profileData?.firstName)
+        );
 
         setAppointments(appointmentsRes.data || []);
         setDiaries(diariesRes.data || []);
@@ -270,16 +265,28 @@ function ProfileProgress() {
   const handleAvatarSelect = async (avatarUrl) => {
     setCurrentAvatar(avatarUrl);
     setShowAvatarPicker(false);
+    setShowMoreAvatars(false);
     try {
+      const firstName = profile?.firstName || user?.firstName || 'User';
+      const lastName = (profile?.lastName || user?.lastName || '').trim() || firstName;
       await updateUserProfile({
-        firstName: profile?.firstName || user?.firstName || 'User',
-        lastName: profile?.lastName || user?.lastName || '',
+        firstName,
+        lastName,
         phone: profile?.phone || null,
         profileImageUrl: avatarUrl,
         country: profile?.country || null,
         governorate: profile?.governorate || null,
       });
       setProfile((prev) => (prev ? { ...prev, profileImageUrl: avatarUrl } : prev));
+      try {
+        const stored = JSON.parse(localStorage.getItem('user') || '{}');
+        localStorage.setItem(
+          'user',
+          JSON.stringify({ ...stored, profileImageUrl: avatarUrl })
+        );
+      } catch {
+        // ignore storage errors
+      }
     } catch (err) {
       console.error(err);
     }
@@ -312,7 +319,13 @@ function ProfileProgress() {
 
             <div className="relative">
               <button
-                onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+                type="button"
+                onClick={() => {
+                  setShowAvatarPicker((open) => {
+                    if (open) setShowMoreAvatars(false);
+                    return !open;
+                  });
+                }}
                 className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#0F766E]/20 hover:scale-105 transition-all focus:outline-none bg-white shadow-sm flex items-center justify-center"
                 title="اضغط لتغيير الأفاتار"
               >
@@ -320,18 +333,49 @@ function ProfileProgress() {
               </button>
 
               {showAvatarPicker && (
-                <div className="absolute top-20 left-0 bg-white border border-neutral-200 rounded-2xl p-2.5 shadow-xl z-20 flex gap-2 justify-center items-center min-w-[240px]">
-                  {AVATAR_OPTIONS.map((avatarUrl, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleAvatarSelect(avatarUrl)}
-                      className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all hover:scale-110 ${
-                        currentAvatar === avatarUrl ? 'border-[#0F766E]' : 'border-transparent'
-                      }`}
-                    >
-                      <img src={avatarUrl} alt="Avatar option" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
+                <div className="absolute top-20 left-0 bg-white border border-neutral-200 rounded-2xl p-3 shadow-xl z-20 w-[280px] space-y-2.5">
+                  <div className="flex gap-2 justify-center items-center flex-wrap">
+                    {AVATAR_OPTIONS_PRIMARY.map((avatarUrl) => (
+                      <button
+                        key={avatarUrl}
+                        type="button"
+                        onClick={() => handleAvatarSelect(avatarUrl)}
+                        className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all hover:scale-110 ${
+                          currentAvatar === avatarUrl ? 'border-[#0F766E]' : 'border-transparent'
+                        }`}
+                      >
+                        <img src={avatarUrl} alt="Avatar option" className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowMoreAvatars((v) => !v)}
+                    className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-[#0F766E] hover:bg-[#0F766E]/5 rounded-xl py-2 transition-colors"
+                  >
+                    <span>{showMoreAvatars ? 'إخفاء المزيد' : 'المزيد من الأفاتارات'}</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform ${showMoreAvatars ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+
+                  {showMoreAvatars && (
+                    <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto pt-0.5 border-t border-neutral-100">
+                      {AVATAR_OPTIONS_MORE.map((avatarUrl) => (
+                        <button
+                          key={avatarUrl}
+                          type="button"
+                          onClick={() => handleAvatarSelect(avatarUrl)}
+                          className={`w-9 h-9 mx-auto rounded-full overflow-hidden border-2 transition-all hover:scale-110 ${
+                            currentAvatar === avatarUrl ? 'border-[#0F766E]' : 'border-transparent'
+                          }`}
+                        >
+                          <img src={avatarUrl} alt="Avatar option" className="w-full h-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

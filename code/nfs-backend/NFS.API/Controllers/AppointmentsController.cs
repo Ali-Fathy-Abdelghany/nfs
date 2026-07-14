@@ -135,11 +135,15 @@ namespace NFS.API.Controllers
 
             try
             {
+                // Store as wall-clock (Unspecified) to match seeded slots and doctor UI hours.
+                var start = DateTime.SpecifyKind(dto.StartTime, DateTimeKind.Unspecified);
+                var end = DateTime.SpecifyKind(dto.EndTime, DateTimeKind.Unspecified);
+
                 var slot = await _appointmentRepository.CreateAvailabilitySlotAsync(new AvailabilitySlot
                 {
                     DoctorId = dto.DoctorId,
-                    StartTime = dto.StartTime,
-                    EndTime = dto.EndTime,
+                    StartTime = start,
+                    EndTime = end,
                     IsBooked = false
                 });
 

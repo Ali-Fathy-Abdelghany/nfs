@@ -59,7 +59,8 @@ namespace NFS.Infrastructure.Repositories
 
         public async Task<IEnumerable<PatientAppointmentDto>> GetPatientAppointmentsDetailedAsync(int patientId)
         {
-            var appointments = await GetAppointmentsByPatientIdAsync(patientId);
+            var appointments = (await GetAppointmentsByPatientIdAsync(patientId)).ToList();
+            var paidIds = await ConfirmPaidAppointmentsAsync(appointments);
 
             return appointments.Select(a =>
             {
@@ -80,7 +81,10 @@ namespace NFS.Infrastructure.Repositories
                     DoctorName = a.Therapist?.User != null
                         ? $"{a.Therapist.User.FirstName} {a.Therapist.User.LastName}"
                         : "المعالج النفسي",
+                    DoctorImageUrl = a.Therapist?.User?.ProfileImageUrl,
                     Status = a.Status,
+                    IsPaid = paidIds.Contains(a.Id)
+                             || string.Equals(a.Status, "Confirmed", StringComparison.OrdinalIgnoreCase),
                     ScheduledStartTime = a.AvailabilitySlot?.StartTime,
                     ScheduledEndTime = a.AvailabilitySlot?.EndTime,
                     CreatedAt = a.CreatedAt,
@@ -103,6 +107,8 @@ namespace NFS.Infrastructure.Repositories
                 .Where(a => a.DoctorId == doctorId)
                 .OrderByDescending(a => a.CreatedAt)
                 .ToListAsync();
+
+            var paidIds = await ConfirmPaidAppointmentsAsync(appointments);
 
             return appointments.Select(a =>
             {
@@ -127,6 +133,8 @@ namespace NFS.Infrastructure.Repositories
                     PatientNotes = a.Patient?.Notes ?? a.Patient?.MedicalHistory,
                     DoctorId = a.DoctorId,
                     Status = a.Status,
+                    IsPaid = paidIds.Contains(a.Id)
+                             || string.Equals(a.Status, "Confirmed", StringComparison.OrdinalIgnoreCase),
                     ScheduledStartTime = a.AvailabilitySlot?.StartTime,
                     ScheduledEndTime = a.AvailabilitySlot?.EndTime,
                     CreatedAt = a.CreatedAt,
@@ -137,6 +145,95 @@ namespace NFS.Infrastructure.Repositories
                     Type = "أونلاين"
                 };
             }).ToList();
+        }
+
+        /// <summary>
+        /// Heal appointments that stay Pending after a successful payment (legacy / missed confirm).
+        /// Returns appointment ids that have a matching Paid payment.
+        /// </summary>
+        private async Task<HashSet<int>> ConfirmPaidAppointmentsAsync(IList<Appointment> appointments)
+        {
+            var paidIds = new HashSet<int>();
+            if (appointments.Count == 0) return paidIds;
+
+            var allIds = appointments.Select(a => a.Id).ToList();
+            var patientIds = appointments.Select(a => a.PatientId).Distinct().ToList();
+
+            var paidByAppointment = await _context.Payments
+                .AsNoTracking()
+                .Where(p => p.AppointmentId.HasValue
+                            && allIds.Contains(p.AppointmentId.Value)
+                            && p.Status == "Paid")
+                .Select(p => p.AppointmentId!.Value)
+                .Distinct()
+                .ToListAsync();
+
+            foreach (var id in paidByAppointment)
+                paidIds.Add(id);
+
+            var paidPairs = await _context.Payments
+                .AsNoTracking()
+                .Where(p => patientIds.Contains(p.PatientId)
+                            && p.Status == "Paid"
+                            && p.DoctorId.HasValue
+                            && (p.AppointmentId == null || allIds.Contains(p.AppointmentId.Value)))
+                .Select(p => new { p.PatientId, DoctorId = p.DoctorId!.Value, p.AppointmentId })
+                .ToListAsync();
+
+            var dirty = false;
+            // Unlinked Paid payments: confirm at most one Pending appointment per payment (newest first).
+            var claimedUnlinkedKeys = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var appointment in appointments
+                         .OrderByDescending(a => a.CreatedAt))
+            {
+                var linkedPaid = paidIds.Contains(appointment.Id)
+                                 || paidPairs.Any(p => p.AppointmentId == appointment.Id);
+
+                string? unlinkedKey = null;
+                if (!linkedPaid)
+                {
+                    var hasUnlinked = paidPairs.Any(p =>
+                        p.AppointmentId == null
+                        && p.PatientId == appointment.PatientId
+                        && p.DoctorId == appointment.DoctorId);
+                    if (hasUnlinked)
+                    {
+                        unlinkedKey = $"{appointment.PatientId}:{appointment.DoctorId}";
+                        if (claimedUnlinkedKeys.Contains(unlinkedKey))
+                            hasUnlinked = false;
+                    }
+
+                    if (!hasUnlinked) continue;
+                }
+
+                paidIds.Add(appointment.Id);
+                if (unlinkedKey != null)
+                    claimedUnlinkedKeys.Add(unlinkedKey);
+
+                if (string.Equals(appointment.Status, "Pending", StringComparison.OrdinalIgnoreCase))
+                {
+                    appointment.Status = "Confirmed";
+                    dirty = true;
+                }
+
+                var unlinked = await _context.Payments
+                    .Where(p => p.PatientId == appointment.PatientId
+                                && p.DoctorId == appointment.DoctorId
+                                && p.Status == "Paid"
+                                && p.AppointmentId == null)
+                    .OrderByDescending(p => p.PaidAt ?? p.CreatedAt)
+                    .FirstOrDefaultAsync();
+                if (unlinked != null)
+                {
+                    unlinked.AppointmentId = appointment.Id;
+                    dirty = true;
+                }
+            }
+
+            if (dirty)
+                await _context.SaveChangesAsync();
+
+            return paidIds;
         }
 
         public async Task UpdateAppointmentStatusAsync(int appointmentId, string status)
@@ -172,6 +269,10 @@ namespace NFS.Infrastructure.Repositories
             if (appointment == null) return false;
 
             appointment.Status = "Cancelled";
+
+            var slot = await _context.AvailabilitySlots.FindAsync(appointment.SlotId);
+            if (slot != null)
+                slot.IsBooked = false;
 
             await _context.SaveChangesAsync();
             return true;

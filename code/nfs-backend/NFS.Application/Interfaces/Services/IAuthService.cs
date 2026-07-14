@@ -11,5 +11,6 @@ namespace NFS.Application.Interfaces.Services
         Task<LoginResponseDto?> RefreshTokenAsync(RefreshTokenDto dto);
         Task<string?> ForgotPasswordAsync(ForgotPasswordDto dto);
         Task<bool> ResetPasswordAsync(ResetPasswordDto dto);
+        Task<LoginResponseDto?> ExternalLoginGoogleAsync(GoogleExternalLoginDto dto);
     }
 }

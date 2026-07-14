@@ -8,6 +8,7 @@ namespace NFS.Application.Interfaces.Data
         DbSet<User> Users { get; }
         DbSet<Role> Roles { get; }
         DbSet<UserRoleMapping> UserRoles { get; }
+        DbSet<ExternalLogin> ExternalLogins { get; }
         DbSet<Patient> Patients { get; }
         DbSet<Therapist> Therapists { get; }
         DbSet<Assessment> Assessments { get; }

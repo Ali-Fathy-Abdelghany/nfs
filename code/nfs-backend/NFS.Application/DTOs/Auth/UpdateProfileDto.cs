@@ -21,7 +21,7 @@ namespace NFS.Application.DTOs
 
         public DateTime? DateOfBirth { get; set; }
 
-        [MaxLength(500)]
+        [MaxLength(1000)]
         public string? ProfileImageUrl { get; set; }
 
         [MaxLength(100)]

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useChatHub } from "../hooks/useChatHub";
 import { useAuth } from "../context/AuthContext";
 import { fetchChatHistory, fetchChatRooms, createChatRoom, joinChatRoom, leaveChatRoom, mapRoomFromApi } from "../api/chat";
+import { fetchUserProfile } from "../api/users";
+import { userAvatarUrl } from "../utils/userAvatar";
 import {
     Send,
     Search,
@@ -26,12 +28,35 @@ function Chats() {
     const [activeRoomId, setActiveRoomId] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [inputMsg, setInputMsg] = useState("");
+    const [myAvatarUrl, setMyAvatarUrl] = useState(null);
+    const [myDisplayName, setMyDisplayName] = useState("");
 
     const messagesEndRef = useRef(null);
     const [conversations, setConversations] = useState({});
 
     const userId = user?.userId || user?.id;
-    const { messages, connectionRef, connectionStatus, joinGroup, leaveGroup, sendMessage } = useChatHub(userId);
+    const { messages, connectionStatus, joinGroup, leaveGroup, sendMessage, setMessages } = useChatHub(userId);
+
+    useEffect(() => {
+        let cancelled = false;
+        async function loadMe() {
+            try {
+                const res = await fetchUserProfile();
+                if (cancelled) return;
+                const p = res.data;
+                const name = `${p?.firstName || user?.firstName || ""} ${p?.lastName || user?.lastName || ""}`.trim();
+                setMyDisplayName(name || "أنت");
+                setMyAvatarUrl(userAvatarUrl(userId, p?.profileImageUrl || user?.profileImageUrl, name));
+            } catch {
+                if (cancelled) return;
+                const name = `${user?.firstName || ""} ${user?.lastName || ""}`.trim();
+                setMyDisplayName(name || "أنت");
+                setMyAvatarUrl(userAvatarUrl(userId, user?.profileImageUrl, name));
+            }
+        }
+        if (userId) loadMe();
+        return () => { cancelled = true; };
+    }, [userId, user?.firstName, user?.lastName, user?.profileImageUrl]);
 
     const loadRooms = async () => {
         try {
@@ -94,78 +119,124 @@ function Chats() {
     const discoverRooms = rooms.filter(r => !r.joined && (searchQuery ? r.name.includes(searchQuery) : true));
     const selectedRoom = rooms.find((r) => r.id === activeRoomId) || rooms[0];
 
+    /** Normalize REST / SignalR payloads (camelCase or PascalCase). */
+    const readSender = (msg) => ({
+        id: msg.id ?? msg.Id,
+        senderId: msg.senderId ?? msg.SenderId,
+        senderName: msg.senderName ?? msg.SenderName,
+        senderAvatarUrl: msg.senderAvatarUrl ?? msg.SenderAvatarUrl,
+        content: msg.content ?? msg.Content ?? msg.text,
+        timestamp: msg.timestamp ?? msg.Timestamp,
+        roomId: msg.roomId ?? msg.RoomId,
+    });
+
+    const mapHistoryMessage = (msg) => {
+        const m = readSender(msg);
+        const isMe = String(m.senderId) === String(userId);
+        const name = isMe
+            ? "أنت"
+            : (m.senderName || "عضو");
+        return {
+            id: m.id,
+            senderId: m.senderId,
+            sender: isMe ? "me" : "other",
+            senderName: name,
+            // Seed by senderId so «عضو» labels never share one doodle.
+            avatarUrl: userAvatarUrl(
+                m.senderId,
+                m.senderAvatarUrl || (isMe ? myAvatarUrl : null),
+                m.senderName || name
+            ),
+            text: m.content,
+            time: new Date(m.timestamp).toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" }),
+            roomId: m.roomId,
+        };
+    };
+
     useEffect(() => {
         if (!activeRoomId) return;
         fetchChatHistory(activeRoomId)
             .then((res) => {
-                const history = (res.data || []).map((msg) => ({
-                    id: msg.id,
-                    sender: String(msg.senderId) === String(user?.userId || user?.id) ? 'me' : 'other',
-                    senderName: String(msg.senderId) === String(user?.userId || user?.id) ? 'أنت' : 'عضو',
-                    avatar: String(msg.senderId) === String(user?.userId || user?.id) ? '🦁' : '🐰',
-                    text: msg.content,
-                    time: new Date(msg.timestamp).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
-                    roomId: msg.roomId,
-                }));
+                const history = (res.data || []).map(mapHistoryMessage);
                 setConversations((prev) => ({ ...prev, [activeRoomId]: history }));
+                setMessages([]);
             })
             .catch(console.error);
-    }, [activeRoomId, user]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeRoomId, userId, myAvatarUrl]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [conversations, activeRoomId]);
+    }, [conversations, activeRoomId, messages]);
 
-  // Join the active room when connection is ready
-  useEffect(() => {
-    if (connectionStatus === 'connected' && activeRoomId) {
-      joinGroup(activeRoomId);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectionStatus, activeRoomId]);
+    useEffect(() => {
+        if (connectionStatus === "connected" && activeRoomId) {
+            joinGroup(activeRoomId);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connectionStatus, activeRoomId]);
 
-  const activeMessages = [
-    ...(conversations[activeRoomId] || []),
-    ...messages
-      .filter((msg) => msg.roomId === activeRoomId || msg.RoomId === activeRoomId)
-      .map((msg) => ({
-        id: msg.id || Date.now(),
-        sender: 'other',
-        senderName: msg.senderName || 'عضو',
-        avatar: msg.avatar || '🐰',
-        text: msg.content || msg.text,
-        time: msg.time || new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
-      })),
-  ];
+    const liveMessages = useMemo(() => {
+        return messages
+            .map(readSender)
+            .filter((msg) => msg.roomId === activeRoomId)
+            // Own messages are added optimistically; skip hub echoes for self.
+            .filter((msg) => String(msg.senderId) !== String(userId))
+            .map((msg) => {
+                const name = msg.senderName || "عضو";
+                return {
+                    id: msg.id || `${msg.timestamp}-${msg.senderId}`,
+                    senderId: msg.senderId,
+                    sender: "other",
+                    senderName: name,
+                    avatarUrl: userAvatarUrl(msg.senderId, msg.senderAvatarUrl, msg.senderName || name),
+                    text: msg.content,
+                    time: new Date(msg.timestamp || Date.now()).toLocaleTimeString("ar-EG", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    }),
+                };
+            });
+    }, [messages, activeRoomId, userId]);
 
-  const handleSendMessage = (e) => {
-    if (e) e.preventDefault();
-    if (!inputMsg.trim()) return;
-    const text = inputMsg;
-    setInputMsg("");
-    const timestamp = new Date().toLocaleTimeString("ar-EG", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const userMsg = {
-      id: Date.now(),
-      sender: "me",
-      senderName: "أنت (الأسد الشجاع)",
-      avatar: "🦁",
-      text: text,
-      time: timestamp,
+    const activeMessages = [
+        ...(conversations[activeRoomId] || []),
+        ...liveMessages,
+    ];
+
+    const handleSendMessage = (e) => {
+        if (e) e.preventDefault();
+        if (!inputMsg.trim() || !activeRoomId) return;
+        const text = inputMsg;
+        setInputMsg("");
+        const timestamp = new Date().toLocaleTimeString("ar-EG", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        const localId = `local-${Date.now()}`;
+        const userMsg = {
+            id: localId,
+            senderId: userId,
+            sender: "me",
+            senderName: "أنت",
+            avatarUrl: myAvatarUrl || userAvatarUrl(userId, user?.profileImageUrl, myDisplayName),
+            text,
+            time: timestamp,
+        };
+        setConversations((prev) => ({
+            ...prev,
+            [activeRoomId]: [...(prev[activeRoomId] || []), userMsg],
+        }));
+        if (connectionStatus === "connected") {
+            sendMessage(activeRoomId, text);
+        }
     };
-    setConversations((prev) => ({
-      ...prev,
-      [activeRoomId]: [...(prev[activeRoomId] || []), userMsg],
-    }));
-    // Send via SignalR
-    if (connectionStatus === "connected" && connectionRef.current) {
-      sendMessage(activeRoomId, "أنت (الأسد الشجاع)", text);
-    }
-  };
 
-// Duplicate block removed – using SignalR‑based activeMessages and handleSendMessage defined earlier
+    const renderAvatar = (avatarUrl, label) => (
+        <div className="w-8 h-8 rounded-full bg-white border border-slate-200/80 overflow-hidden shrink-0 shadow-2xs">
+            <img src={avatarUrl} alt={label || ""} className="w-full h-full object-cover" />
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-700 font-sans selection:bg-teal-100" dir="rtl">
@@ -175,10 +246,8 @@ function Chats() {
                 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start mt-2">
                     
-                    {/* العمود الأيمن (التحكم الجانبي والمساحات) */}
                     <div className="lg:col-span-1 space-y-4 order-2 lg:order-1">
                         
-                        {/* حقل البحث */}
                         <div className="relative bg-white rounded-xl border border-slate-200/60 p-1.5 flex items-center shadow-xs">
                             <Search size={18} className="text-slate-400 mr-3 shrink-0" />
                             <input
@@ -190,7 +259,6 @@ function Chats() {
                             />
                         </div>
 
-                        {/* قائمة مساحاتي */}
                         <div className="bg-white rounded-2xl border border-slate-200/60 shadow-xs p-4">
                             <h3 className="text-xs font-bold text-slate-400 mb-3 tracking-wider text-right">مساحاتي</h3>
                             <div className="space-y-2 max-h-[220px] overflow-y-auto pl-1">
@@ -226,7 +294,6 @@ function Chats() {
                             </div>
                         </div>
 
-                        {/* استكشاف مساحات جديدة */}
                         <div className="bg-white rounded-2xl border border-slate-200/60 shadow-xs p-4">
                             <h3 className="text-xs font-bold text-slate-400 mb-3 tracking-wider text-right">استكشف مساحات جديدة</h3>
                             <div className="space-y-2 max-h-[220px] overflow-y-auto pl-1">
@@ -264,13 +331,11 @@ function Chats() {
                         </button>
                     </div>
 
-                    {/* العمود الأيسر (نافذة الدردشة الكاملة) */}
                     <div className="lg:col-span-2 space-y-4 order-1 lg:order-2">
                         <div className="bg-white rounded-2xl border border-slate-200/60 shadow-xs overflow-hidden h-[580px] flex flex-col justify-between">
                             {selectedRoom ? (
                             selectedRoom.joined ? (
                                 <>
-                                    {/* هيدر المحادثة */}
                                     <div className="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-white z-10 shadow-2xs">
                                         <div className="flex items-center gap-2.5">
                                             <span className="text-2xl">{selectedRoom.avatar}</span>
@@ -284,7 +349,6 @@ function Chats() {
                                         </button>
                                     </div>
 
-                                    {/* مسار تدفق الرسائل */}
                                     <div className="flex-1 overflow-y-auto p-4 bg-slate-50/40 space-y-4">
                                         {activeMessages.map((msg) => {
                                             if (msg.isTip) {
@@ -299,10 +363,7 @@ function Chats() {
                                             const isMe = msg.sender === "me";
                                             return (
                                                 <div key={msg.id} className={`flex gap-2.5 max-w-[80%] ${isMe ? "ml-auto" : "mr-auto flex-row-reverse"}`}>
-                                                    
-                                                    <div className="w-8 h-8 rounded-full bg-white border border-slate-200/80 flex items-center justify-center shrink-0 text-base shadow-2xs">
-                                                        {msg.avatar}
-                                                    </div>
+                                                    {renderAvatar(msg.avatarUrl, msg.senderName)}
 
                                                     <div className="space-y-1">
                                                         <div className={`p-3 rounded-2xl text-sm leading-relaxed shadow-2xs ${
@@ -322,7 +383,6 @@ function Chats() {
                                         <div ref={messagesEndRef} />
                                     </div>
 
-                                    {/* شريط الإدخال السفلي */}
                                     <div className="p-3 border-t border-slate-100 bg-white flex items-center gap-2">
                                         <div className="flex-1 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-1 flex items-center justify-between focus-within:border-teal-500/40 focus-within:ring-2 focus-within:ring-teal-50 transition">
                                             <button className="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
@@ -366,7 +426,6 @@ function Chats() {
                             )}
                         </div>
 
-                        {/* بطاقة التنبيه الأمني السفلي */}
                         <div className="bg-emerald-50/40 border border-emerald-100/50 rounded-2xl p-4 flex gap-3.5 items-center">
                             <div className="w-9 h-9 bg-white border border-emerald-100 text-teal-600 shadow-2xs rounded-xl flex items-center justify-center shrink-0">
                                 <ShieldCheck size={20} />

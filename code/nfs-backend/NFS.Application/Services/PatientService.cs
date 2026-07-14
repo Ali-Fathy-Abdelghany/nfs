@@ -23,6 +23,26 @@ namespace NFS.Application.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<PatientDto>> GetPatientsByDoctorIdAsync(int doctorId)
+        {
+            var patientIds = await _context.Appointments
+                .Where(a => a.DoctorId == doctorId
+                            && a.Status != "Cancelled"
+                            && a.Status != "CANCELLED")
+                .Select(a => a.PatientId)
+                .Distinct()
+                .ToListAsync();
+
+            if (patientIds.Count == 0)
+                return Array.Empty<PatientDto>();
+
+            return await _context.Patients
+                .Include(p => p.User)
+                .Where(p => patientIds.Contains(p.PatientId))
+                .Select(p => MapToDto(p))
+                .ToListAsync();
+        }
+
         public async Task<PatientDto?> GetPatientByIdAsync(int id)
         {
             var patient = await _context.Patients

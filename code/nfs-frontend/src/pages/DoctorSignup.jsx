@@ -3,9 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Input from '../components/ui/Input';
 import { register, login } from '../api/auth';
 import { createTherapist } from '../api/therapists';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
+import { getApiErrorMessage } from '../utils/apiError';
 
 const DoctorSignup = () => {
   const navigate = useNavigate();
+  const { login: setAuth } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -28,6 +33,19 @@ const DoctorSignup = () => {
 
   const handleSubmit = async () => {
     setError('');
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.password) {
+      const msg = 'أدخل الاسم والبريد وكلمة المرور';
+      setError(msg);
+      toast.warning(msg);
+      return;
+    }
+    if (!formData.specialty.trim()) {
+      const msg = 'أدخل التخصص قبل إرسال الطلب';
+      setError(msg);
+      toast.warning(msg);
+      return;
+    }
+
     setLoading(true);
     try {
       const [firstName = '', ...rest] = formData.fullName.trim().split(/\s+/);
@@ -48,9 +66,14 @@ const DoctorSignup = () => {
       };
       await register(registerPayload);
       const loginResult = await login({ email: formData.email, password: formData.password });
+      if (!loginResult?.accessToken) {
+        throw new Error('فشل تسجيل الدخول بعد إنشاء الحساب');
+      }
+      // Persist session before authenticated API calls / verification page
+      setAuth(loginResult);
       const userId = loginResult.userId;
 
-      await createTherapist({
+      const { data: therapist } = await createTherapist({
         userId,
         specialization: formData.specialty,
         bio: formData.bio,
@@ -59,10 +82,18 @@ const DoctorSignup = () => {
         qualifications: formData.license,
       });
 
+      setAuth({
+        ...loginResult,
+        therapistId: therapist?.therapistId ?? loginResult.therapistId,
+      });
+
+      toast.success('تم إنشاء الحساب — أكمل خطوات التوثيق');
       navigate('/verification');
     } catch (err) {
       console.error(err);
-      setError(err.message || 'فشل إنشاء الحساب المهني');
+      const msg = getApiErrorMessage(err, err.message || 'فشل إنشاء الحساب المهني');
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ import { fetchPatientById, fetchPatientMedicalHistory } from '../api/patients';
 import { fetchPatientAppointments } from '../api/appointments';
 import { fetchDiariesByPatient } from '../api/diaries';
 import { fetchUserSessions } from '../api/sessions';
+import { userAvatarUrl } from '../utils/userAvatar';
 
 const WEEKDAY_AR = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
@@ -303,7 +304,11 @@ function PatientProfile() {
                     <div className="bg-white rounded-[24px] border border-[#E6E9E9] shadow-3xs p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300 hover:shadow-2xs">
                         <div className="flex items-center gap-4 text-right">
                             <img
-                                src={patient?.profileImageUrl || patientFromState?.img || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150'}
+                                src={userAvatarUrl(
+                                  patient?.userId || patientFromState?.userId,
+                                  patient?.profileImageUrl || patientFromState?.profileImageUrl,
+                                  patientName || patientFromState?.name
+                                )}
                                 alt="بروفايل المريض"
                                 className="w-16 h-16 rounded-[20px] object-cover border border-[#E6E9E9]"
                             />

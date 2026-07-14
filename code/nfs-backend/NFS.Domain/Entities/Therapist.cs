@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NFS.Domain.Enums;
 
 namespace NFS.Domain.Entities
 {
@@ -16,6 +17,11 @@ namespace NFS.Domain.Entities
         public decimal Rating { get; set; }
         public string? Qualifications { get; set; }
         public bool IsVerified { get; set; }
+
+        /// <summary>Application workflow status (Pending / Approved / Rejected / …).</summary>
+        public TherapistStatus Status { get; set; } = TherapistStatus.Pending;
+        public string? RejectionReason { get; set; }
+        public DateTime? VerifiedAt { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }

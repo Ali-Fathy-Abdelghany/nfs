@@ -29,6 +29,7 @@ namespace NFS.Domain.Entities
         public string? EmailVerificationToken { get; set; }
 
         public ICollection<UserRoleMapping> UserRoles { get; set; } = new List<UserRoleMapping>();
+        public ICollection<ExternalLogin> ExternalLogins { get; set; } = new List<ExternalLogin>();
         public Therapist? Therapist { get; set; }
         public Patient? Patient { get; set; }
     }

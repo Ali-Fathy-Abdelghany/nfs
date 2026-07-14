@@ -2,7 +2,10 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from "../../components/layout/Header";
 import Sidebar from '../../Components/Sidebar/Sidebar';
-import { fetchPatients } from '../../api/patients';
+import { fetchPatientsByDoctor } from '../../api/patients';
+import { fetchTherapistByUserId } from '../../api/therapists';
+import { useAuth } from '../../context/AuthContext';
+import { userAvatarUrl } from '../../utils/userAvatar';
 import './Patients.css';
 
 const STATUS_FILTERS = ['الكل', 'نشط', 'في إجازة', 'مكتمل'];
@@ -11,17 +14,20 @@ const SORT_OPTIONS = [
   { value: 'name', label: 'الاسم (أبجدي)' },
   { value: 'sessions', label: 'عدد الجلسات' },
 ];
+const PAGE_SIZE = 10;
 
 const statusClass = (status) =>
   status === 'نشط' ? 'text-active' : status === 'في إجازة' ? 'text-vacation' : 'text-completed';
 
 function mapPatient(p) {
+  const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
   return {
     id: p.patientId,
     patientId: p.patientId,
     userId: p.userId,
-    name: `${p.firstName} ${p.lastName}`,
-    img: p.profileImageUrl || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+    name,
+    img: userAvatarUrl(p.userId, p.profileImageUrl, name),
+    profileImageUrl: p.profileImageUrl || null,
     condition: p.medicalHistory || p.notes || 'متابعة نفسية',
     medicalHistory: p.medicalHistory,
     notes: p.notes,
@@ -38,20 +44,60 @@ function mapPatient(p) {
 
 function Patients() {
   const navigate = useNavigate();
+  const { user } = useAuth() || {};
   const viewProfile = (patient) => navigate('/doctor/patient-profile', { state: { patient } });
 
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [myRating, setMyRating] = useState('—');
   const [activeStatus, setActiveStatus] = useState('الكل');
   const [sortBy, setSortBy] = useState('latest');
   const [sortOpen, setSortOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchPatients()
-      .then((res) => setPatients((res.data || []).map(mapPatient)))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
+    const role = localStorage.getItem('userRole');
+    if (role === 'admin') {
+      navigate('/admin');
+      return undefined;
+    }
+
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        let doctorId = user?.therapistId;
+        if (!doctorId && user?.userId) {
+          const t = await fetchTherapistByUserId(user.userId);
+          doctorId = t.data?.therapistId;
+        }
+        if (!doctorId) {
+          if (!cancelled) setPatients([]);
+          return;
+        }
+        const res = await fetchPatientsByDoctor(doctorId);
+        if (!cancelled) setPatients((res.data || []).map(mapPatient));
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setPatients([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [navigate, user?.therapistId, user?.userId]);
+
+  useEffect(() => {
+    const userId = user?.userId;
+    if (!userId) return;
+    fetchTherapistByUserId(userId)
+      .then((res) => {
+        const r = res.data?.rating;
+        setMyRating(r != null && Number(r) > 0 ? Number(r).toFixed(1) : '—');
+      })
+      .catch(() => setMyRating('—'));
+  }, [user?.userId]);
 
   const visiblePatients = useMemo(() => {
     let list = patients.filter((p) => activeStatus === 'الكل' || p.status === activeStatus);
@@ -62,6 +108,26 @@ function Patients() {
     });
     return list;
   }, [activeStatus, sortBy, patients]);
+
+  const totalPages = Math.max(1, Math.ceil(visiblePatients.length / PAGE_SIZE) || 1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeStatus, sortBy, patients.length]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) setCurrentPage(totalPages);
+  }, [currentPage, totalPages]);
+
+  const pagedPatients = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visiblePatients.slice(start, start + PAGE_SIZE);
+  }, [visiblePatients, currentPage]);
+
+  const pageNumbers = useMemo(() => {
+    if (totalPages <= 1) return [1];
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }, [totalPages]);
 
   const activeSortLabel = SORT_OPTIONS.find((o) => o.value === sortBy)?.label;
 
@@ -96,7 +162,7 @@ function Patients() {
                 <div className="stat-card-box">
                   <div className="stat-card-info">
                     <span className="stat-card-title">متوسط التقييم</span>
-                    <h3 className="stat-card-number">4.8</h3>
+                    <h3 className="stat-card-number">{myRating}</h3>
                   </div>
                   <div className="stat-card-icon icon-rating"><i className="fa-solid fa-star"></i></div>
                 </div>
@@ -153,7 +219,7 @@ function Patients() {
                   <p className="patients-empty-text">لا يوجد مرضى في هذه الفئة</p>
                 )}
 
-                {visiblePatients.map((p) => (
+                {pagedPatients.map((p) => (
                   <div className="patient-wide-card" key={p.id}>
                     <div className="patient-card-main-info">
                       <div className="patient-avatar-wrapper">
@@ -191,22 +257,40 @@ function Patients() {
                 ))}
               </div>
 
-              <div className="patients-pagination-wrapper">
-                <div className="pagination-container">
-                  <button className="pagination-arrow-btn" disabled title="الصفحة السابقة">
-                    <i className="fa-solid fa-chevron-right"></i>
-                  </button>
-                  <button className="pagination-number-btn active">1</button>
-                  <button className="pagination-number-btn">2</button>
-                  <button className="pagination-number-btn">3</button>
-                  <button className="pagination-number-btn">4</button>
-                  <span className="pagination-ellipsis">...</span>
-                  <button className="pagination-number-btn">8</button>
-                  <button className="pagination-arrow-btn" title="الصفحة التالية">
-                    <i className="fa-solid fa-chevron-left"></i>
-                  </button>
+              {!loading && visiblePatients.length > 0 && totalPages > 1 && (
+                <div className="patients-pagination-wrapper">
+                  <div className="pagination-container">
+                    <button
+                      type="button"
+                      className="pagination-arrow-btn"
+                      disabled={currentPage <= 1}
+                      title="الصفحة السابقة"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    >
+                      <i className="fa-solid fa-chevron-right"></i>
+                    </button>
+                    {pageNumbers.map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        className={`pagination-number-btn ${currentPage === n ? 'active' : ''}`}
+                        onClick={() => setCurrentPage(n)}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      className="pagination-arrow-btn"
+                      disabled={currentPage >= totalPages}
+                      title="الصفحة التالية"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    >
+                      <i className="fa-solid fa-chevron-left"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
             </div>
           </section>

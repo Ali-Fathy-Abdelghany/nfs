@@ -1,4 +1,5 @@
 import axiosInstance from './axiosInstance';
+import { doctorAvatarUrl } from '../utils/doctorAvatar';
 
 export const fetchTherapists = () => axiosInstance.get('/api/therapists');
 export const fetchPendingTherapists = () => axiosInstance.get('/api/therapists/pending');
@@ -8,6 +9,8 @@ export const searchTherapists = (query) => axiosInstance.get('/api/therapists/se
 export const createTherapist = (data) => axiosInstance.post('/api/therapists', data);
 export const updateTherapist = (id, data) => axiosInstance.put(`/api/therapists/${id}`, data);
 export const approveTherapist = (id) => axiosInstance.post(`/api/therapists/${id}/approve`);
+export const rejectTherapist = (id, reason) =>
+  axiosInstance.post(`/api/therapists/${id}/reject`, { reason: reason || null });
 
 export function mapTherapistToProfile(t, fallbackImage) {
   const specialties = t.qualifications
@@ -15,6 +18,10 @@ export function mapTherapistToProfile(t, fallbackImage) {
     : t.specialization
       ? [t.specialization]
       : [];
+
+  const rawRating = t.rating ?? t.Rating;
+  const ratingNum = Number(rawRating);
+  const hasRating = Number.isFinite(ratingNum) && ratingNum > 0;
 
   return {
     therapistId: t.therapistId,
@@ -25,7 +32,9 @@ export function mapTherapistToProfile(t, fallbackImage) {
     specialty: t.specialization || '',
     availability: 'متاح للحجز',
     sessions: t.experienceYears ? `+${t.experienceYears * 40}` : '+40',
-    rating: t.rating != null ? Number(t.rating).toFixed(1) : '4.5',
+    rating: hasRating ? ratingNum.toFixed(1) : '—',
+    ratingValue: hasRating ? Math.min(5, ratingNum) : 0,
+    reviewCount: t.reviewCount ?? t.ReviewCount ?? 0,
     experience: t.experienceYears ? `${t.experienceYears} سنة` : '—',
     experienceYears: t.experienceYears || 0,
     hourlyRate: t.hourlyRate || 250,
@@ -34,6 +43,9 @@ export function mapTherapistToProfile(t, fallbackImage) {
     qualifications: t.qualifications || '',
     email: t.email,
     phone: t.phone,
-    image: t.profileImageUrl || fallbackImage,
+    image: doctorAvatarUrl(t.therapistId, t.profileImageUrl || fallbackImage),
+    isVerified: !!t.isVerified,
+    status: t.status || (t.isVerified ? 'Approved' : 'Pending'),
+    rejectionReason: t.rejectionReason || null,
   };
 }

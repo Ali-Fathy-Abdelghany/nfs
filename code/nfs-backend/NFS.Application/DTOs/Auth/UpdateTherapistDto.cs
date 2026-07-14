@@ -4,6 +4,15 @@ namespace NFS.Application.DTOs
 {
     public class UpdateTherapistDto
     {
+        [MaxLength(100)]
+        public string? FirstName { get; set; }
+
+        [MaxLength(100)]
+        public string? LastName { get; set; }
+
+        [MaxLength(30)]
+        public string? Phone { get; set; }
+
         [Required]
         [MaxLength(200)]
         public string Specialization { get; set; } = null!;

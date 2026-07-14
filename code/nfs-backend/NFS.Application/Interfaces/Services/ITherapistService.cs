@@ -11,5 +11,7 @@ namespace NFS.Application.Interfaces.Services
         Task<bool> UpdateTherapistAsync(int id, UpdateTherapistDto dto);
         Task<bool> DeleteTherapistAsync(int id);
         Task<bool> ApproveTherapistAsync(int id);
+        Task<bool> RejectTherapistAsync(int id, string? reason);
+        Task<IEnumerable<TherapistDto>> GetPendingTherapistsAsync();
     }
 }

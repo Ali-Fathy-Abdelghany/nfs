@@ -17,6 +17,7 @@ namespace NFS.Chat.Extensions
                 sp.GetRequiredService<IMongoClient>().GetDatabase(mongoSection.GetValue<string>("Database")));
             // Register chat repository
             services.AddSingleton<IChatRepository, ChatRepository>();
+            services.AddSingleton<NFS.Application.Interfaces.Repositories.ITherapistReviewRepository, TherapistReviewRepository>();
             services.AddSignalR();
             // MongoDB configuration can be applied here using mongoSection if needed.
             return services;

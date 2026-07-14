@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NFS.Domain.Entities;
+using NFS.Domain.Enums;
 using NFS.Application.Helpers;
 
 namespace NFS.Infrastructure.Data
@@ -8,8 +9,25 @@ namespace NFS.Infrastructure.Data
     {
         public static async Task SeedAsync(ApplicationDbContext context)
         {
-            await context.Database.MigrateAsync();
+            // Apply critical schema patches first so the API can start even if
+            // MigrateAsync blocks on PendingModelChangesWarning (handwritten migrations
+            // without an updated ModelSnapshot).
+            await EnsureTherapistAndReminderColumnsAsync(context);
+            await EnsureExternalLoginsTableAsync(context);
+
+            try
+            {
+                await context.Database.MigrateAsync();
+            }
+            catch (InvalidOperationException ex) when (
+                ex.Message.Contains("PendingModelChangesWarning", StringComparison.Ordinal))
+            {
+                // Schema already ensured above; continue seeding.
+            }
+
             await EnsurePaymentsTableAsync(context);
+            await EnsureTherapistAndReminderColumnsAsync(context);
+            await EnsureExternalLoginsTableAsync(context);
 
             if (!await context.Roles.AnyAsync())
             {
@@ -45,9 +63,10 @@ namespace NFS.Infrastructure.Data
                         Currency NVARCHAR(10) NOT NULL,
                         Status NVARCHAR(30) NOT NULL,
                         Provider NVARCHAR(50) NOT NULL,
-                        ProviderReference NVARCHAR(100) NULL,
-                        CheckoutUrl NVARCHAR(500) NULL,
+                        ProviderReference NVARCHAR(200) NULL,
+                        CheckoutUrl NVARCHAR(2000) NULL,
                         PlanType NVARCHAR(50) NULL,
+                        ExtraAppointmentIds NVARCHAR(200) NULL,
                         CreatedAt DATETIME2 NOT NULL,
                         PaidAt DATETIME2 NULL,
                         CONSTRAINT PK_Payments PRIMARY KEY (Id),
@@ -58,6 +77,76 @@ namespace NFS.Infrastructure.Data
                     CREATE INDEX IX_Payments_PatientId ON Payments(PatientId);
                     CREATE INDEX IX_Payments_DoctorId ON Payments(DoctorId);
                     CREATE INDEX IX_Payments_AppointmentId ON Payments(AppointmentId);
+                END
+                ELSE
+                BEGIN
+                    -- Paymob unified checkout URLs exceed 500 chars
+                    IF EXISTS (
+                        SELECT 1 FROM sys.columns
+                        WHERE object_id = OBJECT_ID(N'Payments') AND name = N'CheckoutUrl' AND max_length < 4000
+                    )
+                        ALTER TABLE Payments ALTER COLUMN CheckoutUrl NVARCHAR(2000) NULL;
+
+                    IF COL_LENGTH(N'Payments', N'ExtraAppointmentIds') IS NULL
+                        ALTER TABLE Payments ADD ExtraAppointmentIds NVARCHAR(200) NULL;
+                END
+                """);
+        }
+
+        /// <summary>
+        /// Therapist Status/RejectionReason/VerifiedAt and Appointment.ReminderSentAt.
+        /// Idempotent — safe if migrations already applied.
+        /// </summary>
+        private static async Task EnsureTherapistAndReminderColumnsAsync(ApplicationDbContext context)
+        {
+            // Separate batches: SQL Server compiles the whole batch before running, so
+            // UPDATE ... Status fails if Status is added in the same batch.
+            await context.Database.ExecuteSqlRawAsync("""
+                IF COL_LENGTH(N'Therapists', N'Status') IS NULL
+                    ALTER TABLE Therapists ADD Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Therapists_Status DEFAULT N'Pending';
+                """);
+
+            await context.Database.ExecuteSqlRawAsync("""
+                IF COL_LENGTH(N'Therapists', N'RejectionReason') IS NULL
+                    ALTER TABLE Therapists ADD RejectionReason NVARCHAR(1000) NULL;
+                """);
+
+            await context.Database.ExecuteSqlRawAsync("""
+                IF COL_LENGTH(N'Therapists', N'VerifiedAt') IS NULL
+                    ALTER TABLE Therapists ADD VerifiedAt DATETIME2 NULL;
+                """);
+
+            await context.Database.ExecuteSqlRawAsync("""
+                IF COL_LENGTH(N'Appointments', N'ReminderSentAt') IS NULL
+                    ALTER TABLE Appointments ADD ReminderSentAt DATETIME2 NULL;
+                """);
+
+            await context.Database.ExecuteSqlRawAsync("""
+                UPDATE Therapists SET Status = N'Approved', VerifiedAt = ISNULL(UpdatedAt, CreatedAt)
+                WHERE IsVerified = 1 AND (Status IS NULL OR Status = N'Pending' OR Status = N'0');
+
+                UPDATE Therapists SET Status = N'Pending'
+                WHERE IsVerified = 0 AND (Status IS NULL OR Status = N'0' OR Status = N'');
+                """);
+        }
+
+        private static async Task EnsureExternalLoginsTableAsync(ApplicationDbContext context)
+        {
+            await context.Database.ExecuteSqlRawAsync("""
+                IF OBJECT_ID(N'ExternalLogins', N'U') IS NULL
+                BEGIN
+                    CREATE TABLE ExternalLogins (
+                        ExternalLoginId INT IDENTITY(1,1) NOT NULL CONSTRAINT PK_ExternalLogins PRIMARY KEY,
+                        Provider NVARCHAR(64) NOT NULL,
+                        ProviderKey NVARCHAR(256) NOT NULL,
+                        UserId INT NOT NULL,
+                        CreatedAt DATETIME2 NOT NULL CONSTRAINT DF_ExternalLogins_CreatedAt DEFAULT (SYSUTCDATETIME()),
+                        CONSTRAINT FK_ExternalLogins_Users_UserId
+                            FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE
+                    );
+
+                    CREATE UNIQUE INDEX IX_ExternalLogins_Provider_ProviderKey
+                        ON ExternalLogins (Provider, ProviderKey);
                 END
                 """);
         }
@@ -227,6 +316,8 @@ namespace NFS.Infrastructure.Data
                         Rating = spec.Rating,
                         Qualifications = spec.Qualifications,
                         IsVerified = true,
+                        Status = TherapistStatus.Approved,
+                        VerifiedAt = DateTime.UtcNow,
                         CreatedAt = DateTime.UtcNow
                     };
                     context.Therapists.Add(therapist);
@@ -405,8 +496,13 @@ namespace NFS.Infrastructure.Data
 
                 if (freeCount > 20)
                 {
+                    var referencedSlotIds = context.Appointments.Select(a => a.SlotId);
                     var excess = await context.AvailabilitySlots
-                        .Where(s => s.DoctorId == therapist.TherapistId && !s.IsBooked && s.StartTime > now)
+                        .Where(s =>
+                            s.DoctorId == therapist.TherapistId
+                            && !s.IsBooked
+                            && s.StartTime > now
+                            && !referencedSlotIds.Contains(s.Id))
                         .OrderByDescending(s => s.StartTime)
                         .Skip(18)
                         .ToListAsync();
@@ -414,7 +510,8 @@ namespace NFS.Infrastructure.Data
                     {
                         context.AvailabilitySlots.RemoveRange(excess);
                         await context.SaveChangesAsync();
-                        freeCount = 18;
+                        freeCount = await context.AvailabilitySlots
+                            .CountAsync(s => s.DoctorId == therapist.TherapistId && !s.IsBooked && s.StartTime > now);
                     }
                 }
 

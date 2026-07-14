@@ -56,7 +56,7 @@ function Dashboard() {
             {/* هيدر الترحيب العلوي */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-[#EBEEEE] pb-5">
                 <div className="text-right space-y-1">
-                    <h2 className="text-2xl font-black text-slate-800 tracking-tight transition-colors duration-300 hover:text-[#316764]">مرحباً، د. {user?.firstName || 'مريم'} {user?.lastName || 'أحمد'}</h2>
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight transition-colors duration-300 hover:text-[#316764]">مرحباً، د. {user?.firstName || 'المعالج'} {user?.lastName || ''}</h2>
                     <p className="text-xs text-slate-400 font-medium">{today}</p>
                 </div>
                 <div className="bg-gradient-to-r from-teal-50 to-emerald-50/50 text-[#316764] px-4 py-2 rounded-2xl text-xs font-bold border border-teal-100/70 shadow-3xs transition-all duration-300 hover:scale-105 hover:shadow-xs">

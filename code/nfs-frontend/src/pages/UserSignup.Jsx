@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register, login } from '../api/auth';
+import { register, login, loginWithGoogle } from '../api/auth';
 import { ensurePatientRecord } from '../api/patientHelpers';
+import { completeAuthSession } from '../api/completeAuthSession';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { getApiErrorMessage } from '../utils/apiError';
+import GoogleSignInButton, { isGoogleSignInConfigured } from '../components/auth/GoogleSignInButton';
 
 const inputClass =
   'w-full px-4 py-3.5 bg-[#F7FAFA] border border-gray-100 rounded-2xl text-right text-sm focus:outline-none focus:border-[#316764] transition';
@@ -61,6 +63,25 @@ const UserSignup = () => {
     } catch (err) {
       console.error('Registration failed', err);
       toast.error(getApiErrorMessage(err, err.message || 'فشل التسجيل'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (idToken) => {
+    setLoading(true);
+    try {
+      const result = await loginWithGoogle(idToken);
+      const { sessionData, userRole } = await completeAuthSession(result);
+      setAuth(sessionData);
+      // Signup page intent: new clients continue to quiz; others follow role routing.
+      if (userRole === 'user') navigate('/quiz');
+      else if (userRole === 'admin') navigate('/admin');
+      else if (userRole === 'doctor') navigate(sessionData.therapistId ? '/doctor/dashboard' : '/verification');
+      else navigate('/dashboard');
+    } catch (err) {
+      console.error('Google signup failed', err);
+      toast.error(getApiErrorMessage(err, err.message || 'فشل التسجيل عبر Google'));
     } finally {
       setLoading(false);
     }
@@ -215,6 +236,24 @@ const UserSignup = () => {
               {loading ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب والمتابعة للتقييم'}
             </button>
           </form>
+
+          {isGoogleSignInConfigured() && (
+            <div className="mt-4 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-xs text-gray-400">أو</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
+              <GoogleSignInButton
+                disabled={loading}
+                text="signup_with"
+                onSuccess={handleGoogleSuccess}
+                onError={(err) =>
+                  toast.error(err?.message || 'فشل التسجيل عبر Google')
+                }
+              />
+            </div>
+          )}
 
           <div className="text-center mt-8 space-y-2">
             <button

@@ -1,0 +1,58 @@
+Using launch settings from F:\Tasks\nfs\code\nfs-backend\NFS.API\Properties\launchSettings.json...
+info: Startup[0]
+      Payment gateway: Paymob (Intention API + unified checkout).
+info: Startup[0]
+      Email: SMTP enabled (smtp.gmail.com:587). Appointment reminders every 15 min.
+info: Startup[0]
+      Google OAuth: ClientId configured.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'AssessmentResult.AssessmentId1' was created in shadow state because a conflicting property with the simple name 'AssessmentId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10625]
+      The foreign key property 'AssessmentResult.PatientId1' was created in shadow state because a conflicting property with the simple name 'PatientId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'HourlyRate' on entity type 'Therapist'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[30000]
+      No store type was specified for the decimal property 'Rating' on entity type 'Therapist'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+fail: Microsoft.EntityFrameworkCore.Database.Command[20102]
+      Failed executing DbCommand (187ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF COL_LENGTH(N'Therapists', N'Status') IS NULL
+          ALTER TABLE Therapists ADD Status NVARCHAR(20) NOT NULL CONSTRAINT DF_Therapists_Status DEFAULT N'Pending';
+      
+      IF COL_LENGTH(N'Therapists', N'RejectionReason') IS NULL
+          ALTER TABLE Therapists ADD RejectionReason NVARCHAR(1000) NULL;
+      
+      IF COL_LENGTH(N'Therapists', N'VerifiedAt') IS NULL
+          ALTER TABLE Therapists ADD VerifiedAt DATETIME2 NULL;
+      
+      UPDATE Therapists SET Status = N'Approved', VerifiedAt = ISNULL(UpdatedAt, CreatedAt)
+      WHERE IsVerified = 1 AND (Status IS NULL OR Status = N'Pending' OR Status = N'0');
+      
+      UPDATE Therapists SET Status = N'Pending'
+      WHERE IsVerified = 0 AND (Status IS NULL OR Status = N'0' OR Status = N'');
+      
+      IF COL_LENGTH(N'Appointments', N'ReminderSentAt') IS NULL
+          ALTER TABLE Appointments ADD ReminderSentAt DATETIME2 NULL;
+fail: Program[0]
+      An error occurred during database seeding.
+      Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'Status'.
+      Invalid column name 'Status'.
+      Invalid column name 'Status'.
+         at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+         at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+         at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+         at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+         at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+         at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+         at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__210_1(IAsyncResult result)
+         at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+      --- End of stack trace from previous location ---
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteNonQueryAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+         at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.ExecuteSqlRawAsync(DatabaseFacade databaseFacade, String sql, IEnumerable`1 parameters, CancellationToken cancellationToken)
+         at NFS.Infrastructure.Data.DbSeeder.EnsureTherapistAndReminderColumnsAsync(ApplicationDbContext context) in F:\Tasks\nfs\code\nfs-backend\NFS.Infrastructure\Data\DbSeeder.cs:line 101
+         at NFS.Infrastructure.Data.DbSeeder.SeedAsync(ApplicationDbContext context) in F:\Tasks\nfs\code\nfs-backend\NFS.Infrastructure\Data\DbSeeder.cs:line 14
+         at Program.<Main>$(String[] args) in F:\Tasks\nfs\code\nfs-backend\NFS.API\Program.cs:line 237
+      ClientConnectionId:05905ac6-2769-42c4-82fd-4e76d34bc00e
+      Error Number:207,State:1,Class:16

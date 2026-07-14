@@ -29,6 +29,9 @@ namespace NFS.Domain.Entities
         [MaxLength(20)]
         public string Status { get; set; } = "Pending";
 
+        /// <summary>Set when an appointment reminder email was sent.</summary>
+        public DateTime? ReminderSentAt { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         [ForeignKey(nameof(DoctorId))]
         public Therapist? Therapist { get; set; }
