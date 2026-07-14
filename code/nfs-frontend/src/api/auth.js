@@ -100,6 +100,12 @@ export function persistAuthSession(loginResponse, extra = {}) {
   localStorage.setItem('userRole', userRole);
   localStorage.setItem('user', JSON.stringify(user));
 
+  try {
+    window.dispatchEvent(new CustomEvent('nfs-auth-changed', { detail: { userId } }));
+  } catch {
+    /* ignore */
+  }
+
   return { user, userRole, accessToken };
 }
 
@@ -109,4 +115,9 @@ export function clearAuthSession() {
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('userRole');
   localStorage.removeItem('user');
+  try {
+    window.dispatchEvent(new CustomEvent('nfs-auth-changed', { detail: { userId: null } }));
+  } catch {
+    /* ignore */
+  }
 }

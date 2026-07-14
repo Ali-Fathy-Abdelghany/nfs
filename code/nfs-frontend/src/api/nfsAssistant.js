@@ -2,10 +2,22 @@ import { getStoredUser } from './config';
 
 const NFS_AI_BASE_URL = import.meta.env.VITE_NFS_AI_BASE_URL || 'http://localhost:5000';
 
-export async function askNfsAssistant(message, conversationId) {
+/** Stable per-user conversation id — never reuse another account's id. */
+export function getNfsAssistantUserId() {
   const user = getStoredUser();
-  const userId = String(user?.userId || user?.id || 'anonymous');
-  const resolvedConversationId = conversationId || `nfs_${userId}`;
+  const id = user?.userId ?? user?.id ?? user?.UserId ?? null;
+  if (id == null || id === '') return 'anonymous';
+  return String(id);
+}
+
+export function getNfsAssistantConversationId(userId = getNfsAssistantUserId()) {
+  return `nfs_${userId}`;
+}
+
+export async function askNfsAssistant(message, conversationId) {
+  const userId = getNfsAssistantUserId();
+  // Always scope to the logged-in user; ignore stale ids from another session.
+  const resolvedConversationId = getNfsAssistantConversationId(userId);
 
   const response = await fetch(`${NFS_AI_BASE_URL}/api/chat/talk-to-nafs`, {
     method: 'POST',
@@ -27,13 +39,13 @@ export async function askNfsAssistant(message, conversationId) {
   return {
     reply: data?.reply || '',
     conversationId: data?.conversationId || resolvedConversationId,
+    userId,
   };
 }
 
 export async function fetchNfsAssistantHistory(conversationId) {
-  const user = getStoredUser();
-  const userId = String(user?.userId || user?.id || 'anonymous');
-  const resolvedConversationId = conversationId || `nfs_${userId}`;
+  const userId = getNfsAssistantUserId();
+  const resolvedConversationId = getNfsAssistantConversationId(userId);
   const params = new URLSearchParams({
     userId,
     conversationId: resolvedConversationId,
@@ -47,6 +59,7 @@ export async function fetchNfsAssistantHistory(conversationId) {
 
   return {
     conversationId: data?.conversationId || resolvedConversationId,
+    userId,
     messages: Array.isArray(data?.messages) ? data.messages : [],
   };
 }

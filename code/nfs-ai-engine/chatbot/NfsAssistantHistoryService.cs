@@ -40,9 +40,11 @@ public class NfsAssistantHistoryService
 
     public async Task<IReadOnlyList<NfsAssistantMessage>> GetConversationAsync(string userId, string conversationId)
     {
+        // Always enforce user ownership — never return another account's thread.
+        var ownedConversationId = $"nfs_{userId}";
         var filter = Builders<NfsAssistantMessage>.Filter.And(
             Builders<NfsAssistantMessage>.Filter.Eq(m => m.UserId, userId),
-            Builders<NfsAssistantMessage>.Filter.Eq(m => m.ConversationId, conversationId));
+            Builders<NfsAssistantMessage>.Filter.Eq(m => m.ConversationId, ownedConversationId));
 
         return await _messages
             .Find(filter)

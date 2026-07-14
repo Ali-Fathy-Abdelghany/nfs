@@ -32,9 +32,8 @@ namespace NafsApi.Controllers
             {
                 var reply = await _nafsService.GetDoctorResponseAsync(request.Message);
                 var userId = string.IsNullOrWhiteSpace(request.UserId) ? "anonymous" : request.UserId.Trim();
-                var conversationId = string.IsNullOrWhiteSpace(request.ConversationId)
-                    ? $"nfs_{userId}"
-                    : request.ConversationId.Trim();
+                // Force per-user conversation — never accept another account's conversationId.
+                var conversationId = $"nfs_{userId}";
 
                 try
                 {
@@ -62,9 +61,8 @@ namespace NafsApi.Controllers
         public async Task<IActionResult> GetHistory([FromQuery] string userId, [FromQuery] string? conversationId)
         {
             var resolvedUserId = string.IsNullOrWhiteSpace(userId) ? "anonymous" : userId.Trim();
-            var resolvedConversationId = string.IsNullOrWhiteSpace(conversationId)
-                ? $"nfs_{resolvedUserId}"
-                : conversationId.Trim();
+            // History is always the current user's own thread.
+            var resolvedConversationId = $"nfs_{resolvedUserId}";
 
             var messages = await _historyService.GetConversationAsync(resolvedUserId, resolvedConversationId);
             return Ok(new

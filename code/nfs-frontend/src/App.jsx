@@ -19,7 +19,7 @@ import Chats from "./pages/Chats";
 import Library from "./pages/Library";
 import PatientProfile from "./pages/PatientProfile";
 import NfsAssistant from "./pages/NfsAssistant";
-import NfsAssistantWidget from "./Components/NfsAssistantWidget";
+import NfsAssistantWidget from "./components/NfsAssistantWidget";
 
 import Sessions from "./pages/Sessions";
 import ProfileProgress from "./pages/ProfileProgress";
@@ -40,8 +40,16 @@ import ResetPassword from "./pages/ResetPassword";
 import QuizPage from "./Components/QuizPage/QuizPage";
 import AllArticles from "./pages/AllArticles/AllArticles";
 import AllReviews from "./pages/AllReviews/AllReviews";
+import { useAuth } from "./context/AuthContext";
 
-function App() {
+function AppRoutes() {
+    const { user, isAuthenticated } = useAuth() || {};
+    // Remount the floating widget on every account change so the previous
+    // user's in-memory chat cannot leak into the next session.
+    const widgetUserKey = isAuthenticated
+        ? String(user?.userId ?? user?.id ?? "user")
+        : "anonymous";
+
     return (
         <Router>
             <Routes>
@@ -94,9 +102,13 @@ function App() {
                     element={<Navigate to="/dashboard" replace />}
                 />
             </Routes>
-            <NfsAssistantWidget />
+            <NfsAssistantWidget key={`nfs-assistant-widget-${widgetUserKey}`} />
         </Router>
     );
+}
+
+function App() {
+    return <AppRoutes />;
 }
 
 export default App;

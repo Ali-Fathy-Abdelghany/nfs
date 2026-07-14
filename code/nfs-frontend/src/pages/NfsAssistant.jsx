@@ -1,7 +1,13 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Bot, Loader2, Send, Sparkles, UserRound } from 'lucide-react';
 import Header from '../components/layout/Header';
-import { askNfsAssistant } from '../api/nfsAssistant';
+import {
+  askNfsAssistant,
+  fetchNfsAssistantHistory,
+  getNfsAssistantConversationId,
+  getNfsAssistantUserId,
+} from '../api/nfsAssistant';
+import { useAuth } from '../context/AuthContext';
 
 const quickPrompts = [
   'أشعر بتوتر شديد اليوم، ماذا أفعل؟',
@@ -10,27 +16,71 @@ const quickPrompts = [
   'كيف أتعامل مع نوبة قلق؟',
 ];
 
-const initialMessages = [
-  {
-    id: 'welcome',
-    role: 'assistant',
-    text: 'أنا نفس، مساعدك الهادئ. احكي لي ما تشعر به الآن، وسأحاول مساعدتك بخطوات بسيطة وآمنة.',
-  },
-];
+const welcomeMessage = {
+  id: 'welcome',
+  role: 'assistant',
+  text: 'أنا نفس، مساعدك الهادئ. احكي لي ما تشعر به الآن، وسأحاول مساعدتك بخطوات بسيطة وآمنة.',
+};
+
+function mapHistoryMessages(raw) {
+  if (!Array.isArray(raw) || raw.length === 0) return [welcomeMessage];
+  return raw.map((message) => ({
+    id: String(message.id || `${message.role}-${message.timestamp || Math.random()}`),
+    role: message.role === 'assistant' || message.role === 'user' ? message.role : 'assistant',
+    text: message.text || message.content || '',
+  }));
+}
 
 export default function NfsAssistant() {
-  const [messages, setMessages] = useState(initialMessages);
+  const { user, isAuthenticated } = useAuth() || {};
+  const authUserId = isAuthenticated
+    ? String(user?.userId ?? user?.id ?? getNfsAssistantUserId())
+    : 'anonymous';
+
+  const [messages, setMessages] = useState([welcomeMessage]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState('');
-  const [conversationId, setConversationId] = useState('');
+  const [conversationId, setConversationId] = useState(() =>
+    getNfsAssistantConversationId(authUserId)
+  );
   const inputRef = useRef(null);
+  const fetchGenRef = useRef(0);
 
-  const canSend = useMemo(() => input.trim().length > 0 && !isSending, [input, isSending]);
+  const canSend = useMemo(
+    () => input.trim().length > 0 && !isSending && !historyLoading,
+    [input, isSending, historyLoading]
+  );
+
+  const loadHistory = useCallback(async (userId) => {
+    const gen = ++fetchGenRef.current;
+    setHistoryLoading(true);
+    try {
+      const history = await fetchNfsAssistantHistory();
+      if (gen !== fetchGenRef.current) return;
+      setConversationId(history.conversationId || getNfsAssistantConversationId(userId));
+      setMessages(mapHistoryMessages(history.messages));
+    } catch (err) {
+      console.error(err);
+      if (gen !== fetchGenRef.current) return;
+      setMessages([welcomeMessage]);
+      setConversationId(getNfsAssistantConversationId(userId));
+    } finally {
+      if (gen === fetchGenRef.current) setHistoryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadHistory(authUserId);
+    return () => {
+      fetchGenRef.current += 1;
+    };
+  }, [authUserId, loadHistory]);
 
   const sendMessage = async (text = input) => {
     const messageText = text.trim();
-    if (!messageText || isSending) return;
+    if (!messageText || isSending || historyLoading) return;
 
     const userMessage = {
       id: `user-${Date.now()}`,
@@ -44,7 +94,10 @@ export default function NfsAssistant() {
     setIsSending(true);
 
     try {
-      const result = await askNfsAssistant(messageText, conversationId);
+      const result = await askNfsAssistant(
+        messageText,
+        getNfsAssistantConversationId(authUserId)
+      );
       setConversationId(result.conversationId);
       setMessages((prev) => [
         ...prev,
@@ -113,13 +166,15 @@ export default function NfsAssistant() {
                 </div>
                 <div>
                   <h2 className="font-black text-neutral-900">نفس</h2>
-                  <p className="text-xs text-neutral-500">متصل بخدمة Gemini المحلية</p>
+                  <p className="text-xs text-neutral-500">
+                    {historyLoading ? 'جاري مزامنة المحادثة…' : 'متصل بخدمة Gemini المحلية'}
+                  </p>
                 </div>
               </div>
-              {isSending && (
+              {(isSending || historyLoading) && (
                 <div className="text-xs text-[#0F766E] font-bold flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  يكتب الآن...
+                  {historyLoading ? 'تحميل السجل…' : 'يكتب الآن...'}
                 </div>
               )}
             </div>
@@ -132,16 +187,20 @@ export default function NfsAssistant() {
                     key={message.id}
                     className={`flex gap-3 ${isAssistant ? 'justify-start flex-row-reverse' : 'justify-start'}`}
                   >
-                    <div className={`w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 ${
-                      isAssistant ? 'bg-[#E6F0EF] text-[#0F766E]' : 'bg-neutral-100 text-neutral-600'
-                    }`}>
+                    <div
+                      className={`w-9 h-9 rounded-2xl flex items-center justify-center shrink-0 ${
+                        isAssistant ? 'bg-[#E6F0EF] text-[#0F766E]' : 'bg-neutral-100 text-neutral-600'
+                      }`}
+                    >
                       {isAssistant ? <Bot className="w-5 h-5" /> : <UserRound className="w-5 h-5" />}
                     </div>
-                    <div className={`max-w-[82%] rounded-3xl px-4 py-3 text-sm leading-7 whitespace-pre-wrap ${
-                      isAssistant
-                        ? 'bg-white border border-neutral-100 text-neutral-800 shadow-sm text-right'
-                        : 'bg-[#0F766E] text-white text-right'
-                    }`}>
+                    <div
+                      className={`max-w-[82%] rounded-3xl px-4 py-3 text-sm leading-7 whitespace-pre-wrap ${
+                        isAssistant
+                          ? 'bg-white border border-neutral-100 text-neutral-800 shadow-sm text-right'
+                          : 'bg-[#0F766E] text-white text-right'
+                      }`}
+                    >
                       {message.text}
                     </div>
                   </div>
@@ -171,8 +230,9 @@ export default function NfsAssistant() {
                     }
                   }}
                   rows={2}
-                  placeholder="اكتب ما تشعر به الآن..."
-                  className="flex-1 resize-none rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-[#0F766E] focus:ring-4 focus:ring-[#0F766E]/10 text-right"
+                  disabled={historyLoading}
+                  placeholder={historyLoading ? 'جارٍ تحميل سجل محادثتك…' : 'اكتب ما تشعر به الآن...'}
+                  className="flex-1 resize-none rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm outline-none focus:border-[#0F766E] focus:ring-4 focus:ring-[#0F766E]/10 text-right disabled:opacity-60"
                 />
               </div>
             </form>
@@ -181,13 +241,15 @@ export default function NfsAssistant() {
           <aside className="space-y-4">
             <div className="bg-white rounded-[2rem] border border-neutral-100 p-5 text-right shadow-sm">
               <h3 className="text-lg font-black text-neutral-900 mb-2">اقتراحات سريعة</h3>
-              <p className="text-xs text-neutral-500 leading-6 mb-4">اختر بداية مناسبة، ويمكنك تعديلها بعد الإرسال.</p>
+              <p className="text-xs text-neutral-500 leading-6 mb-4">
+                اختر بداية مناسبة، ويمكنك تعديلها بعد الإرسال.
+              </p>
               <div className="space-y-2">
                 {quickPrompts.map((prompt) => (
                   <button
                     key={prompt}
                     onClick={() => sendMessage(prompt)}
-                    disabled={isSending}
+                    disabled={isSending || historyLoading}
                     className="w-full text-right px-4 py-3 rounded-2xl bg-[#E6F0EF]/60 text-[#316764] text-xs font-bold hover:bg-[#E6F0EF] disabled:opacity-60 transition"
                   >
                     {prompt}
@@ -199,7 +261,8 @@ export default function NfsAssistant() {
             <div className="bg-amber-50 border border-amber-100 rounded-[2rem] p-5 text-right">
               <h3 className="text-sm font-black text-amber-900 mb-2">تنبيه مهم</h3>
               <p className="text-xs text-amber-800 leading-6">
-                مساعد نفس يقدم دعماً عاماً ولا يغني عن الطبيب أو الطوارئ. إذا كان هناك خطر على نفسك أو على شخص آخر، اطلب مساعدة طبية فوراً.
+                مساعد نفس يقدم دعماً عاماً ولا يغني عن الطبيب أو الطوارئ. إذا كان هناك خطر على نفسك أو على شخص آخر،
+                اطلب مساعدة طبية فوراً.
               </p>
             </div>
           </aside>
