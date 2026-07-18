@@ -110,7 +110,12 @@ function Sessions() {
   const toast = useToast();
   const { user } = useAuth() || {};
   const role = localStorage.getItem('userRole') || user?.userRole || 'patient';
-  const isDoctor = role === 'doctor';
+  // The route is authoritative for this shared page, so a doctor never falls
+  // back to the patient data/layout after leaving a meeting.
+  const isDoctor =
+    location.pathname.startsWith('/doctor/') ||
+    role === 'doctor' ||
+    role === 'therapist';
   const isAdmin = role === 'admin';
   const isPatient = !isDoctor && !isAdmin;
   const adminDoctorId = location.state?.adminDoctorId || null;
@@ -500,7 +505,20 @@ function Sessions() {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              navigate(isDoctor ? '/doctor/meetings' : '/digital-clinic');
+                              const meetingPath = isDoctor
+                                ? '/doctor/meetings'
+                                : '/digital-clinic';
+                              navigate(
+                                `${meetingPath}?appointmentId=${s.appointmentId}`,
+                                {
+                                  state: {
+                                    appointmentId: s.appointmentId,
+                                    exitPath: isDoctor
+                                      ? '/doctor/dashboard'
+                                      : '/sessions',
+                                  },
+                                }
+                              );
                             }}
                             className="bg-[#316764] text-white text-[11px] px-4 py-2 rounded-xl font-medium hover:bg-[#254f4d] transition-colors flex items-center gap-1 shadow-xs"
                           >
@@ -566,7 +584,7 @@ function Sessions() {
         </div>
       )}
 
-      <Footer />
+      {!isDoctor && <Footer />}
     </div>
   );
 }

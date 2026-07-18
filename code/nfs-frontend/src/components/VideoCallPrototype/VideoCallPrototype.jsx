@@ -48,7 +48,7 @@ function VideoCallPrototype({
   const remoteSrc = isDoctor ? PATIENT_IMG : DOCTOR_IMG;
   const localSrc = isDoctor ? DOCTOR_IMG : PATIENT_IMG;
   const leaveTo =
-    exitPath || (isDoctor ? '/doctor/sessions' : '/sessions');
+    exitPath || (isDoctor ? '/doctor/dashboard' : '/sessions');
 
   const clearReactionTimers = useCallback(() => {
     reactionTimers.current.forEach(clearTimeout);

@@ -1,16 +1,9 @@
 import React from 'react';
-import VideoCallPrototype from '../../components/VideoCallPrototype/VideoCallPrototype';
+import LiveKitMeeting from '../../components/LiveKitMeeting/LiveKitMeeting';
 
-/** Patient digital clinic — prototype video UI (no real media). */
+/** Patient digital clinic powered by LiveKit. */
 function DigitalClinic() {
-  return (
-    <VideoCallPrototype
-      role="patient"
-      remoteName="د. مريم"
-      localLabel="أنت"
-      exitPath="/sessions"
-    />
-  );
+  return <LiveKitMeeting role="patient" />;
 }
 
 export default DigitalClinic;

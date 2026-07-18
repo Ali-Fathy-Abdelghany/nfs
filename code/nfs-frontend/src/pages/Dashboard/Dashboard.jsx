@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchPatients } from '../../api/patients';
-import { fetchUserSessions } from '../../api/sessions';
+import { fetchDoctorAppointments } from '../../api/appointments';
+import { fetchTherapistByUserId } from '../../api/therapists';
 import { useAuth } from '../../context/AuthContext';
+import { userAvatarUrl } from '../../utils/userAvatar';
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -17,6 +19,7 @@ function Dashboard() {
 
     const [hoveredItem, setHoveredItem] = useState(null);
     const [patients, setPatients] = useState([]);
+    const [nextAppointment, setNextAppointment] = useState(null);
     const [totalPatients, setTotalPatients] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -24,25 +27,89 @@ function Dashboard() {
         fetchPatients()
             .then((res) => setTotalPatients((res.data || []).length))
             .catch(console.error);
+
         const userId = user?.userId || user?.id;
         if (!userId) return;
-        fetchUserSessions(userId)
-            .then((res) => {
-                const todaySessions = (res.data || [])
-                    .filter((s) => s.actualStartTime && new Date(s.actualStartTime).toDateString() === new Date().toDateString())
-                    .map((s, i) => ({
-                        id: s.id || i,
-                        name: s.doctorName || 'مريض',
-                        time: s.actualStartTime ? new Date(s.actualStartTime).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '-',
-                        type: 'online',
-                        typeText: s.type || 'أونلاين',
-                        icon: 'fa-video',
-                        img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
-                    }));
+
+        let cancelled = false;
+        async function loadAppointments() {
+            try {
+                let therapistId = user?.therapistId;
+                if (!therapistId) {
+                    const therapistRes = await fetchTherapistByUserId(userId);
+                    therapistId = therapistRes.data?.therapistId;
+                }
+                if (!therapistId) return;
+
+                const appointmentsRes = await fetchDoctorAppointments(therapistId);
+                if (cancelled) return;
+
+                const confirmed = (appointmentsRes.data || [])
+                    .filter((a) => String(a.status || '').toLowerCase() === 'confirmed')
+                    .map((a) => {
+                        const start = a.scheduledStartTime || a.actualStartTime;
+                        return {
+                            id: a.id,
+                            appointmentId: a.id,
+                            name: a.patientName || 'مريض',
+                            startTime: start,
+                            time: start
+                                ? new Date(start).toLocaleTimeString('ar-EG', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                })
+                                : '-',
+                            type: 'online',
+                            typeText: a.type || 'أونلاين',
+                            icon: 'fa-video',
+                            img: userAvatarUrl(
+                                a.patientId,
+                                a.patientImageUrl,
+                                a.patientName || 'مريض'
+                            ),
+                        };
+                    })
+                    .filter((a) => a.startTime);
+
+                const todaySessions = confirmed.filter(
+                    (a) =>
+                        new Date(a.startTime).toDateString() ===
+                        new Date().toDateString()
+                );
                 setPatients(todaySessions);
-            })
-            .catch(console.error);
+
+                const now = Date.now();
+                const upcoming = confirmed
+                    .filter((a) => new Date(a.startTime).getTime() >= now - 60 * 60 * 1000)
+                    .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+                setNextAppointment(upcoming[0] || null);
+            } catch (err) {
+                console.error(err);
+                if (!cancelled) {
+                    setPatients([]);
+                    setNextAppointment(null);
+                }
+            }
+        }
+
+        loadAppointments();
+        return () => {
+            cancelled = true;
+        };
     }, [user]);
+
+    const joinAppointment = (appointment) => {
+        if (!appointment?.appointmentId) {
+            navigate('/doctor/dashboard');
+            return;
+        }
+        navigate(`/doctor/meetings?appointmentId=${appointment.appointmentId}`, {
+            state: {
+                appointmentId: appointment.appointmentId,
+                exitPath: '/doctor/dashboard',
+            },
+        });
+    };
 
     const handleCancelSession = (id) => {
         if(window.confirm("هل أنت متأكد من رغبتك في إلغاء هذه الجلسة؟")) {
@@ -61,6 +128,69 @@ function Dashboard() {
                 </div>
                 <div className="bg-gradient-to-r from-teal-50 to-emerald-50/50 text-[#316764] px-4 py-2 rounded-2xl text-xs font-bold border border-teal-100/70 shadow-3xs transition-all duration-300 hover:scale-105 hover:shadow-xs">
                     الجلسات المتاحة اليوم: {patients.length} جلسات
+                </div>
+            </div>
+
+            {/* الموعد القادم — مدخل مباشر لغرفة LiveKit */}
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-[#214f4c] to-[#408581] text-white p-6 shadow-sm">
+                <div className="absolute -left-10 -top-12 w-40 h-40 rounded-full bg-white/5" />
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-5">
+                    <div className="flex items-center gap-4">
+                        {nextAppointment ? (
+                            <img
+                                src={nextAppointment.img}
+                                alt={nextAppointment.name}
+                                className="w-14 h-14 rounded-2xl object-cover border border-white/20 shadow-sm shrink-0"
+                            />
+                        ) : (
+                            <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/15 flex items-center justify-center shrink-0">
+                                <i className="fa-solid fa-video text-xl"></i>
+                            </div>
+                        )}
+                        <div className="space-y-1 text-right">
+                            <span className="text-[11px] font-bold text-white/70">موعدك القادم</span>
+                            {nextAppointment ? (
+                                <>
+                                    <h3 className="text-lg font-black">
+                                        جلسة مع {nextAppointment.name}
+                                    </h3>
+                                    <p className="text-xs text-white/80">
+                                        {new Date(nextAppointment.startTime).toLocaleDateString('ar-EG', {
+                                            weekday: 'long',
+                                            day: 'numeric',
+                                            month: 'long',
+                                        })}
+                                        {' — '}
+                                        {nextAppointment.time}
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <h3 className="text-lg font-black">لا توجد جلسة مؤكدة قادمة</h3>
+                                    <p className="text-xs text-white/75">ستظهر الجلسة هنا فور تأكيد الحجز والدفع.</p>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {nextAppointment ? (
+                        <button
+                            type="button"
+                            onClick={() => joinAppointment(nextAppointment)}
+                            className="h-12 px-6 rounded-full bg-white text-[#316764] font-black text-sm hover:bg-[#E6F0EF] transition-all active:scale-[0.98] flex items-center justify-center gap-2 shrink-0"
+                        >
+                            <i className="fa-solid fa-video"></i>
+                            انضم إلى الجلسة
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => navigate('/doctor/timetable')}
+                            className="h-12 px-6 rounded-full bg-white/10 border border-white/20 text-white font-bold text-sm hover:bg-white/20 transition-all flex items-center justify-center gap-2 shrink-0"
+                        >
+                            عرض الجدول
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -168,10 +298,10 @@ function Dashboard() {
                                                 </button>
                                                 
                                                 <button 
-                                                    onClick={() => navigate('/doctor/meetings')}
+                                                    onClick={() => joinAppointment(patient)}
                                                     className="bg-gradient-to-r from-[#316764] to-[#408581] hover:from-[#254f4d] hover:to-[#316764] text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-xs transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer"
                                                 >
-                                                    ابدأ الآن
+                                                    انضم الآن
                                                 </button>
                                             </div>
                                         </div>
@@ -277,11 +407,11 @@ function Dashboard() {
                                                 <button 
                                                     onClick={() => {
                                                         setIsModalOpen(false);
-                                                        navigate('/doctor/meetings');
+                                                        joinAppointment(patient);
                                                     }}
                                                     className="bg-gradient-to-r from-[#316764] to-[#408581] text-white text-[11px] font-bold px-4 py-2 rounded-xl transition-all cursor-pointer"
                                                 >
-                                                    ابدأ
+                                                    انضم
                                                 </button>
                                             </div>
                                         </div>

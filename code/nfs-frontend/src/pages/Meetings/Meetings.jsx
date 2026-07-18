@@ -1,19 +1,12 @@
 import React from 'react';
-import VideoCallPrototype from '../../components/VideoCallPrototype/VideoCallPrototype';
+import LiveKitMeeting from '../../components/LiveKitMeeting/LiveKitMeeting';
 
 /**
- * Doctor video call prototype.
+ * Doctor video call powered by LiveKit.
  * Rendered without the app Sidebar (fullscreen call shell).
  */
 function Meetings() {
-  return (
-    <VideoCallPrototype
-      role="doctor"
-      remoteName="المريض"
-      localLabel="أنت (بث مباشر)"
-      exitPath="/doctor/sessions"
-    />
-  );
+  return <LiveKitMeeting role="doctor" />;
 }
 
 export default Meetings;

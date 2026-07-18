@@ -14,7 +14,7 @@ export function getRoleHomePath(role, { isAuthenticated } = {}) {
     isAuthenticated ??
     !!(localStorage.getItem('token') || localStorage.getItem('accessToken'));
 
-  if (!hasSession) return '/login';
+  if (!hasSession) return '/';
 
   const normalized = String(role || localStorage.getItem('userRole') || '').toLowerCase();
   if (normalized === 'admin') return '/admin';

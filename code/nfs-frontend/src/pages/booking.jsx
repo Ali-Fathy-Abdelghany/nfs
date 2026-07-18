@@ -4,6 +4,7 @@ import { Search, Calendar, Clock, MapPin, ChevronDown, ChevronUp, ChevronLeft, C
 import { fetchTherapists, searchTherapists } from '../api/therapists';
 import { fetchDoctorAvailability, createAppointment, fetchPatientAppointments } from '../api/appointments';
 import { useAuth } from '../context/AuthContext';
+import { useAuthGate } from '../context/AuthGateContext';
 import { useToast } from '../context/ToastContext';
 import { getApiErrorMessage } from '../utils/apiError';
 import { ensurePatientRecord } from '../api/patientHelpers';
@@ -16,11 +17,13 @@ const MONTH_LABELS = [
 ];
 
 function mapTherapistToDoctor(t) {
+  const displayName = `د. ${t.firstName} ${t.lastName}`;
   return {
     id: t.therapistId,
     therapistId: t.therapistId,
     userId: t.userId,
-    name: `د. ${t.firstName} ${t.lastName}`,
+    name: displayName,
+    gender: t.gender,
     specialty: t.specialization || t.bio || 'معالج نفسي',
     availability: 'متاح للحجز',
     sessions: t.experienceYears ? `+${t.experienceYears * 50}` : '+100',
@@ -29,7 +32,7 @@ function mapTherapistToDoctor(t) {
     experience: t.experienceYears ? `${t.experienceYears} سنة` : '—',
     price: t.hourlyRate ? `${t.hourlyRate} ج.م / جلسة` : '—',
     hourlyRate: t.hourlyRate || 0,
-    image: doctorAvatarUrl(t.therapistId, t.profileImageUrl),
+    image: doctorAvatarUrl(t.therapistId, t.profileImageUrl, t.gender, displayName),
     categories: t.specialization ? [t.specialization] : [],
     sessionTypes: ['فيديو'],
     bio: t.bio || '',
@@ -232,6 +235,7 @@ export default function Booking({ preselectedDoctor }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { requireAuth } = useAuthGate();
   const toast = useToast();
   const doctorToSelect = preselectedDoctor || location.state?.preselectedDoctor;
 
@@ -355,8 +359,10 @@ export default function Booking({ preselectedDoctor }) {
       }
     }
     if (!patientId) {
-      toast.warning('يرجى تسجيل الدخول أولاً');
-      navigate('/login');
+      requireAuth(null, {
+        title: 'الحجز يحتاج حساب',
+        message: 'سجّل الدخول أو أنشئ حساب عشان تحجز مع المعالج المناسب لك.',
+      });
       return;
     }
     if (!selectedSlot) {
@@ -385,8 +391,13 @@ export default function Booking({ preselectedDoctor }) {
   };
 
   const handleJoinSession = () => {
-    if (isJoinEnabled) {
-      navigate('/digital-clinic');
+    if (isJoinEnabled && nextAppointment?.id) {
+      navigate(`/digital-clinic?appointmentId=${nextAppointment.id}`, {
+        state: {
+          appointmentId: nextAppointment.id,
+          exitPath: '/sessions',
+        },
+      });
     } else {
       toast.info('عذراً، يمكنك الانضمام للجلسة قبل موعدها بـ 15 دقيقة فقط.');
     }

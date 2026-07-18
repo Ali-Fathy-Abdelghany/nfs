@@ -9,6 +9,7 @@ import Booking from './booking';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useAuth } from '../context/AuthContext';
+import { useAuthGate } from '../context/AuthGateContext';
 import { fetchUserProfile } from '../api/users';
 import { fetchDiariesByPatient, createDiaryEntry, updateDiaryEntry, mapDiaryToEntry } from '../api/diaries';
 import { useToast } from '../context/ToastContext';
@@ -214,7 +215,8 @@ const SupportCircle = ({ onClose, onGoToChats }) => (
 export default function Dashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth() || {};
+  const { requireAuth } = useAuthGate();
   const toast = useToast();
   const [profile, setProfile] = useState(null);
 
@@ -242,23 +244,34 @@ export default function Dashboard() {
   }, [location.state]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setProfile(null);
+      return;
+    }
     fetchUserProfile()
       .then((res) => setProfile(res.data))
       .catch(console.error);
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setEntries([]);
+      return;
+    }
     const patientId = user?.patientId || user?.userId || user?.id;
     if (!patientId) return;
     fetchDiariesByPatient(patientId)
       .then((res) => setEntries((res.data || []).map(mapDiaryToEntry)))
       .catch(console.error);
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   const handleSaveEntry = async (newEntry) => {
     const patientId = user?.patientId || user?.userId || user?.id;
     if (!patientId) {
-      toast.warning('يرجى تسجيل الدخول أولاً');
+      requireAuth(null, {
+        title: 'احفظ يومياتك بأمان',
+        message: 'سجّل الدخول عشان نحفظ مفكرة الامتنان على حسابك.',
+      });
       return;
     }
     try {
@@ -350,10 +363,16 @@ export default function Dashboard() {
             <motion.div key="home-tab" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} className="space-y-12">
               <section className="relative text-right space-y-2">
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-4xl md:text-5xl font-black text-neutral-950 tracking-tight">مرحباً {profile?.firstName || user?.firstName || 'بك'}</h1>
-                  <p className="text-lg text-neutral-500 font-medium">كيف حالك اليوم؟ (أنت تشعر بـ: <span className="text-[#0F766E] font-bold">{userMoodText}</span>)</p>
+                  <h1 className="text-4xl md:text-5xl font-black text-neutral-950 tracking-tight">
+                    مرحباً {isAuthenticated ? (profile?.firstName || user?.firstName || 'بك') : 'بك في نفس'}
+                  </h1>
+                  <p className="text-lg text-neutral-500 font-medium">
+                    {isAuthenticated
+                      ? <>كيف حالك اليوم؟ (أنت تشعر بـ: <span className="text-[#0F766E] font-bold">{userMoodText}</span>)</>
+                      : 'مساحة آمنة لبداية رحلتك النفسية… اكتشف، تنفّس، واحجز متى ما كنت جاهز.'}
+                  </p>
                   <button 
-  onClick={() => setActiveTab('booking')} // التعديل هنا
+  onClick={() => setActiveTab('booking')}
   className="bg-gradient-to-r from-[#316764] to-[#83B9B5] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 whitespace-nowrap"
 >
   احجز الآن
@@ -455,7 +474,15 @@ export default function Dashboard() {
                     <p className="text-xs text-neutral-500 leading-relaxed">تمرين سريع لتهدئة ضربات القلب والجهاز العصبي في ٥ دقائق مجانًا.</p>
                   </div>
 
-                  <div onClick={() => setShowJournal(true)} className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100">
+                  <div
+                    onClick={() =>
+                      requireAuth(() => setShowJournal(true), {
+                        title: 'احفظ يومياتك بأمان',
+                        message: 'سجّل الدخول عشان نحفظ مفكرة الامتنان على حسابك.',
+                      })
+                    }
+                    className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100"
+                  >
                     <div className="w-12 h-12 bg-[#E6F0EF] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <BookOpen className="text-[#0F766E] w-6 h-6" />
                     </div>
@@ -463,7 +490,15 @@ export default function Dashboard() {
                     <p className="text-xs text-neutral-500 leading-relaxed">دوّن ٣ أشياء دافئة تشعر بالامتنان وتصالح مع قلبك وتفاصيل يومك.</p>
                   </div>
 
-                  <div onClick={() => navigate('/doctor/chats')} className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100">
+                  <div
+                    onClick={() =>
+                      requireAuth(() => navigate('/doctor/chats'), {
+                        title: 'المحادثات لأعضاء نفس',
+                        message: 'سجّل الدخول عشان تدخل دوائر الدعم وتشارك بأمان.',
+                      })
+                    }
+                    className="bg-white rounded-2xl p-6 hover:shadow-md hover:scale-[1.01] transition-all group cursor-pointer border border-neutral-100"
+                  >
                     <div className="w-12 h-12 bg-[#E6F0EF] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                       <HeartHandshake className="text-[#0F766E] w-6 h-6" />
                     </div>
@@ -570,7 +605,10 @@ export default function Dashboard() {
             onClose={() => setShowSupport(false)}
             onGoToChats={() => {
               setShowSupport(false);
-              navigate('/doctor/chats');
+              requireAuth(() => navigate('/doctor/chats'), {
+                title: 'المحادثات لأعضاء نفس',
+                message: 'سجّل الدخول عشان تدخل دوائر الدعم وتشارك بأمان.',
+              });
             }}
           />
         )}

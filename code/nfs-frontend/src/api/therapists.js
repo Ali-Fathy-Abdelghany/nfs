@@ -8,11 +8,13 @@ export const fetchTherapistByUserId = (userId) => axiosInstance.get(`/api/therap
 export const searchTherapists = (query) => axiosInstance.get('/api/therapists/search', { params: { q: query } });
 export const createTherapist = (data) => axiosInstance.post('/api/therapists', data);
 export const updateTherapist = (id, data) => axiosInstance.put(`/api/therapists/${id}`, data);
+export const deleteTherapist = (id) => axiosInstance.delete(`/api/therapists/${id}`);
 export const approveTherapist = (id) => axiosInstance.post(`/api/therapists/${id}/approve`);
 export const rejectTherapist = (id, reason) =>
   axiosInstance.post(`/api/therapists/${id}/reject`, { reason: reason || null });
 
 export function mapTherapistToProfile(t, fallbackImage) {
+  const displayName = `د. ${t.firstName} ${t.lastName}`;
   const specialties = t.qualifications
     ? t.qualifications.split(/[,،]/).map((s) => s.trim()).filter(Boolean)
     : t.specialization
@@ -26,9 +28,10 @@ export function mapTherapistToProfile(t, fallbackImage) {
   return {
     therapistId: t.therapistId,
     userId: t.userId,
-    name: `د. ${t.firstName} ${t.lastName}`,
+    name: displayName,
     firstName: t.firstName,
     lastName: t.lastName,
+    gender: t.gender,
     specialty: t.specialization || '',
     availability: 'متاح للحجز',
     sessions: t.experienceYears ? `+${t.experienceYears * 40}` : '+40',
@@ -43,7 +46,12 @@ export function mapTherapistToProfile(t, fallbackImage) {
     qualifications: t.qualifications || '',
     email: t.email,
     phone: t.phone,
-    image: doctorAvatarUrl(t.therapistId, t.profileImageUrl || fallbackImage),
+    image: doctorAvatarUrl(
+      t.therapistId,
+      t.profileImageUrl,
+      t.gender,
+      displayName
+    ) || fallbackImage,
     isVerified: !!t.isVerified,
     status: t.status || (t.isVerified ? 'Approved' : 'Pending'),
     rejectionReason: t.rejectionReason || null,

@@ -78,6 +78,14 @@ namespace NFS.API.Controllers
             return result ? NoContent() : NotFound();
         }
 
+        [Authorize(Roles = "ADMIN")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _therapistService.DeleteTherapistAsync(id);
+            return result ? NoContent() : NotFound();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] CreateTherapistDto dto)
         {

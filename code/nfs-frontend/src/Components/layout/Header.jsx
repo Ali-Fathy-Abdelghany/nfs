@@ -1,21 +1,43 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bell, BookOpen, User, BookA, LogOut, Shield } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Bell, BookOpen, User, BookA, LogOut, Shield, LogIn, UserPlus, Info } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useAuthGate } from '../../context/AuthGateContext';
 import { getRoleHomePath } from '../../api/config';
+
+const AboutNavButton = ({ onClick, active }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 outline-none ${
+      active
+        ? 'text-[#0F766E] bg-[#A6CEC5] shadow-sm'
+        : 'text-neutral-400 hover:text-[#0F766E] hover:bg-[#A6CEC5] focus:bg-[#A6CEC5] focus:text-[#0F766E]'
+    }`}
+    title="عن نفس"
+    aria-label="عن نفس"
+  >
+    <Info className="w-[22px] h-[22px]" />
+  </button>
+);
 
 const Header = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
-  const { logout, isAuthenticated } = useAuth();
+  const location = useLocation();
+  const { logout, isAuthenticated } = useAuth() || {};
+  const { requireAuth } = useAuthGate();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const isAboutPage = location.pathname === '/about';
 
-  const userRole = localStorage.getItem('userRole') || 'patient';
+  const userRole = isAuthenticated
+    ? localStorage.getItem('userRole') || 'patient'
+    : 'guest';
 
   const handleLogoClick = () => {
     setActiveTab?.('home');
     const homePath = getRoleHomePath(userRole, { isAuthenticated });
-    if (homePath === '/dashboard' || homePath === '/doctor/dashboard') {
-      navigate(homePath, { state: { targetTab: 'home' } });
+    if (homePath === '/dashboard' || homePath === '/' || homePath === '/doctor/dashboard') {
+      navigate(homePath === '/' ? '/dashboard' : homePath, { state: { targetTab: 'home' } });
     } else {
       navigate(homePath);
     }
@@ -34,8 +56,10 @@ const Header = ({ activeTab, setActiveTab }) => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/auth');
+    navigate('/');
   };
+
+  const goAbout = () => navigate('/about');
 
   return (
     <header className="bg-white/70 backdrop-blur-lg flex flex-row justify-between items-center w-full px-6 py-4 sticky top-0 z-40 border-b border-neutral-100 select-none" dir="rtl">
@@ -53,7 +77,28 @@ const Header = ({ activeTab, setActiveTab }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        {userRole === 'doctor' ? (
+        {!isAuthenticated ? (
+          <>
+            <AboutNavButton onClick={goAbout} active={isAboutPage} />
+            <div className="w-[1px] h-6 bg-neutral-200 mx-1" />
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="h-11 px-5 flex items-center gap-2 rounded-full text-[#0F766E] bg-[#E6F0EF] border border-[#0F766E]/15 font-bold text-sm hover:bg-[#A6CEC5]/60 transition-all active:scale-[0.98]"
+            >
+              <LogIn className="w-4 h-4" />
+              تسجيل الدخول
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/select-role')}
+              className="h-11 px-5 flex items-center gap-2 rounded-full text-white bg-gradient-to-r from-[#316764] to-[#83B9B5] font-bold text-sm shadow-sm hover:opacity-90 transition-all active:scale-[0.98]"
+            >
+              <UserPlus className="w-4 h-4" />
+              إنشاء حساب
+            </button>
+          </>
+        ) : userRole === 'doctor' ? (
           <>
             <button
               className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-300 outline-none p-0 border-2 ${
@@ -94,6 +139,7 @@ const Header = ({ activeTab, setActiveTab }) => {
               )}
             </div>
 
+            <AboutNavButton onClick={goAbout} active={isAboutPage} />
             <div className="w-[1px] h-6 bg-neutral-200 mx-1" />
 
             <button
@@ -114,6 +160,7 @@ const Header = ({ activeTab, setActiveTab }) => {
               <Shield className="w-4 h-4" />
               لوحة الإدارة
             </button>
+            <AboutNavButton onClick={goAbout} active={isAboutPage} />
             <div className="w-[1px] h-6 bg-neutral-200 mx-1" />
             <button
               onClick={handleLogout}
@@ -132,8 +179,13 @@ const Header = ({ activeTab, setActiveTab }) => {
                   : 'text-neutral-400 hover:text-[#0F766E] hover:bg-[#A6CEC5] focus:bg-[#A6CEC5] focus:text-[#0F766E]'
               }`}
               onClick={() => {
-                setActiveTab?.('profile');
-                navigate('/profile-progress');
+                requireAuth(() => {
+                  setActiveTab?.('profile');
+                  navigate('/profile-progress');
+                }, {
+                  title: 'حسابك بانتظارك',
+                  message: 'سجّل الدخول عشان تشوف تقدمك وإحصائيات رحلتك النفسية.',
+                });
               }}
               title="حسابي"
             >
@@ -146,7 +198,12 @@ const Header = ({ activeTab, setActiveTab }) => {
                   ? 'text-[#0F766E] bg-[#A6CEC5] shadow-sm'
                   : 'text-neutral-400 hover:text-[#0F766E] hover:bg-[#A6CEC5] focus:bg-[#A6CEC5] focus:text-[#0F766E]'
               }`}
-              onClick={() => handleNavigation('my_diary')}
+              onClick={() => {
+                requireAuth(() => handleNavigation('my_diary'), {
+                  title: 'يومياتك محمية',
+                  message: 'سجّل الدخول عشان تكتب يومياتك وتحفظها بأمان على حسابك.',
+                });
+              }}
               title="يومياتي"
             >
               <BookA className="w-[22px] h-[22px]" />
@@ -159,8 +216,13 @@ const Header = ({ activeTab, setActiveTab }) => {
                   : 'text-neutral-400 hover:text-[#0F766E] hover:bg-[#A6CEC5] focus:bg-[#A6CEC5] focus:text-[#0F766E]'
               }`}
               onClick={() => {
-                setActiveTab?.('sessions');
-                navigate('/sessions');
+                requireAuth(() => {
+                  setActiveTab?.('sessions');
+                  navigate('/sessions');
+                }, {
+                  title: 'جلساتك الخاصة',
+                  message: 'سجّل الدخول عشان تشوف مواعيدك وتدخل جلساتك المحجوزة.',
+                });
               }}
               title="جلساتي"
             >
@@ -170,11 +232,18 @@ const Header = ({ activeTab, setActiveTab }) => {
             <button
               className="w-12 h-12 flex items-center justify-center text-neutral-400 hover:text-[#0F766E] hover:bg-[#A6CEC5] focus:bg-[#A6CEC5] focus:text-[#0F766E] rounded-full transition-all duration-300 relative outline-none"
               title="الإشعارات"
+              onClick={() => {
+                requireAuth(() => {}, {
+                  title: 'الإشعارات لحسابك',
+                  message: 'سجّل الدخول عشان توصلك تنبيهات الحجوزات والتذكيرات.',
+                });
+              }}
             >
               <Bell className="w-[22px] h-[22px]" />
               <span className="absolute top-3.5 right-3.5 w-2 h-2 bg-rose-500 rounded-full border border-white" />
             </button>
 
+            <AboutNavButton onClick={goAbout} active={isAboutPage} />
             <div className="w-[1px] h-6 bg-neutral-200 mx-1" />
 
             <button

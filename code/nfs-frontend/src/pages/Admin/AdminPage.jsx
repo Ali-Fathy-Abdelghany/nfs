@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { Trash2, X } from 'lucide-react';
 import Header from '../../components/layout/Header';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
@@ -9,9 +9,21 @@ import {
   fetchPendingTherapists,
   approveTherapist,
   rejectTherapist,
+  deleteTherapist,
 } from '../../api/therapists';
 import { getArticles, resetArticles, saveArticles } from '../../api/articles';
 import { getApiErrorMessage } from '../../utils/apiError';
+import { doctorAvatarUrl } from '../../utils/doctorAvatar';
+
+function doctorImage(doc) {
+  const displayName = `د. ${doc.firstName || ''} ${doc.lastName || ''}`.trim();
+  return doctorAvatarUrl(
+    doc.therapistId,
+    doc.profileImageUrl,
+    doc.gender,
+    displayName
+  );
+}
 
 function genderLabel(g) {
   if (!g) return '—';
@@ -56,7 +68,7 @@ function DoctorRequestModal({
         <div className="p-5 space-y-4">
           <div className="flex items-start gap-3">
             <img
-              src={doc.profileImageUrl || 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=120'}
+              src={doctorImage(doc)}
               alt=""
               className="w-16 h-16 rounded-2xl object-cover border border-[#E6E9E9]"
             />
@@ -463,6 +475,29 @@ function AdminPage() {
     }
   };
 
+  const handleDelete = async (doc) => {
+    const doctorName = `د. ${doc.firstName || ''} ${doc.lastName || ''}`.trim();
+    const confirmed = window.confirm(
+      `هل أنت متأكد من حذف حساب ${doctorName}؟\n\nلن يتمكن الطبيب من تسجيل الدخول أو الظهور للمرضى، مع الاحتفاظ بالسجلات الطبية والمالية السابقة.`
+    );
+    if (!confirmed) return;
+
+    setActingId(doc.therapistId);
+    setActingKind('delete');
+    try {
+      await deleteTherapist(doc.therapistId);
+      toast.success('تم حذف حساب الطبيب وتعطيل الوصول إليه');
+      if (detailDoc?.therapistId === doc.therapistId) setDetailDoc(null);
+      await load();
+    } catch (err) {
+      console.error(err);
+      toast.error(getApiErrorMessage(err, 'تعذر حذف حساب الطبيب'));
+    } finally {
+      setActingId(null);
+      setActingKind(null);
+    }
+  };
+
   const openProfile = (doc, { edit = false } = {}) => {
     navigate('/doctor/profile', {
       state: {
@@ -593,10 +628,7 @@ function AdminPage() {
                     onClick={() => (tab === 'pending' ? setDetailDoc(doc) : openProfile(doc))}
                   >
                     <img
-                      src={
-                        doc.profileImageUrl ||
-                        'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=120'
-                      }
+                      src={doctorImage(doc)}
                       alt=""
                       className="w-14 h-14 rounded-2xl object-cover border border-[#E6E9E9]"
                     />
@@ -695,6 +727,16 @@ function AdminPage() {
                         </button>
                       </>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(doc)}
+                      disabled={actingId === doc.therapistId}
+                      className="w-10 h-10 inline-flex items-center justify-center rounded-xl border border-red-200 bg-white text-red-700 hover:bg-red-50 transition disabled:opacity-60"
+                      title="حذف حساب الطبيب"
+                      aria-label={`حذف حساب د. ${doc.firstName} ${doc.lastName}`}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               ))}

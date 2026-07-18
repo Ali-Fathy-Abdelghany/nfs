@@ -329,10 +329,22 @@ function PatientProfile() {
                         </div>
                         <div className="w-full sm:w-auto">
                             <button 
-                                onClick={() => navigate('/doctor/meetings')}
+                                onClick={() => {
+                                    if (!nextAppointment?.id) {
+                                        navigate('/doctor/dashboard');
+                                        return;
+                                    }
+                                    navigate(`/doctor/meetings?appointmentId=${nextAppointment.id}`, {
+                                        state: {
+                                            appointmentId: nextAppointment.id,
+                                            exitPath: '/doctor/dashboard',
+                                        },
+                                    });
+                                }}
                                 className="w-full sm:w-auto bg-[#316764] hover:bg-[#254f4d] text-white text-xs font-bold px-5 py-3 rounded-xl shadow-xs transition-all duration-300 hover:scale-102 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
                             >
-                                <i className="fa-solid fa-play text-[10px]"></i> ابدأ الجلسة الآن
+                                <i className="fa-solid fa-play text-[10px]"></i>
+                                {nextAppointment?.id ? 'ابدأ الجلسة الآن' : 'عرض الجلسات'}
                             </button>
                         </div>
                     </div>

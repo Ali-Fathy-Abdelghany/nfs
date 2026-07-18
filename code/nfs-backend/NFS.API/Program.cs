@@ -15,6 +15,7 @@ using NFS.Chat.Repositories;
 using NFS.Infrastructure.Data;
 using NFS.Infrastructure.Email;
 using NFS.Infrastructure.Repositories;
+using NFS.Infrastructure.Services;
 using System.Text;
 
 // Load NFS.API/.env into process environment before configuration is built.
@@ -89,6 +90,13 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.Configure<GoogleAuthOptions>(opts =>
 {
     opts.ClientId = builder.Configuration["OAuth:Google:ClientId"] ?? string.Empty;
+});
+
+builder.Services.Configure<LiveKitOptions>(opts =>
+{
+    opts.Url = builder.Configuration["LIVEKIT_URL"] ?? string.Empty;
+    opts.ApiKey = builder.Configuration["LIVEKIT_API_KEY"] ?? string.Empty;
+    opts.ApiSecret = builder.Configuration["LIVEKIT_API_SECRET"] ?? string.Empty;
 });
 
 // JWT Authentication (JwtSettings__Secret from .env)
@@ -176,6 +184,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITherapistService, TherapistService>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAssessmentService, AssessmentService>();
+builder.Services.AddScoped<ILiveKitMeetingService, LiveKitMeetingService>();
 
 // Paymob when keys exist; otherwise FakePaymentGateway for local/dev without credentials.
 builder.Services.AddHttpClient<PaymobPaymentGateway>();
@@ -226,6 +235,12 @@ if (googleOpts.IsConfigured)
     startupLogger.LogInformation("Google OAuth: ClientId configured.");
 else
     startupLogger.LogWarning("Google OAuth: not configured — set OAuth__Google__ClientId in .env to enable Google sign-in.");
+
+var liveKitOpts = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<LiveKitOptions>>().Value;
+if (liveKitOpts.IsConfigured)
+    startupLogger.LogInformation("LiveKit: video meetings enabled ({Url}).", liveKitOpts.Url);
+else
+    startupLogger.LogWarning("LiveKit: not configured — set LIVEKIT_URL, LIVEKIT_API_KEY, and LIVEKIT_API_SECRET in .env.");
 
 // Seed SQL Database (users, roles, therapist/patient profiles)
 using (var scope = app.Services.CreateScope())

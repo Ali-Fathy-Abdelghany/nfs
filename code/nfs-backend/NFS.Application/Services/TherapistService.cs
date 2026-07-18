@@ -24,6 +24,7 @@ namespace NFS.Application.Services
             var therapists = await _context.Therapists
                 .Include(t => t.User)
                 .AsNoTracking()
+                .Where(t => t.User != null && t.User.IsActive)
                 .ToListAsync();
             return therapists.Select(MapToDto).ToList();
         }
@@ -33,7 +34,8 @@ namespace NFS.Application.Services
             var therapists = await _context.Therapists
                 .Include(t => t.User)
                 .AsNoTracking()
-                .Where(t => t.Status == TherapistStatus.Pending && !t.IsVerified)
+                .Where(t => t.User != null && t.User.IsActive
+                    && t.Status == TherapistStatus.Pending && !t.IsVerified)
                 .ToListAsync();
             return therapists.Select(MapToDto).ToList();
         }
@@ -42,7 +44,8 @@ namespace NFS.Application.Services
         {
             var therapist = await _context.Therapists
                 .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.TherapistId == id);
+                .FirstOrDefaultAsync(t => t.TherapistId == id
+                    && t.User != null && t.User.IsActive);
             return therapist == null ? null : MapToDto(therapist);
         }
 
@@ -50,7 +53,8 @@ namespace NFS.Application.Services
         {
             var therapist = await _context.Therapists
                 .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.UserId == userId);
+                .FirstOrDefaultAsync(t => t.UserId == userId
+                    && t.User != null && t.User.IsActive);
             return therapist == null ? null : MapToDto(therapist);
         }
 
@@ -121,10 +125,25 @@ namespace NFS.Application.Services
 
         public async Task<bool> DeleteTherapistAsync(int id)
         {
-            var therapist = await _context.Therapists.FindAsync(id);
+            // Deactivate instead of physically deleting. Therapist records may be
+            // referenced by appointments, payments, assessments, and clinical history.
+            var therapist = await _context.Therapists
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.TherapistId == id);
             if (therapist == null) return false;
 
-            _context.Therapists.Remove(therapist);
+            therapist.IsVerified = false;
+            therapist.VerifiedAt = null;
+            therapist.UpdatedAt = DateTime.UtcNow;
+
+            if (therapist.User != null)
+            {
+                therapist.User.IsActive = false;
+                therapist.User.RefreshToken = null;
+                therapist.User.RefreshTokenExpiryTime = null;
+                therapist.User.UpdatedAt = DateTime.UtcNow;
+            }
+
             await _context.SaveChangesAsync();
             return true;
         }
